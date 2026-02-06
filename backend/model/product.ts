@@ -8,6 +8,7 @@ const ProductSchema = new mongoose.Schema(
         productstyle: { type: String, required: true},
         productsize: { type: String, required: true},
         productAllowedToRent: { type: Boolean, required: true},
+        productPrice: { type: Number, required: true},
     }
 )
 

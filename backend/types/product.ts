@@ -5,4 +5,5 @@ export interface IProduct {
     productstyle: string;
     productsize: string;
     productAllowedToRent: boolean;
+    productPrice: number;
 }
