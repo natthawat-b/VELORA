@@ -28,6 +28,7 @@ const errRes = {
 
 function successRes<T = null>(payload: T): ITypeSuccess<T> {
   return {
+    success: true,
     code: httpStatusCodes.Created,
     status: 2001,
     error: null,
