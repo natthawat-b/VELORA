@@ -4,7 +4,7 @@ import axios from 'axios';
 import './assets/App.css';
 
 // กำหนด URL ของ Backend API
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'http://localhost:3001/api';
 
 function App() {
   const navigate = useNavigate();
