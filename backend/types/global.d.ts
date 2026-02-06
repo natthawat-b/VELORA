@@ -6,6 +6,7 @@ declare interface ITypeHttpStatusCodes {
 
 
 declare interface ITypeSuccess<V> {
+  success: true;
   code: ITypeHttpStatusCodes.Created;
   status: number;
   error: null;
