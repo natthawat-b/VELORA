@@ -1,0 +1,38 @@
+.address-edit-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.address-edit-container h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+
+.address-edit-container form {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.info-text {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.address-edit-container .btn-primary {
+  margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .address-edit-container {
+    padding: 16px;
+  }
+
+  .address-edit-container form {
+    padding: 20px;
+  }
+}
