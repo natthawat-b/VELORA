@@ -7,6 +7,11 @@ async function register(req: Request, res:Response) {
     return res.status(data.code).json(data);
 }
 
+async function login(req: Request, res:Response) {
+    return controller.login(req, res);
+}
+
 export default {
     register,
+    login,
 };
