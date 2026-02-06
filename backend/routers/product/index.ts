@@ -1,8 +1,9 @@
 import express from "express";
-import addFunc from "./addFunc";
+import resFunc from "./resFunc";
 
 const routers = express.Router();
 
-routers.post("/add", addFunc.addproduct);
+routers.post("/add", resFunc.addproduct);
+routers.get("/", resFunc.getproduct);
 
 export default routers;  

@@ -1,0 +1,221 @@
+:root {
+  --gold-text: #b8922e;
+  --bg-gray: #f9f9f9;
+  --sidebar-width: 250px; /* เผื่อไว้ถ้าอยากทำ Sidebar */
+}
+
+body {
+  margin: 0;
+  font-family: 'Kanit', sans-serif;
+  background-color: var(--bg-gray);
+  overflow-x: hidden; /* ป้องกันสกรอลแนวนอน */
+}
+
+.home-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Navbar (Header) --- */
+.navbar {
+  background: white;
+  padding: 15px 40px; /* เพิ่ม padding ด้านข้าง */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  width: 100%;
+  box-sizing: border-box; /* สำคัญ! ให้นับ padding รวมในความกว้าง */
+}
+
+.nav-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; /* เต็มจอ */
+  /* ลบ max-width: 1200px ออก */
+}
+
+.brand-logo {
+  font-size: 32px;
+  letter-spacing: 2px;
+  margin: 0;
+  color: #1a0a2e;
+  font-weight: 800;
+}
+
+.nav-icons {
+  display: flex;
+  gap: 20px;
+}
+
+.icon-cart {
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+}
+
+/* --- Main Content --- */
+.main-content {
+  flex: 1;
+  width: 100%; /* เต็มจอ */
+  padding: 30px 40px; /* เว้นขอบซ้ายขวา 40px ไม่ให้ติดขอบเกินไป */
+  box-sizing: border-box;
+  /* ลบ max-width ออกเพื่อให้เนื้อหาขยายเต็มที่ */
+}
+
+/* --- Trending Banner --- */
+.trending-banner {
+  background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+  border-radius: 20px;
+  display: flex;
+  overflow: hidden;
+  margin-bottom: 40px;
+  height: 350px; /* เพิ่มความสูงให้ดูอลังการขึ้นบนจอคอม */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.banner-text {
+  flex: 1;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.banner-text h2 {
+  font-size: 48px; /* ขยายตัวหนังสือ */
+  margin-bottom: 25px;
+  color: #1a1a1a;
+}
+
+.price-tag {
+  background: white;
+  padding: 12px 30px;
+  border-radius: 50px;
+  margin-bottom: 15px;
+  width: fit-content;
+  font-size: 24px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+}
+
+.price-tag small {
+  font-size: 16px;
+  color: #666;
+  font-weight: normal;
+  margin-left: 15px;
+}
+
+.banner-image {
+  flex: 1.5; /* ให้พื้นที่รูปภาพเยอะกว่าข้อความเล็กน้อย */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.placeholder-img {
+  width: 80%;
+  height: 90%;
+  background: #c4c4c4;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+}
+
+/* --- Product Grid (หัวใจสำคัญของการเต็มจอ) --- */
+.product-grid {
+  display: grid;
+  /* ปรับ minmax ให้ใหญ่ขึ้นนิดหน่อยเพื่อความสวยงามบนจอใหญ่ */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+  gap: 30px;
+  margin-bottom: 80px; /* เว้นที่ให้ Bottom Nav */
+}
+
+.product-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid #f0f0f0;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.product-img-holder {
+  height: 280px; /* รูปสูงขึ้น */
+  background-color: #c4e4f5;
+  width: 100%;
+  object-fit: cover;
+}
+
+.product-info {
+  padding: 20px;
+}
+
+.p-category {
+  color: var(--gold-text);
+  font-size: 14px;
+  margin: 0;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.p-title {
+  margin: 8px 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.p-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.p-price {
+  font-weight: bold;
+  font-size: 22px;
+  color: #1a1a1a;
+}
+
+.p-rent {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #888;
+}
+
+/* --- Bottom Nav (แถบล่าง) --- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  display: flex;
+  justify-content: center; /* จัดไอคอนให้อยู่ตรงกลาง */
+  gap: 60px; /* ห่างกันมากขึ้น */
+  padding: 20px 0;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+  z-index: 100;
+}
+
+.nav-item {
+  font-size: 28px;
+  color: #ccc;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav-item.active, .nav-item:hover {
+  color: #1a1a1a;
+  transform: scale(1.1);
+}

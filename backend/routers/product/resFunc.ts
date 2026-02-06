@@ -7,6 +7,11 @@ async function addproduct(req: Request, res: Response) {
     return res.status(data.code).json(data);
 }
 
+async function getproduct(req: Request, res: Response) {
+    return controller.get(req, res);
+}
+
 export default {
     addproduct,
-}
+    getproduct,
+};

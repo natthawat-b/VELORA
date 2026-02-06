@@ -1,0 +1,283 @@
+:root {
+  --bg-color: #f5f5f5;
+  --text-dark: #1a1a1a;
+  --text-gray: #888;
+  --green-cash: #4caf50;
+  --blue-bank: #1976d2;
+  --gold-primary: #d4af37;
+  --border-color: #e0e0e0;
+}
+
+body {
+  margin: 0;
+  font-family: 'Kanit', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+}
+
+.payment-page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Navbar --- */
+.payment-navbar {
+  background: white;
+  padding: 20px 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  position: relative;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #555;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.btn-back:hover { color: var(--text-dark); }
+
+.page-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* --- Main Content --- */
+.payment-content {
+  flex: 1;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* ให้การ์ดอยู่ด้านบนหน่อย ไม่กลางจอเป๊ะ */
+}
+
+.payment-card {
+  background: white;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+
+.card-heading {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  text-align: center;
+}
+
+.card-subheading {
+  text-align: center;
+  color: var(--text-gray);
+  margin: 0 0 30px 0;
+  font-size: 14px;
+}
+
+/* Payment Options */
+.payment-option {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.payment-option:hover {
+  border-color: #ccc;
+  background-color: #fafafa;
+}
+
+.payment-option.selected {
+  border-color: var(--gold-primary);
+  background-color: #fffbf0; /* สีทองจางๆ */
+}
+
+/* Option Content Structure */
+.bank-option {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+.bank-header {
+  display: flex;
+  align-items: center;
+}
+
+/* Icons & Text */
+.option-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  margin-right: 20px;
+}
+
+.option-icon.cash { background: #e8f5e9; color: var(--green-cash); }
+.option-icon.bank { background: #e3f2fd; color: var(--blue-bank); }
+
+.option-info { flex: 1; display: flex; flex-direction: column; }
+.option-title { font-weight: 600; font-size: 18px; }
+.option-desc { font-size: 13px; color: var(--text-gray); margin-top: 2px; }
+
+/* Radio Circle UI */
+.radio-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  position: relative;
+}
+
+.payment-option.selected .radio-circle {
+  border-color: var(--gold-primary);
+  background-color: var(--gold-primary);
+}
+
+.payment-option.selected .radio-circle::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px; height: 8px;
+  background: white;
+  border-radius: 50%;
+}
+
+.divider {
+  height: 1px;
+  background: #eee;
+  margin: 20px 0;
+}
+
+/* Bank Form Animation */
+.bank-form {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #555;
+}
+
+/* Custom Select & Input */
+.select-wrapper, .input-wrapper {
+  position: relative;
+}
+
+select, input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  background: white;
+  appearance: none; /* ลบ Default Arrow ของ Browser */
+  font-family: 'Kanit', sans-serif;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  color: var(--text-dark);
+}
+
+select { cursor: pointer; }
+select.filled { color: var(--text-dark); }
+select:invalid { color: #999; } /* สี Placeholder */
+
+select:focus, input:focus {
+  border-color: var(--text-dark);
+}
+
+.select-arrow {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  pointer-events: none;
+}
+
+.input-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ccc;
+}
+
+/* Confirm Button */
+.btn-confirm-payment {
+  width: 100%;
+  background-color: var(--text-dark); /* สีดำตามธีม */
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 30px;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.btn-confirm-payment:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .payment-card {
+    padding: 25px;
+    border-radius: 0; /* เต็มจอในมือถือ */
+    box-shadow: none;
+    max-width: 100%;
+  }
+  .payment-content {
+    padding: 0;
+  }
+}
