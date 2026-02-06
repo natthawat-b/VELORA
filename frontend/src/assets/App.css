@@ -1,158 +1,140 @@
-* {
+/* ตั้งค่าพื้นฐาน */
+body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Sukhumvit Set', 'Kanit', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  background-color: #f8f9fa;
-  color: #333;
-  line-height: 1.6;
-}
-
-.App {
+  font-family: 'Kanit', sans-serif; /* แนะนำให้ใช้ font ภาษาไทยที่ดูโมเดิร์น */
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
 }
 
-/* Common Button Styles */
-.btn-primary {
-  background-color: #000;
-  color: #fff;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+/* Error message */
+.error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  margin: 10px 0;
+  text-align: center;
+}
+
+/* ปุ่ม disabled */
+.btn-login:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.container {
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
-.btn-primary:hover {
-  background-color: #333;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+/* การ์ดหลักตรงกลางจอ */
+.login-card {
+  background-color: white;
+  padding: 40px 60px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 400px;/* จำกัดความกว้างบนหน้าจอคอม */
+  text-align: center;
 }
 
-.btn-secondary {
-  background-color: #fff;
+/* โลโก้ VELORA */
+.brand-logo {
+  font-size: 48px;
+  font-weight: bold;
+  color: #1a0a2e;
+  margin-bottom: 40px;
+  letter-spacing: 2px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
   color: #000;
-  border: 2px solid #000;
-  padding: 12px 24px;
+}
+
+/* ฟอร์มและ Input */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.input-group {
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 5px;
+  margin-left: 10px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  background-color: #d9d9d9;
+  border-radius: 25px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+/* ปุ่มต่างๆ */
+.btn-login {
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 12px;
   border-radius: 8px;
   font-size: 16px;
-  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  margin-top: 10px;
+  transition: background 0.3s;
 }
 
-.btn-secondary:hover {
-  background-color: #000;
-  color: #fff;
+.btn-login:hover {
+  background-color: #333;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .btn-outline {
-  background-color: transparent;
+  background-color: white;
   color: #000;
-  border: 1px solid #ddd;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-outline:hover {
-  border-color: #000;
-  background-color: #f8f9fa;
-}
-
-.back-button {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 8px;
-  margin-bottom: 16px;
-}
-
-.back-button:hover {
-  opacity: 0.7;
-}
-
-/* Logo */
-.logo {
-  font-size: 32px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-align: center;
-  margin-bottom: 24px;
-}
-
-/* Form Styles */
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  width: 100%;
+  border: 1px solid #eee;
   padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 25px;
   font-size: 16px;
-  transition: border-color 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: #000;
+.btn-gold {
+  background-color: #d4af37; /* สีทองตามภาพ */
+  color: #000;
+  border: none;
+  padding: 12px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+  transition: transform 0.2s;
 }
 
-/* Rating */
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-weight: 600;
-}
-
-.star {
-  color: #ffc107;
-}
-
-/* Container */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .container {
-    padding: 16px;
-  }
-
-  .logo {
-    font-size: 24px;
-  }
-
-  .btn-primary,
-  .btn-secondary,
-  .btn-outline {
-    padding: 10px 20px;
-    font-size: 14px;
-  }
+.btn-outline:hover, .btn-gold:hover {
+  transform: translateY(-2px);
 }
