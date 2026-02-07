@@ -138,3 +138,32 @@ body {
 .btn-outline:hover, .btn-gold:hover {
   transform: translateY(-2px);
 }
+
+/* Login Type Toggle */
+.login-type-toggle {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 10px 20px;
+  border: 2px solid #ddd;
+  background-color: white;
+  border-radius: 25px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+  border-color: #1a1a1a;
+}
+
+.toggle-btn.active {
+  background-color: #1a1a1a;
+  color: white;
+  border-color: #1a1a1a;
+}

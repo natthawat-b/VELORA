@@ -1,0 +1,534 @@
+/* Product Detail Page Styles */
+.product-detail-container {
+  min-height: 100vh;
+  background-color: #fff;
+  padding-bottom: 80px;
+}
+
+/* Header */
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.back-btn, .detail-header .cart-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #333;
+}
+
+/* Product Image Section */
+.product-image-section {
+  background-color: #f5f0e8;
+  padding: 60px 40px 40px;
+}
+
+.product-image-large {
+  width: 100%;
+  height: 280px;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.product-image-large .placeholder-image {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #87CEEB 0%, #87CEEB 40%, white 40%, white 50%, #90EE90 50%, #228B22 100%);
+}
+
+/* Product Info Section */
+.product-info-section {
+  padding: 20px;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.prices {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.main-price {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+}
+
+.rent-price {
+  font-size: 14px;
+  color: #d4a574;
+}
+
+.favorite-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.product-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #d4a574;
+  margin: 0 0 10px 0;
+}
+
+.product-desc {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+/* Shop Info */
+.shop-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.shop-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: #ddd;
+}
+
+.shop-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.shop-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.shop-rating {
+  font-size: 12px;
+  color: #888;
+}
+
+/* Reviews Section */
+.reviews-section {
+  margin-top: 20px;
+}
+
+.reviews-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.reviews-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.add-review-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #333;
+  background: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.review-card {
+  background-color: #e8f4e8;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.review-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.user-avatar-small {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #4CAF50;
+}
+
+.user-name {
+  font-size: 11px;
+  color: #333;
+}
+
+.review-stars {
+  font-size: 10px;
+  color: #FFD700;
+  margin-bottom: 5px;
+}
+
+.review-comment {
+  font-size: 11px;
+  color: #666;
+  margin: 0;
+}
+
+/* Bottom Action Bar */
+.bottom-action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background-color: white;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 11px;
+  color: #333;
+  border-right: 1px solid #eee;
+}
+
+.action-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.buy-btn {
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border: none;
+  background-color: #87CEEB;
+  cursor: pointer;
+}
+
+.buy-label {
+  font-size: 12px;
+  color: #333;
+}
+
+.buy-price {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* ==================== */
+/* Responsive - Desktop */
+/* ==================== */
+
+@media (min-width: 768px) {
+  .product-detail-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .product-image-section {
+    padding: 80px 60px 60px;
+  }
+
+  .product-image-large {
+    height: 400px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .product-info-section {
+    padding: 30px 60px;
+  }
+
+  .main-price {
+    font-size: 36px;
+  }
+
+  .rent-price {
+    font-size: 18px;
+  }
+
+  .product-title {
+    font-size: 32px;
+  }
+
+  .product-desc {
+    font-size: 16px;
+  }
+
+  .reviews-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+  }
+
+  .bottom-action-bar {
+    max-width: 1200px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 15px 15px 0 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-image-large {
+    height: 500px;
+    max-width: 700px;
+  }
+}
+
+/* Rent Button */
+.rent-btn {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border: none;
+  background-color: #1a1a2e;
+  cursor: pointer;
+  border-radius: 25px 0 0 25px;
+  margin-left: 5px;
+}
+
+.rent-label {
+  font-size: 12px;
+  color: #d4a574;
+  font-weight: 600;
+}
+
+.rent-price-btn {
+  font-size: 14px;
+  font-weight: bold;
+  color: #d4a574;
+}
+
+/* Purchase Modal Styles */
+.purchase-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.purchase-modal {
+  background: white;
+  border-radius: 25px 25px 0 0;
+  width: 100%;
+  max-width: 500px;
+  padding: 25px 20px;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.modal-product-name {
+  font-size: 22px;
+  font-weight: bold;
+  color: #d4a574;
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+
+.modal-content {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.modal-product-image {
+  width: 140px;
+  height: 180px;
+  border-radius: 15px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: #f5f5f5;
+}
+
+.modal-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-product-image .placeholder-image {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #87CEEB 0%, #87CEEB 40%, white 40%, white 50%, #90EE90 50%, #228B22 100%);
+}
+
+.modal-options {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.option-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option-label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.size-options,
+.rental-days-options {
+  display: flex;
+  gap: 8px;
+}
+
+.size-btn,
+.days-btn {
+  width: 42px;
+  height: 42px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.size-btn:hover,
+.days-btn:hover {
+  border-color: #d4a574;
+}
+
+.size-btn.active,
+.days-btn.active {
+  background-color: #d4a574;
+  border-color: #d4a574;
+  color: white;
+}
+
+/* Modal Action Buttons */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-rent-btn,
+.modal-buy-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+}
+
+.modal-rent-btn:hover,
+.modal-buy-btn:hover {
+  transform: scale(1.02);
+}
+
+.modal-rent-btn {
+  background-color: #1a1a2e;
+  color: #d4a574;
+}
+
+.modal-rent-btn span:first-child {
+  font-size: 14px;
+}
+
+.modal-rent-btn .modal-price {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.modal-buy-btn {
+  background: linear-gradient(135deg, #40E0D0 0%, #48D1CC 100%);
+  color: #1a1a2e;
+}
+
+.modal-buy-btn span:first-child {
+  font-size: 14px;
+}
+
+.modal-buy-btn .modal-price {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Desktop responsive for modal */
+@media (min-width: 768px) {
+  .purchase-modal {
+    max-width: 600px;
+    border-radius: 25px;
+    margin-bottom: 50px;
+  }
+
+  .modal-product-image {
+    width: 180px;
+    height: 220px;
+  }
+}

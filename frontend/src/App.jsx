@@ -19,6 +19,7 @@ function App() {
     setLoading(true);
 
     try {
+      // ล็อกอินเป็นลูกค้า
       const response = await axios.post(`${API_URL}/user/login`, {
         username,
         password
@@ -26,10 +27,9 @@ function App() {
 
       // ถ้าล็อกอินสำเร็จ
       if (response.data.success) {
-        alert('เข้าสู่ระบบสำเร็จ!');
-        // TODO: เก็บข้อมูล user ไว้ใน localStorage หรือ context
-        // localStorage.setItem('user', JSON.stringify(response.data.data));
-        // navigate('/home'); // นำทางไปหน้าหลัก
+        const userData = response.data.payload?.data || response.data.payload;
+        localStorage.setItem('userData', JSON.stringify(userData));
+        navigate('/home'); // นำทางไปหน้าหลัก
       }
     } catch (err) {
       // จัดการ error
@@ -54,9 +54,10 @@ function App() {
         {/* ส่วนเข้าสู่ระบบ (Login Section) */}
         <div className="section">
           <h2 className="section-title">เข้าสู่ระบบ</h2>
+
           <form className="login-form" onSubmit={handleLogin}>
             <div className="input-group">
-              <label>ชื่อ</label>
+              <label>ชื่อผู้ใช้</label>
               <input 
                 type="text" 
                 value={username}
