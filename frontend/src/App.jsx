@@ -6,7 +6,7 @@ import './assets/App.css';
 
 
 // กำหนด URL ของ Backend API
-const API_URL = 'http://localhost:3001/api';
+const API_URL = 'http://localhost:3000/api';
 
 function App() {
   const navigate = useNavigate();
@@ -52,6 +52,13 @@ function App() {
         // Store user data in localStorage
         localStorage.setItem('userData', JSON.stringify(userData));
         localStorage.setItem('userType', userType);
+        
+        // Store userId for follow functionality
+        const userId = userData._id || userData.id;
+        if (userId) {
+          localStorage.setItem('userId', userId);
+          console.log('✅ User logged in with ID:', userId);
+        }
         
         // Navigate based on user type
         // Navigate based on user type

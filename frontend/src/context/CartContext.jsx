@@ -26,7 +26,7 @@ export function CartProvider({ children }) {
       // สร้าง Array ของ Promise เพื่อดึงข้อมูลสินค้าแต่ละตัว
       const updatedItemsPromises = cartItems.map(async (item) => {
         try {
-          const response = await fetch(`http://localhost:3001/api/product/${item.productId}`);
+          const response = await fetch(`http://localhost:3000/api/product/${item.productId}`);
           const data = await response.json();
           
           if (data.success && data.payload) {

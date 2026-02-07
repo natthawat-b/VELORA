@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Database Debug Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .section {
+            background: #f4f4f4;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        pre {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>🔍 VELORA Database Debug Tool</h1>
+    
+    <div class="section">
+        <h2>Shop Database</h2>
+        <button onclick="getAllShops()">ดูร้านค้าทั้งหมด</button>
+        <div id="shopResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>User Database</h2>
+        <button onclick="getAllUsers()">ดู User ทั้งหมด</button>
+        <div id="userResult"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+        async function getAllShops() {
+            const resultDiv = document.getElementById('shopResult');
+            resultDiv.innerHTML = '<p>กำลังโหลด...</p>';
+            
+            try {
+                const response = await fetch(`${API_URL}/shop/all`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const shops = data.payload;
+                    resultDiv.innerHTML = `
+                        <p class="success">✅ พบ ${shops.length} ร้านค้า</p>
+                        <pre>${JSON.stringify(shops, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <p class="error">❌ Error: ${data.error?.message || 'Unknown error'}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Error: ${error.message}</p>
+                    <p>ตรวจสอบว่า Backend รันอยู่ที่ port 3000</p>
+                `;
+            }
+        }
+
+        async function getAllUsers() {
+            const resultDiv = document.getElementById('userResult');
+            resultDiv.innerHTML = '<p>กำลังโหลด...</p>';
+            
+            try {
+                const response = await fetch(`${API_URL}/user`);
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <p class="success">✅ Response received</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Error: ${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

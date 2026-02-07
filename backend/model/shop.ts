@@ -10,6 +10,8 @@ const ShopSchema = new mongoose.Schema(
         shopIDcard: { type: String, requised: true, unique: true},
         shopBank: { type: String, requised: true},
         shopBankNumber: { type: String, requised: true},
+        shopPhoto: { type: String }, // Profile photo (base64)
+        followers: [{ type: String }], // Array of user IDs who follow this shop
         
     },
      { timestamps:true, versionKey: false}

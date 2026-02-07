@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/register.css';
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = 'http://localhost:3000/api';
 
 function Register() {
   const navigate = useNavigate();
@@ -32,6 +32,13 @@ function Register() {
       const response = await axios.post(`${API_URL}/user/register`, formData);
       
       if (response.data.success || response.data.payload?.success) {
+        // Store userId in localStorage
+        const userId = response.data.payload?._id || response.data._id;
+        if (userId) {
+          localStorage.setItem('userId', userId);
+          console.log('✅ User registered and logged in:', userId);
+        }
+        
         alert('สมัครสมาชิกสำเร็จ!');
         navigate('/');
       }

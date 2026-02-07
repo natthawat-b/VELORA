@@ -9,19 +9,51 @@ const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedStyle, setSelectedStyle] = useState('ทั้งหมด');
   const navigate = useNavigate();
   const { cartCount } = useCart();
+
+  // Available styles
+  const styles = ['ทั้งหมด', 'Streetwear', 'Minimalist', 'Vintage', 'Formal', 'Sporty'];
 
   const performSearch = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3001/api/product/search', {
-        productname: searchTerm
-      });
-      if (response.data.success) {
-        setSearchResults(response.data.payload);
+      // If "ทั้งหมด" is selected and no search term, fetch all products
+      if (selectedStyle === 'ทั้งหมด' && !searchTerm) {
+        const response = await axios.get('http://localhost:3000/api/product');
+        if (response.data.success) {
+          setSearchResults(response.data.payload);
+        } else {
+          setSearchResults([]);
+        }
       } else {
-        setSearchResults([]);
+        // Build search query
+        let searchQuery = searchTerm;
+        
+        // If a specific style is selected, add it to search query
+        if (selectedStyle !== 'ทั้งหมด') {
+          searchQuery = searchTerm || selectedStyle;
+        }
+
+        const response = await axios.post('http://localhost:3000/api/product/search', {
+          productname: searchQuery
+        });
+        
+        if (response.data.success) {
+          let results = response.data.payload;
+          
+          // If specific style selected, filter results by style
+          if (selectedStyle !== 'ทั้งหมด') {
+            results = results.filter(product => 
+              product.productstyle === selectedStyle
+            );
+          }
+          
+          setSearchResults(results);
+        } else {
+          setSearchResults([]);
+        }
       }
     } catch (error) {
       console.error('Error searching products:', error);
@@ -29,22 +61,22 @@ const SearchPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchTerm]);
+  }, [searchTerm, selectedStyle]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      if (searchTerm) {
-        performSearch();
-      } else {
-        setSearchResults([]);
-      }
+      performSearch();
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm, performSearch]);
+  }, [searchTerm, selectedStyle, performSearch]);
 
   const handleProductClick = (productId) => {
     navigate(`/product/${productId}`);
+  };
+
+  const handleStyleClick = (style) => {
+    setSelectedStyle(style);
   };
 
   return (
@@ -57,17 +89,32 @@ const SearchPage = () => {
           <FiSearch className="search-icon" />
           <input
             type="text"
-            placeholder="ค้นหาสินค้า..."
+            placeholder="ค้นหาสไตล์สินค้า..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             autoFocus
           />
         </div>
         <div className="cart-wrapper" onClick={() => navigate('/cart')}>
-            <FiShoppingCart className="icon-cart" />
-            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+          <FiShoppingCart className="icon-cart" />
+          {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
         </div>
       </header>
+
+      {/* Style Filter Chips */}
+      <div className="filter-section">
+        <div className="filter-chips">
+          {styles.map((style) => (
+            <button
+              key={style}
+              className={`filter-chip ${selectedStyle === style ? 'active' : ''}`}
+              onClick={() => handleStyleClick(style)}
+            >
+              {style}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <main className="search-results">
         {loading ? (
@@ -88,13 +135,20 @@ const SearchPage = () => {
                   <h3 className="search-p-title">{item.productname}</h3>
                   <div className="search-p-footer">
                     <span className="search-p-price">฿ {item.productPrice?.toLocaleString()}</span>
+                    <span className="search-p-rating">★ 4.9</span>
                   </div>
+                  <p className="search-p-rent">เช่า: {Math.round(item.productPrice * 0.1)}/วัน</p>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          searchTerm && <div className="no-results">ไม่พบสินค้า "{searchTerm}"</div>
+          <div className="no-results">
+            {searchTerm || selectedStyle !== 'ทั้งหมด' 
+              ? `ไม่พบสินค้า ${searchTerm ? `"${searchTerm}"` : ''} ${selectedStyle !== 'ทั้งหมด' ? `ในหมวด ${selectedStyle}` : ''}`
+              : 'ไม่มีสินค้า'
+            }
+          </div>
         )}
       </main>
     </div>
