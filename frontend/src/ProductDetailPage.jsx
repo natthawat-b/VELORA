@@ -1,61 +1,187 @@
-import React from 'react';
-import './ProductDetailPage.css';
-import { FiChevronLeft, FiShoppingCart, FiHeart, FiMessageCircle, FiPlus } from 'react-icons/fi';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import './assets/ProductDetailPage.css';
+import { FiChevronLeft, FiShoppingCart, FiHeart, FiMessageCircle, FiPlus, FiEdit, FiTrash2, FiX } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
 
+const API_URL = 'http://localhost:3000/api';
+
 function ProductDetailPage() {
-  // ข้อมูลจำลอง (Mock Data)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [isOwner, setIsOwner] = useState(false);
+  
+  // Edit Modal State
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editFormData, setEditFormData] = useState({});
+  const [editLoading, setEditLoading] = useState(false);
+  
+  // Delete Confirmation State
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  // Mock reviews (you can replace with API later)
   const reviews = [
     { id: 1, user: 'ชื่อบัญชีผู้ซื้อ', comment: 'เน้นแรก', rating: 5 },
     { id: 2, user: 'ชื่อบัญชีผู้ซื้อ', comment: 'เริ่ด', rating: 5 },
-    { id: 3, user: 'ชื่อบัญชีผู้ซื้อ', comment: 'ผ้าดีมากค่ะ ยังไม่ได้สั่ง', rating: 5 },
-    { id: 4, user: 'ชื่อบัญชีผู้ซื้อ', comment: 'ใส่สบายมากค่ะ เสื้อแฟน', rating: 5 },
   ];
+
+  // Fetch product data on mount
+  useEffect(() => {
+    fetchProductData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  const fetchProductData = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API_URL}/product/${id}`);
+      
+      if (response.data.success) {
+        const productData = response.data.payload;
+        setProduct(productData);
+        setEditFormData(productData);
+        
+        // Check if current user is owner
+        const userType = localStorage.getItem('userType');
+        console.log('🔍 Debug - userType from localStorage:', userType);
+        console.log('🔍 Debug - isOwner will be:', userType === 'shop');
+        // For now, showing buttons to shop owners - you can add more specific checks
+        setIsOwner(userType === 'shop');
+      }
+    } catch (err) {
+      console.error('Error fetching product:', err);
+      setError('ไม่สามารถโหลดข้อมูลสินค้าได้');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle edit form changes
+  const handleEditChange = (e) => {
+    setEditFormData({
+      ...editFormData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  // Handle edit submit
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setEditLoading(true);
+
+    try {
+      const response = await axios.put(`${API_URL}/product/${id}`, editFormData);
+      
+      if (response.data.success) {
+        alert('แก้ไขสินค้าสำเร็จ!');
+        setShowEditModal(false);
+        fetchProductData(); // Refresh data
+      }
+    } catch (err) {
+      console.error('Edit error:', err);
+      alert('เกิดข้อผิดพลาดในการแก้ไขสินค้า');
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
+  // Handle delete
+  const handleDelete = async () => {
+    setDeleteLoading(true);
+
+    try {
+      const response = await axios.delete(`${API_URL}/product/${id}`);
+      
+      if (response.data.success) {
+        alert('ลบสินค้าสำเร็จ!');
+        navigate('/shop-profile'); // Navigate to shop page
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+      alert('เกิดข้อผิดพลาดในการลบสินค้า');
+    } finally {
+      setDeleteLoading(false);
+      setShowDeleteConfirm(false);
+    }
+  };
+
+  if (loading) {
+    return <div className="loading-container">กำลังโหลด...</div>;
+  }
+
+  if (error || !product) {
+    return <div className="error-container">{error || 'ไม่พบสินค้า'}</div>;
+  }
 
   return (
     <div className="product-page-container">
       {/* --- Header --- */}
       <header className="product-header">
         <div className="header-inner">
-          <button className="btn-back">
+          <button className="btn-back" onClick={() => navigate(-1)}>
             <FiChevronLeft />
           </button>
-          <h1 className="header-title">VELORA</h1> {/* เพิ่มโลโก้เพื่อให้ดูเต็มขึ้น */}
+          <h1 className="header-title">VELORA</h1>
           <button className="btn-cart">
             <FiShoppingCart />
-            <span className="cart-badge">1</span>
+            <span className="cart-badge">0</span>
           </button>
         </div>
       </header>
 
-      {/* --- Main Content (2 Columns Layout) --- */}
+      {/* --- Main Content --- */}
       <main className="product-main">
         
         {/* Left Column: Product Image */}
         <div className="product-image-section">
           <div className="main-image-placeholder">
-            {/* CSS Art: Cloud & Mountain */}
-            <div className="art-cloud"></div>
-            <div className="art-mountain"></div>
+            {product.productphoto ? (
+              <img src={product.productphoto} alt={product.productname} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+            ) : (
+              <>
+                <div className="art-cloud"></div>
+                <div className="art-mountain"></div>
+              </>
+            )}
           </div>
         </div>
 
-        {/* Right Column: Product Info & Actions */}
+        {/* Right Column: Product Info */}
         <div className="product-info-section">
           
-          {/* Title & Price Part */}
+          {/* Title & Price */}
           <div className="info-header">
             <div className="price-group">
-              <h2 className="buy-price">฿ X,XXX</h2>
-              <span className="rent-price">฿ X,XXX/วัน</span>
+              <h2 className="buy-price">฿ {product.productPrice?.toLocaleString()}</h2>
+              {product.productAllowedToRent && (
+                <span className="rent-price">฿ {Math.round(product.productPrice * 0.1)}/วัน</span>
+              )}
             </div>
             <button className="btn-favorite">
               <FiHeart />
             </button>
           </div>
 
-          <h1 className="product-name">ชื่อสินค้า</h1>
-          <p className="product-description">รายละเอียดสินค้า....</p>
+          <h1 className="product-name">{product.productname}</h1>
+          <p className="product-description">{product.productdetail}</p>
+          
+          {/* Owner Actions */}
+          {isOwner && (
+            <div className="owner-actions">
+              <button className="btn-owner-action edit" onClick={() => setShowEditModal(true)}>
+                <FiEdit /> แก้ไข
+              </button>
+              <button className="btn-owner-action delete" onClick={() => setShowDeleteConfirm(true)}>
+                <FiTrash2 /> ลบ
+              </button>
+            </div>
+          )}
 
           <hr className="divider" />
 
@@ -100,7 +226,7 @@ function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Action Buttons (Desktop Style) */}
+          {/* Action Buttons */}
           <div className="action-buttons-container">
             <button className="btn-action chat">
               <FiMessageCircle /> สอบถามร้าน
@@ -110,12 +236,102 @@ function ProductDetailPage() {
             </button>
             <button className="btn-action buy-now">
               <span className="buy-text">Buy</span>
-              <span className="buy-price-btn">฿ X,XXX</span>
+              <span className="buy-price-btn">฿ {product.productPrice?.toLocaleString()}</span>
             </button>
           </div>
 
         </div>
       </main>
+
+      {/* Edit Modal */}
+      {showEditModal && (
+        <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>แก้ไขสินค้า</h2>
+              <button className="btn-close-modal" onClick={() => setShowEditModal(false)}>
+                <FiX />
+              </button>
+            </div>
+            <form onSubmit={handleEditSubmit} className="edit-form">
+              <div className="form-group">
+                <label>ชื่อสินค้า</label>
+                <input
+                  type="text"
+                  name="productname"
+                  value={editFormData.productname || ''}
+                  onChange={handleEditChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>รายละเอียด</label>
+                <textarea
+                  name="productdetail"
+                  value={editFormData.productdetail || ''}
+                  onChange={handleEditChange}
+                  rows="4"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>ราคา (฿)</label>
+                <input
+                  type="number"
+                  name="productPrice"
+                  value={editFormData.productPrice || ''}
+                  onChange={handleEditChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>สไตล์</label>
+                <input
+                  type="text"
+                  name="productstyle"
+                  value={editFormData.productstyle || ''}
+                  onChange={handleEditChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>ขนาด</label>
+                <input
+                  type="text"
+                  name="productsize"
+                  value={editFormData.productsize || ''}
+                  onChange={handleEditChange}
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="btn-cancel" onClick={() => setShowEditModal(false)}>
+                  ยกเลิก
+                </button>
+                <button type="submit" className="btn-save" disabled={editLoading}>
+                  {editLoading ? 'กำลังบันทึก...' : 'บันทึก'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
+          <div className="modal-content confirm-modal" onClick={(e) => e.stopPropagation()}>
+            <h2>ยืนยันการลบสินค้า</h2>
+            <p>คุณแน่ใจหรือไม่ว่าต้องการลบสินค้านี้? การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setShowDeleteConfirm(false)} disabled={deleteLoading}>
+                ยกเลิก
+              </button>
+              <button className="btn-delete-confirm" onClick={handleDelete} disabled={deleteLoading}>
+                {deleteLoading ? 'กำลังลบ...' : 'ลบสินค้า'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

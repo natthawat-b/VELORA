@@ -1,5 +1,5 @@
 import React from 'react';
-import './ShopProfilePage.css';
+import './assets/ShopProfilePage.css';
 import { FiChevronLeft, FiMessageCircle, FiShoppingCart, FiSearch, FiUser, FiMoreHorizontal } from 'react-icons/fi';
 import { FaStar, FaCircle } from 'react-icons/fa';
 

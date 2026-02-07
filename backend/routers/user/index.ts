@@ -5,5 +5,6 @@ const routers = express.Router();
 
 routers.post("/register", resFunc.register);
 routers.post("/login", resFunc.login);
+// routers.put("/edit", resFunc.edit);
 
 export default routers;

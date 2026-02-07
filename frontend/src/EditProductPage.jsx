@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import './assets/AddProductPage.css';
+import './assets/AddProductPage.css'; // Reuse same CSS
 import { FiChevronLeft, FiPlus, FiImage, FiX } from 'react-icons/fi';
 
-function AddProductPage() {
+function EditProductPage() {
   const navigate = useNavigate();
+  const { id } = useParams(); // Get product ID from URL
   const API_URL = 'http://localhost:3000/api';
   
   // State สำหรับเก็บข้อมูล
@@ -18,6 +19,7 @@ function AddProductPage() {
   const [isRentable, setIsRentable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [fetchingProduct, setFetchingProduct] = useState(true);
   
   // State สำหรับจัดการขนาดสินค้า (Sizes)
   const [sizes] = useState(['S', 'M', 'L', 'XL']); // ค่าเริ่มต้น
@@ -25,6 +27,43 @@ function AddProductPage() {
 
   // Mock Styles
   const styles = ['Streetwear', 'Minimalist', 'Vintage', 'Formal', 'Sporty'];
+
+  // Fetch product data on mount
+  useEffect(() => {
+    fetchProductData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  const fetchProductData = async () => {
+    try {
+      setFetchingProduct(true);
+      const response = await axios.get(`${API_URL}/product/${id}`);
+      
+      if (response.data.success) {
+        const product = response.data.payload;
+        
+        // Populate form with existing data
+        setProductName(product.productname || '');
+        setDescription(product.productdetail || '');
+        setSelectedStyle(product.productstyle || '');
+        setPrice(product.productPrice?.toString() || '');
+        setProductPhoto(product.productphoto || '');
+        setPhotoPreview(product.productphoto || '');
+        setIsRentable(product.productAllowedToRent || false);
+        
+        // Parse sizes from string to array
+        if (product.productsize) {
+          const sizesArray = product.productsize.split(', ');
+          setSelectedSizes(sizesArray);
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching product:', err);
+      setError('ไม่สามารถโหลดข้อมูลสินค้าได้');
+    } finally {
+      setFetchingProduct(false);
+    }
+  };
 
   // Toggle เลือกขนาด
   const toggleSize = (size) => {
@@ -58,40 +97,52 @@ function AddProductPage() {
       const base64String = reader.result;
       setProductPhoto(base64String);
       setPhotoPreview(base64String);
-      setError(''); // Clear any previous errors
-    };
-    reader.onerror = () => {
-      setError('เกิดข้อผิดพลาดในการอ่านไฟล์');
+      setError('');
     };
     reader.readAsDataURL(file);
   };
 
-  // Handle form submission
+  // Remove image
+  const handleRemoveImage = () => {
+    setProductPhoto('');
+    setPhotoPreview('');
+  };
+
+  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     
     // Validation
-    if (!productName || !description || !selectedStyle || !price || selectedSizes.length === 0 || !productPhoto) {
-      setError('กรุณากรอกข้อมูลให้ครบทุกช่อง และเลือกรูปภาพสินค้า');
+    if (!productName.trim()) {
+      setError('กรุณากรอกชื่อสินค้า');
+      return;
+    }
+    if (!description.trim()) {
+      setError('กรุณากรอกรายละเอียดสินค้า');
+      return;
+    }
+    if (!selectedStyle) {
+      setError('กรุณาเลือก Style สินค้า');
+      return;
+    }
+    if (selectedSizes.length === 0) {
+      setError('กรุณาเลือกขนาดสินค้าอย่างน้อย 1 ขนาด');
+      return;
+    }
+    if (!price || parseFloat(price) <= 0) {
+      setError('กรุณากรอกราคาสินค้าที่ถูกต้อง');
+      return;
+    }
+    if (!productPhoto) {
+      setError('กรุณาอัพโหลดรูปภาพสินค้า');
       return;
     }
 
     setLoading(true);
     
     try {
-      // Get shop ID from localStorage
-      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-      const shopId = userData._id;
-      
-      if (!shopId) {
-        setError('ไม่พบข้อมูลร้านค้า กรุณา login ใหม่');
-        setLoading(false);
-        return;
-      }
-
       const productData = {
-        shopId: shopId, // ID ของร้านค้า
         productname: productName,
         productdetail: description,
         productphoto: productPhoto, // Base64 string
@@ -101,30 +152,39 @@ function AddProductPage() {
         productPrice: parseFloat(price)
       };
 
-      const response = await axios.post(`${API_URL}/product/add`, productData);
+      const response = await axios.put(`${API_URL}/product/${id}`, productData);
       
       if (response.data.success) {
-        // Success - redirect to seller products page
-        alert('เพิ่มสินค้าสำเร็จ!');
+        alert('อัพเดทสินค้าสำเร็จ!');
         navigate('/seller-products');
       }
     } catch (err) {
-      console.error('Error adding product:', err);
-      setError(err.response?.data?.error?.message || 'เกิดข้อผิดพลาดในการเพิ่มสินค้า');
+      console.error('Error updating product:', err);
+      setError(err.response?.data?.error?.message || 'เกิดข้อผิดพลาดในการอัพเดทสินค้า');
     } finally {
       setLoading(false);
     }
   };
+
+  if (fetchingProduct) {
+    return (
+      <div className="add-product-container">
+        <div style={{ textAlign: 'center', padding: '40px' }}>
+          กำลังโหลดข้อมูลสินค้า...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="add-product-container">
       {/* --- Header --- */}
       <header className="page-header">
         <div className="header-inner">
-          <button className="btn-back">
+          <button className="btn-back" onClick={() => navigate('/seller-products')}>
             <FiChevronLeft /> ย้อนกลับ
           </button>
-          <h1 className="header-title">เพิ่มรายการสินค้า</h1>
+          <h1 className="header-title">แก้ไขรายการสินค้า</h1>
         </div>
       </header>
 
@@ -149,10 +209,7 @@ function AddProductPage() {
                   />
                   <button
                     type="button"
-                    onClick={() => {
-                      setProductPhoto('');
-                      setPhotoPreview('');
-                    }}
+                    onClick={handleRemoveImage}
                     style={{
                       position: 'absolute',
                       top: '10px',
@@ -174,7 +231,7 @@ function AddProductPage() {
                 </div>
               ) : (
                 <label htmlFor="file-upload" className="upload-placeholder" style={{ cursor: 'pointer' }}>
-                  <FiPlus className="upload-icon-large" />
+                  <FiImage className="upload-icon-large" />
                   <p>อัปโหลดรูปภาพสินค้า</p>
                   <span className="upload-hint">รองรับไฟล์ .jpg, .png (สูงสุด 10MB)</span>
                   <input
@@ -188,14 +245,14 @@ function AddProductPage() {
               )}
             </div>
             
-            {/* Gallery Thumbnails (จำลองว่ามีรูปเล็กๆ) */}
+            {/* Gallery Thumbnails */}
             <div className="image-thumbnails">
               <div className={`thumb-box ${photoPreview ? 'active' : ''}`}>
-                {photoPreview ? <FiImage /> : <FiPlus />}
+                {photoPreview ? <FiImage /> : <FiImage />}
               </div>
-              <div className="thumb-box"><FiPlus /></div>
-              <div className="thumb-box"><FiPlus /></div>
-              <div className="thumb-box"><FiPlus /></div>
+              <div className="thumb-box"><FiImage /></div>
+              <div className="thumb-box"><FiImage /></div>
+              <div className="thumb-box"><FiImage /></div>
             </div>
           </div>
 
@@ -259,7 +316,6 @@ function AddProductPage() {
             <div className="form-group">
               <div className="label-row">
                 <label>ขนาด</label>
-                <button type="button" className="btn-add-size-mini"><FiPlus /></button>
               </div>
               <div className="size-selector">
                 {sizes.map((size) => (
@@ -305,7 +361,7 @@ function AddProductPage() {
             <div className="form-actions">
               <button type="button" className="btn-cancel" onClick={() => navigate('/seller-products')}>ยกเลิก</button>
               <button type="submit" className="btn-submit" disabled={loading}>
-                {loading ? 'กำลังเพิ่มสินค้า...' : 'ลงขายสินค้า'}
+                {loading ? 'กำลังบันทึก...' : 'บันทึกการแก้ไข'}
               </button>
             </div>
 
@@ -316,4 +372,4 @@ function AddProductPage() {
   );
 }
 
-export default AddProductPage;
+export default EditProductPage;

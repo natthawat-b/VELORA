@@ -13,7 +13,16 @@ export default async function login(req: Request, res: Response) {
         if (user.password !== password) {
             return res.status(401).json(errRes.BAD_REQUEST({ message: "Invalid password" }));
         }
-        return res.status(200).json(successRes({ message: "Login successful" }));
+        
+        // Return user data with userType for role-based navigation
+        const userData = {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            userType: 'user'
+        };
+        
+        return res.status(200).json(successRes(userData));
     } catch (error) {
         console.error("Login error", error);
         return res.status(500).json(errRes.INTERNAL_SERVER_ERROR({ message: "Internal server error" }));

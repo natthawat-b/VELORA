@@ -1,8 +1,10 @@
 import React from 'react';
-import './ShopOwnerProfile.css';
+import { useNavigate } from 'react-router-dom';
+import './assets/ShopOwnerProfile.css';
 import { FiShoppingCart, FiMessageSquare, FiBox, FiTruck, FiCheckCircle, FiHome, FiSearch, FiUser, FiEdit2, FiCamera, FiShoppingBag } from 'react-icons/fi';
 
 function ShopOwnerProfile() {
+  const navigate = useNavigate();
   return (
     <div className="shop-owner-container">
       {/* --- Navbar --- */}
@@ -39,7 +41,7 @@ function ShopOwnerProfile() {
                 <button className="btn-edit-text"><FiEdit2 /> แก้ไข</button>
               </div>
               
-              <button className="btn-my-products">
+              <button className="btn-my-products" onClick={() => navigate('/seller-products')}>
                 <FiShoppingBag className="btn-icon" /> สินค้าของฉัน
               </button>
             </div>
@@ -80,10 +82,8 @@ function ShopOwnerProfile() {
         </div>
       </main>
 
-      {/* Bottom Nav (Optional for Desktop, but kept for consistency) */}
+      {/* Bottom Nav - Only Profile Button */}
       <footer className="bottom-nav">
-        <div className="nav-item"><FiHome /></div>
-        <div className="nav-item"><FiSearch /></div>
         <div className="nav-item active"><FiUser /></div>
       </footer>
     </div>

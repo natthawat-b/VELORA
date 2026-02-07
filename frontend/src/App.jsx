@@ -19,23 +19,50 @@ function App() {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_URL}/user/login`, {
-        username,
-        password
-      });
+      // Try user login first
+      let response;
+      let loginType = 'user';
+      
+      try {
+        response = await axios.post(`${API_URL}/user/login`, {
+          username,
+          password
+        });
+      } catch (userErr) {
+        // If user login fails, try shop login with same credentials
+        try {
+          response = await axios.post(`${API_URL}/shop/login`, {
+            shopname: username, // Use same input for shopname
+            shopPassword: password
+          });
+          loginType = 'shop';
+        } catch {
+          // Both logins failed
+          throw userErr; // Throw the original error
+        }
+      }
 
-      // ถ้าล็อกอินสำเร็จ
+      // If login successful, check userType and redirect
       if (response.data.success) {
-        alert('เข้าสู่ระบบสำเร็จ!');
-        // TODO: เก็บข้อมูล user ไว้ใน localStorage หรือ context
-        // localStorage.setItem('user', JSON.stringify(response.data.data));
-        navigate('/home'); // นำทางไปหน้าหลัก
+        const userData = response.data.payload;
+        const userType = userData.userType || loginType;
+        
+        // Store user data in localStorage
+        localStorage.setItem('userData', JSON.stringify(userData));
+        localStorage.setItem('userType', userType);
+        
+        // Navigate based on user type
+        if (userType === 'shop') {
+          navigate('/shop-profile');
+        } else {
+          navigate('/home');
+        }
       }
     } catch (err) {
-      // จัดการ error
+      // Handle error
       console.error('Login error:', err);
       if (err.response) {
-        setError(err.response.data.error?.message || err.response.data.message || 'เกิดข้อผิดพลาด');
+        setError(err.response.data.error?.message || err.response.data.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
       } else if (err.request) {
         setError('ไม่สามารถเชื่อมต่อ server ได้ - กรุณาตรวจสอบว่า backend รันอยู่');
       } else {
