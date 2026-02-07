@@ -1,33 +1,54 @@
-import React from 'react';
-import './SelectedStylePage.css';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import './assets/SelectedStylePage.css';
 import { FiChevronLeft, FiSearch, FiHome, FiUser } from 'react-icons/fi';
 
 function SelectedStylePage() {
-  // จำลองข้อมูลสินค้า
-  const products = Array.from({ length: 12 }, (_, i) => ({
-    id: i + 1,
-    name: 'ชื่อสินค้า',
-    desc: 'รายละเอียดสินค้า',
-    price: 'XXXX',
-    rent: 'xxx',
-    rating: '4.9'
-  }));
+  const { styleName } = useParams();
+  const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`http://localhost:3001/api/product?style=${styleName}`);
+        if (response.data.success) {
+          setProducts(response.data.payload);
+        }
+      } catch (error) {
+        console.error('Error fetching products by style:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (styleName) {
+      fetchProducts();
+    }
+  }, [styleName]);
+
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
+  };
 
   return (
     <div className="page-container">
       {/* Header: ปุ่มย้อนกลับ + Search Bar */}
       <header className="top-header">
         <div className="header-inner">
-          <button className="btn-back">
+          <button className="btn-back" onClick={() => navigate(-1)}>
             <FiChevronLeft />
           </button>
           <div className="search-box-wrapper">
             <FiSearch className="search-icon" />
             <input 
               type="text" 
-              placeholder="สไตล์ที่เลือก..." 
+              placeholder={`สไตล์ ${styleName}...`}
               className="search-input" 
-              defaultValue="สไตล์ที่เลือก..." // จำลองว่ามีการเลือกค่ามาแล้ว
+              defaultValue={styleName} 
             />
           </div>
         </div>
@@ -35,37 +56,45 @@ function SelectedStylePage() {
 
       {/* Main Content: Product Grid */}
       <main className="main-content">
-        <div className="product-grid">
-          {products.map((item) => (
-            <div key={item.id} className="product-card">
-              <div className="card-image">
-                {/* พื้นที่สำหรับใส่รูปภาพ (Image Placeholder) */}
-                <div className="img-placeholder-content"></div>
-              </div>
-              
-              <div className="card-details">
-                <h3 className="product-name">{item.name}</h3>
-                <p className="product-desc">{item.desc}</p>
-                
-                <div className="price-row">
-                  <span className="price-text">฿ {item.price}</span>
-                  <div className="rating-badge">
-                    <span>★ {item.rating}</span>
+        {loading ? (
+             <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading...</div>
+        ) : products.length > 0 ? (
+            <div className="selected-style-product-grid">
+              {products.map((item) => (
+                <div key={item._id} className="product-card" onClick={() => handleProductClick(item._id)} style={{ cursor: 'pointer' }}>
+                  <div className="card-image">
+                    {item.productphoto ? (
+                        <img src={item.productphoto} alt={item.productname} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                        <div className="img-placeholder-content"></div>
+                    )}
+                  </div>
+                  
+                  <div className="card-details">
+                    <h3 className="product-name">{item.productname}</h3>
+                    <p className="product-desc">{item.productdetail}</p>
+                    
+                    <div className="price-row">
+                      <span className="price-text">฿ {item.productPrice?.toLocaleString()}</span>
+                    </div>
+                    
+                     {item.productAllowedToRent && (
+                        <p className="rent-text">เช่า: {Math.round(item.productPrice * 0.1)}/วัน</p>
+                     )}
                   </div>
                 </div>
-                
-                <p className="rent-text">เช่า: {item.rent}/วัน</p>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
+        ) : (
+             <div style={{ textAlign: 'center', marginTop: '50px', color: '#666' }}>ไม่พบสินค้าในสไตล์ {styleName}</div>
+        )}
       </main>
 
       {/* Bottom Navigation */}
       <footer className="bottom-nav">
-        <div className="nav-item"><FiHome /></div>
+        <div className="nav-item" onClick={() => navigate('/home')}><FiHome /></div>
         <div className="nav-item active"><FiSearch /></div>
-        <div className="nav-item"><FiUser /></div>
+        <div className="nav-item" onClick={() => navigate('/profile')}><FiUser /></div>
       </footer>
     </div>
   );

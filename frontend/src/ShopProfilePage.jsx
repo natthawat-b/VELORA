@@ -3,10 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './assets/ShopProfilePage.css';
 import { FiChevronLeft, FiMessageCircle, FiShoppingCart, FiSearch, FiUser, FiMoreHorizontal } from 'react-icons/fi';
 import { FaStar, FaCircle } from 'react-icons/fa';
+import { useCart } from './context/CartContext';
 
 function ShopProfilePage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { cartCount } = useCart();
 
   // Log shop ID for debugging (จะใช้ fetch ข้อมูลจาก API ในอนาคต)
   console.log('Shop ID:', id);
@@ -43,7 +45,24 @@ function ShopProfilePage() {
         </div>
         <h1 className="brand-logo">VELORA</h1>
         <div className="nav-right">
-          <FiShoppingCart className="nav-icon" />
+          <div style={{ position: 'relative', display: 'inline-block', cursor: 'pointer' }} onClick={() => navigate('/cart')}>
+            <FiShoppingCart className="nav-icon" />
+            {cartCount > 0 && <span className="cart-badge" style={{
+                position: 'absolute',
+                top: '-8px',
+                right: '-8px',
+                background: 'red',
+                color: 'white',
+                fontSize: '10px',
+                width: '16px',
+                height: '16px',
+                borderRadius: '50%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontWeight: 'bold'
+              }}>{cartCount}</span>}
+          </div>
           <FiUser className="nav-icon" />
         </div>
       </header>
@@ -102,7 +121,7 @@ function ShopProfilePage() {
         <section className="shop-products-section">
           <h3 className="section-title">รายการสินค้า</h3>
           
-          <div className="product-grid">
+          <div className="shop-profile-product-grid">
             {products.map((item) => (
               <div key={item.id} className="product-card">
                 <div className="card-image">

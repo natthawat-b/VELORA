@@ -16,28 +16,7 @@ function OrderListPage() {
   ];
 
   // ข้อมูลจำลอง (Mock Data) - ลองลบข้อมูลออกให้เหลือ [] เพื่อดูหน้า Empty State ได้ครับ
-  const orders = [
-    {
-      id: 'ORD-001',
-      shop: 'Velora Official',
-      status: 'receive',
-      statusText: 'พัสดุถึงศูนย์คัดแยกสินค้า',
-      items: [
-        { name: 'เสื้อยืด Vintage Cotton', variant: 'Size L', price: 450, qty: 1, image: '' }
-      ],
-      total: 500
-    },
-    {
-      id: 'ORD-002',
-      shop: 'Indie Style Shop',
-      status: 'completed',
-      statusText: 'จัดส่งสำเร็จแล้ว',
-      items: [
-        { name: 'กางเกงยีนส์ขากระบอก', variant: 'Size 32', price: 1200, qty: 1, image: '' }
-      ],
-      total: 1250
-    }
-  ];
+  const orders = [];
 
   // กรองข้อมูลตาม Tab ที่เลือก
   const filteredOrders = orders.filter(order => order.status === activeTab);

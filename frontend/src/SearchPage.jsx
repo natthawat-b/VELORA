@@ -53,8 +53,16 @@ const SearchPage = () => {
         <button onClick={() => navigate(-1)} className="back-button">
           <FiArrowLeft />
         </button>
-        <div className="search-bar-wrapper">
-          <FiSearch className="search-icon" />
+        <form 
+          className="search-bar-wrapper" 
+          onSubmit={(e) => {
+            e.preventDefault();
+            performSearch();
+          }}
+        >
+          <button type="submit" style={{background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center'}}>
+            <FiSearch className="search-icon" />
+          </button>
           <input
             type="text"
             placeholder="ค้นหาสินค้า..."
@@ -62,7 +70,7 @@ const SearchPage = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             autoFocus
           />
-        </div>
+        </form>
         <div className="cart-wrapper" onClick={() => navigate('/cart')}>
             <FiShoppingCart className="icon-cart" />
             {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}

@@ -1,8 +1,10 @@
 import React from 'react';
-import './StylesPage.css';
+import { useNavigate } from 'react-router-dom';
+import './assets/StylesPage.css';
 import { FiChevronLeft, FiSearch } from 'react-icons/fi';
 
 function StylesPage() {
+  const navigate = useNavigate();
   const styles = [
     { name: 'Streetwear', img: '🧥' },
     { name: 'Minimalist', img: '🌿' },
@@ -24,7 +26,7 @@ function StylesPage() {
       {/* Header เต็มความกว้าง */}
       <header className="styles-header">
         <div className="header-content">
-          <button className="back-btn">
+          <button className="back-btn" onClick={() => navigate(-1)}>
             <FiChevronLeft />
           </button>
           <div className="search-wrapper">
@@ -44,7 +46,7 @@ function StylesPage() {
         
         <div className="styles-grid">
           {styles.map((style, index) => (
-            <div key={index} className="style-card">
+            <div key={index} className="style-card" onClick={() => navigate(`/style/${style.name}`)} style={{ cursor: 'pointer' }}>
               <div className="style-image-box">
                 {/* ใช้ Emoji แทนรูปภาพชั่วคราว ใส่ <img> จริงได้ที่นี่ */}
                 <span className="placeholder-icon">{style.img}</span>

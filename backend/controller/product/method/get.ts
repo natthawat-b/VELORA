@@ -12,6 +12,11 @@ export default async function get(req: Request, res: Response) {
             filter.shopId = req.query.shopId;
         }
 
+        // Filter by style if provided
+        if (req.query.style) {
+            filter.productstyle = req.query.style;
+        }
+
         const products = await Product.find(filter);
         return successRes(products);
     } catch (error) {

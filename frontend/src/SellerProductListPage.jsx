@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/SellerProductListPage.css';
@@ -16,7 +16,7 @@ function SellerProductListPage() {
   // Fetch products on mount
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   // Handle delete product
   const handleDelete = async (productId, productName) => {
@@ -46,7 +46,7 @@ function SellerProductListPage() {
     navigate(`/edit-product/${productId}`);
   };
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       
@@ -72,7 +72,7 @@ function SellerProductListPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [API_URL]);
 
   return (
     <div className="seller-page-container">

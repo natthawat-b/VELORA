@@ -14,14 +14,14 @@ body {
   color: var(--text-dark);
 }
 
-.shop-owner-container {
+.user-profile-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 /* --- Navbar --- */
-.shop-owner-container .navbar {
+.user-profile-container .navbar {
   background: var(--white);
   padding: 15px 40px;
   position: sticky;
@@ -32,7 +32,7 @@ body {
   justify-content: center;
 }
 
-.shop-owner-container .nav-content {
+.user-profile-container .nav-content {
   width: 100%;
   max-width: 1200px;
   display: flex;
@@ -40,7 +40,7 @@ body {
   align-items: center;
 }
 
-.shop-owner-container .brand-logo {
+.user-profile-container .brand-logo {
   font-size: 32px;
   letter-spacing: 1px;
   margin: 0;
@@ -48,38 +48,38 @@ body {
   font-weight: bold;
 }
 
-.shop-owner-container .nav-icons {
+.user-profile-container .nav-icons {
   display: flex;
   gap: 25px;
 }
 
-.shop-owner-container .nav-icon {
+.user-profile-container .nav-icon {
   font-size: 24px;
   cursor: pointer;
   color: #333;
   transition: transform 0.2s;
 }
 
-.shop-owner-container .nav-icon:hover { transform: scale(1.1); }
+.user-profile-container .nav-icon:hover { transform: scale(1.1); }
 
 /* --- Main Content --- */
-.shop-owner-container .main-content {
+.user-profile-container .main-content {
   flex: 1;
   padding: 40px 20px;
   display: flex;
   justify-content: center;
 }
 
-.shop-owner-container .content-wrapper {
+.user-profile-container .content-wrapper {
   width: 100%;
-  max-width: 700px; /* จำกัดความกว้างให้อยู่ตรงกลางสวยๆ */
+  max-width: 700px;
   display: flex;
   flex-direction: column;
   gap: 25px;
 }
 
 /* --- 1. Profile Card --- */
-.shop-owner-container .profile-card {
+.user-profile-container .profile-card {
   background: var(--white);
   border-radius: 20px;
   padding: 40px;
@@ -90,12 +90,12 @@ body {
   text-align: center;
 }
 
-.shop-owner-container .profile-image-section {
+.user-profile-container .profile-image-section {
   position: relative;
   margin-bottom: 20px;
 }
 
-.shop-owner-container .profile-img-placeholder {
+.user-profile-container .profile-img-placeholder {
   width: 150px;
   height: 150px;
   border-radius: 50%;
@@ -106,8 +106,15 @@ body {
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
+.user-profile-container .profile-uploaded-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 /* CSS Art: Mountain & Cloud */
-.shop-owner-container .art-cloud {
+.user-profile-container .art-cloud {
   width: 60px;
   height: 20px;
   background: white;
@@ -117,18 +124,18 @@ body {
   left: 50%;
   transform: translateX(-50%);
 }
-.shop-owner-container .art-cloud::after {
+.user-profile-container .art-cloud::after {
   content: ''; position: absolute; width: 25px; height: 25px;
   background: white; border-radius: 50%; top: -15px; left: 10px;
 }
-.shop-owner-container .art-mountain {
+.user-profile-container .art-mountain {
   width: 120%; height: 40%;
   background: #7cb342;
   position: absolute; bottom: 0; left: -10%;
   border-radius: 100% 100% 0 0;
 }
 
-.shop-owner-container .btn-edit-img {
+.user-profile-container .btn-edit-img {
   position: absolute;
   bottom: 5px;
   left: 50%;
@@ -138,7 +145,7 @@ body {
   cursor: pointer;
 }
 
-.shop-owner-container .edit-text {
+.user-profile-container .edit-text {
   font-size: 12px;
   color: #888;
   text-decoration: underline;
@@ -147,7 +154,7 @@ body {
   border-radius: 10px;
 }
 
-.shop-owner-container .profile-info-section {
+.user-profile-container .profile-info-section {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -155,35 +162,25 @@ body {
   gap: 15px;
 }
 
-.shop-owner-container .name-row {
+.user-profile-container .name-row {
   display: flex;
   align-items: center;
   gap: 10px;
   justify-content: center;
 }
 
-.shop-owner-container .shop-account-name {
+.user-profile-container .shop-account-name {
   font-size: 28px;
   margin: 0;
   font-weight: 800;
 }
 
-.shop-owner-container .btn-edit-text {
-  background: none;
-  border: none;
-  color: #999;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  text-decoration: underline;
-}
+/* removed name editing styles */
 
-.shop-owner-container .btn-my-products {
-  background-color: #000; /* สีดำตามภาพ */
-  color: #d4af37; /* ไอคอนสีทอง */
-  border: none;
+.user-profile-container .btn-my-products {
+  background-color: var(--white);
+  color: var(--text-dark);
+  border: 1px solid #ddd;
   padding: 12px 30px;
   border-radius: 30px;
   font-size: 16px;
@@ -192,38 +189,36 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   transition: transform 0.2s;
 }
 
-.shop-owner-container .btn-my-products:hover {
+.user-profile-container .btn-my-products:hover {
   transform: translateY(-2px);
-  background-color: #333;
+  background-color: #f9f9f9;
 }
 
-.shop-owner-container .btn-icon { font-size: 18px; }
-
 /* --- 2. Status Dashboard --- */
-.shop-owner-container .status-dashboard {
+.user-profile-container .status-dashboard {
   background: var(--white);
   border-radius: 20px;
   padding: 30px 40px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.03);
 }
 
-.shop-owner-container .section-title {
+.user-profile-container .section-title {
   font-size: 18px;
   margin-bottom: 25px;
   font-weight: 600;
 }
 
-.shop-owner-container .status-grid {
+.user-profile-container .status-grid {
   display: flex;
   justify-content: space-around;
   align-items: center;
 }
 
-.shop-owner-container .status-item {
+.user-profile-container .status-item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -233,7 +228,7 @@ body {
   text-align: center;
 }
 
-.shop-owner-container .status-icon-box {
+.user-profile-container .status-icon-box {
   width: 65px;
   height: 65px;
   background-color: #eee;
@@ -244,32 +239,33 @@ body {
   font-size: 28px;
   color: #555;
   transition: 0.2s;
+  border: 1px solid #e0e0e0;
 }
 
-.shop-owner-container .status-icon-box.completed {
-  background-color: #000; /* สีดำทองตามภาพ */
+.user-profile-container .status-icon-box.completed {
+  background-color: #000;
   color: var(--gold-primary);
   border: 1px solid var(--gold-primary);
 }
 
-.shop-owner-container .status-item p {
+.user-profile-container .status-item p {
   margin: 0;
   font-size: 14px;
   color: #333;
 }
 
-.shop-owner-container .status-item:hover .status-icon-box {
+.user-profile-container .status-item:hover .status-icon-box {
   transform: translateY(-5px);
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 /* --- 3. Logout --- */
-.shop-owner-container .logout-section {
+.user-profile-container .logout-section {
   margin-top: 10px;
   margin-bottom: 80px;
 }
 
-.shop-owner-container .btn-logout {
+.user-profile-container .btn-logout {
   width: 100%;
   background: var(--white);
   color: var(--red-logout);
@@ -284,13 +280,13 @@ body {
   letter-spacing: 1px;
 }
 
-.shop-owner-container .btn-logout:hover {
+.user-profile-container .btn-logout:hover {
   background: #fff5f5;
   transform: translateY(-2px);
 }
 
 /* --- Bottom Nav --- */
-.shop-owner-container .bottom-nav {
+.user-profile-container .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -298,23 +294,117 @@ body {
   background: var(--white);
   display: flex;
   justify-content: space-around;
-  padding: 20px 0;
-  box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-  z-index: 100;
+  padding: 15px 0;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+  z-index: 1000;
 }
 
-.shop-owner-container .nav-item {
+.user-profile-container .nav-item {
   font-size: 28px;
   color: #ccc;
   cursor: pointer;
   transition: 0.2s;
 }
 
-.shop-owner-container .nav-item.active {
-  color: var(--text-dark);
+.user-profile-container .nav-icon {
+  font-size: 26px;
+  color: #888;
+  cursor: pointer;
 }
 
-.shop-owner-container .nav-item:hover {
+.user-profile-container .nav-icon.active {
   color: var(--text-dark);
-  transform: scale(1.1);
+}
+/* Edit Menu Modal */
+.user-profile-container .edit-menu-modal {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  animation: slideUp 0.3s;
+}
+
+.user-profile-container .edit-menu-modal h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.user-profile-container .edit-menu-modal button {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.2s;
+  color: #333;
+}
+
+.user-profile-container .edit-menu-modal button:hover {
+  background: #f5f5f5;
+  border-color: #ccc;
+}
+
+.user-profile-container .edit-menu-modal .btn-menu-cancel {
+  border: none;
+  background: #f5f5f5;
+  color: #666;
+  margin-top: 5px;
+}
+
+/* Name Editing */
+.user-profile-container .edit-name-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.user-profile-container .name-edit-input {
+  font-size: 24px;
+  font-weight: 700;
+  border: none;
+  border-bottom: 2px solid var(--gold-primary);
+  text-align: center;
+  width: 100%;
+  max-width: 250px;
+  padding: 5px;
+  font-family: 'Kanit', sans-serif;
+  background: transparent;
+}
+
+.user-profile-container .name-edit-input:focus {
+  outline: none;
+}
+
+.user-profile-container .name-edit-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.user-profile-container .btn-save-name {
+  background: var(--gold-primary);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.user-profile-container .btn-cancel-name {
+  background: #f0f0f0;
+  color: #555;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
 }
