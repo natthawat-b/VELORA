@@ -1,0 +1,346 @@
+:root {
+  --bg-color: #f9f9f9;
+  --white: #ffffff;
+  --text-dark: #1a1a1a;
+  --text-gray: #888;
+  --border-color: #e0e0e0;
+  --input-bg: #f0f0f0;
+  --gold-primary: #d4af37;
+  --gold-hover: #b8922e;
+}
+
+body {
+  margin: 0;
+  font-family: 'Kanit', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+}
+
+.add-product-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Header --- */
+.page-header {
+  background: var(--white);
+  padding: 15px 0;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #555;
+  transition: 0.2s;
+}
+
+.btn-back:hover { color: var(--text-dark); }
+
+.header-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* --- Main Content (Grid) --- */
+.main-content {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.form-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr; /* แบ่งซ้ายขวา 1 : 1.2 */
+  gap: 50px;
+  width: 100%;
+  max-width: 1000px;
+  background: var(--white);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+  align-items: start;
+}
+
+/* --- Left Column: Image Upload --- */
+.image-upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.image-preview-box {
+  width: 100%;
+  aspect-ratio: 1 / 1; /* สี่เหลี่ยมจัตุรัส */
+  background-color: var(--input-bg);
+  border-radius: 20px;
+  border: 2px dashed #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.image-preview-box:hover {
+  background-color: #e8e8e8;
+  border-color: #aaa;
+}
+
+.upload-placeholder {
+  text-align: center;
+  color: #888;
+}
+
+.upload-icon-large {
+  font-size: 48px;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+.upload-hint {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 5px;
+  display: block;
+}
+
+.image-thumbnails {
+  display: flex;
+  gap: 15px;
+}
+
+.thumb-box {
+  width: 70px;
+  height: 70px;
+  background-color: var(--input-bg);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.thumb-box.active {
+  border: 2px solid var(--text-dark);
+  color: var(--text-dark);
+}
+
+/* --- Right Column: Form Inputs --- */
+.product-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 14px 16px;
+  background-color: var(--input-bg);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: 'Kanit', sans-serif;
+  outline: none;
+  transition: 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  background-color: var(--white);
+  border-color: var(--text-dark);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.select-wrapper select {
+  cursor: pointer;
+  color: #888;
+}
+.select-wrapper select.selected {
+  color: var(--text-dark);
+}
+
+/* Size Selection */
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-add-size-mini {
+  background: #eee;
+  border: none;
+  width: 24px; height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex; justify-content: center; align-items: center;
+  color: #555;
+}
+
+.size-selector {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.size-chip {
+  padding: 10px 20px;
+  background-color: var(--input-bg);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #888;
+  transition: 0.2s;
+  min-width: 40px;
+  text-align: center;
+}
+
+.size-chip:hover {
+  background-color: #e0e0e0;
+}
+
+.size-chip.active {
+  background-color: var(--text-dark);
+  color: var(--white);
+}
+
+.divider {
+  border-top: 1px solid #f0f0f0;
+  margin: 10px 0;
+}
+
+/* Toggle Switch (CSS-only) */
+.form-group-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--gold-primary);
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* Buttons */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn-cancel {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 12px 30px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-submit {
+  background: var(--text-dark);
+  color: white;
+  border: none;
+  padding: 12px 40px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: 0.2s;
+}
+
+.btn-submit:hover {
+  background: #333;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .form-wrapper {
+    grid-template-columns: 1fr; /* ยุบเหลือคอลัมน์เดียวบนจอมือถือ/แท็บเล็ต */
+  }
+}

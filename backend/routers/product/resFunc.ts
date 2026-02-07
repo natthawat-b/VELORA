@@ -27,9 +27,15 @@ async function searchproduct(req: Request<{}, {}, IProduct>, res: Response) {
     return res.status(data.code).json(data);
 }
 
+async function getproduct(req: Request, res: Response) {
+    const data = await controller.get(req, res);
+    return data;
+}
+
 export default {
     addproduct,
     deleteproduct,
     editproduct,
     searchproduct,
+    getproduct,
 }

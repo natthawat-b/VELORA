@@ -29,13 +29,13 @@ function App() {
         alert('เข้าสู่ระบบสำเร็จ!');
         // TODO: เก็บข้อมูล user ไว้ใน localStorage หรือ context
         // localStorage.setItem('user', JSON.stringify(response.data.data));
-        // navigate('/home'); // นำทางไปหน้าหลัก
+        navigate('/home'); // นำทางไปหน้าหลัก
       }
     } catch (err) {
       // จัดการ error
       console.error('Login error:', err);
       if (err.response) {
-        setError(err.response.data.message || 'เกิดข้อผิดพลาด');
+        setError(err.response.data.error?.message || err.response.data.message || 'เกิดข้อผิดพลาด');
       } else if (err.request) {
         setError('ไม่สามารถเชื่อมต่อ server ได้ - กรุณาตรวจสอบว่า backend รันอยู่');
       } else {
