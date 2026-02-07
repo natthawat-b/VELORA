@@ -22,7 +22,7 @@ async function editproduct(req: Request<IdParams, {}, IProduct>, res: Response) 
     return res.status(data.code).json(data);
 }
 
-async function searchproduct(req: Request<{}, {}, IProduct>, res: Response) {
+async function searchproduct(req: Request, res: Response) {
     const data = await controller.searchproduct(req.body);
     return res.status(data.code).json(data);
 }

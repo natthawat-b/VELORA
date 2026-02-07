@@ -4,8 +4,10 @@ import resFunc from "./resFunc";
 const routers = express.Router();
 
 routers.post("/add", resFunc.addproduct);
+routers.post("/search", resFunc.searchproduct); // Add search route
 routers.get("/", resFunc.getproduct);
-routers.get("/:id", resFunc.getProductById);
-routers.post("/search", resFunc.searchproduct);
+routers.get("/:id", resFunc.getProductById); // Get single product by ID
+routers.delete("/:id", resFunc.deleteproduct);
+routers.put("/:id", resFunc.editproduct);
 
 export default routers;  

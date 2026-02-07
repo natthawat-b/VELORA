@@ -2,11 +2,14 @@ import { successRes, errRes } from "../../main";
 import Product from "../../../model/product";
 import { IProduct } from "../../../types/product";
 
-export default async function searchproduct(data: IProduct) {
+export default async function searchproduct(data: any) {
     try {
         console.log("Search request received:", data);
         const searchProduct = await Product.find({ 
-            productname: { $regex: data.productname, $options: 'i' } 
+            $or: [
+                { productname: { $regex: data.productname, $options: 'i' } },
+                { productstyle: { $regex: data.productname, $options: 'i' } }
+            ]
         });
         console.log("Search results:", searchProduct);
         return successRes(searchProduct);

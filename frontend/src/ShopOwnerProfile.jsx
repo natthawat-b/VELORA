@@ -1,8 +1,16 @@
 import React from 'react';
-import './ShopOwnerProfile.css';
-import { FiShoppingCart, FiMessageSquare, FiBox, FiTruck, FiCheckCircle, FiHome, FiSearch, FiUser, FiEdit2, FiCamera, FiShoppingBag } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import './assets/ShopOwnerProfile.css';
+import { FiShoppingCart, FiMessageSquare, FiBox, FiTruck, FiCheckCircle, FiHome, FiSearch, FiUser, FiEdit2, FiCamera, FiShoppingBag, FiLogOut } from 'react-icons/fi';
 
 function ShopOwnerProfile() {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('userData');
+    localStorage.removeItem('userType');
+    navigate('/');
+  };
+
   return (
     <div className="shop-owner-container">
       {/* --- Navbar --- */}
@@ -12,6 +20,7 @@ function ShopOwnerProfile() {
           <div className="nav-icons">
             <FiShoppingCart className="nav-icon" />
             <FiMessageSquare className="nav-icon" />
+            <FiLogOut className="nav-icon" onClick={handleLogout} style={{ color: '#d32f2f', cursor: 'pointer' }} title="ออกจากระบบ" />
           </div>
         </div>
       </header>
@@ -39,7 +48,7 @@ function ShopOwnerProfile() {
                 <button className="btn-edit-text"><FiEdit2 /> แก้ไข</button>
               </div>
               
-              <button className="btn-my-products">
+              <button className="btn-my-products" onClick={() => navigate('/seller-products')}>
                 <FiShoppingBag className="btn-icon" /> สินค้าของฉัน
               </button>
             </div>
@@ -74,16 +83,14 @@ function ShopOwnerProfile() {
 
           {/* ส่วนที่ 3: ปุ่ม Logout */}
           <div className="logout-section">
-            <button className="btn-logout">LOG OUT</button>
+            <button className="btn-logout" onClick={handleLogout}>LOG OUT</button>
           </div>
           
         </div>
       </main>
 
-      {/* Bottom Nav (Optional for Desktop, but kept for consistency) */}
+      {/* Bottom Nav - Only Profile Button */}
       <footer className="bottom-nav">
-        <div className="nav-item"><FiHome /></div>
-        <div className="nav-item"><FiSearch /></div>
         <div className="nav-item active"><FiUser /></div>
       </footer>
     </div>

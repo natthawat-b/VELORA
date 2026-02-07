@@ -13,7 +13,16 @@ export default async function login(req: Request, res: Response) {
         if (shop.shopPassword !== shopPassword) {
             return res.status(401).json(errRes.BAD_REQUEST({ message: "Invalid password" }));
         }
-        return res.status(200).json(successRes({ message: "Login successful" }));
+        
+        // Return shop data with userType for role-based navigation
+        const shopData = {
+            _id: shop._id,
+            shopname: shop.shopname,
+            shopEmail: shop.shopEmail,
+            userType: 'shop'
+        };
+        
+        return res.status(200).json(successRes(shopData));
     } catch (error) {
         console.error("Login error", error);
         return res.status(500).json(errRes.INTERNAL_SERVER_ERROR({ message: "Internal server error" }));

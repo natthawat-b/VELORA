@@ -21,7 +21,7 @@ body {
 }
 
 /* --- Navbar --- */
-.navbar {
+.shop-owner-container .navbar {
   background: var(--white);
   padding: 15px 40px;
   position: sticky;
@@ -32,7 +32,7 @@ body {
   justify-content: center;
 }
 
-.nav-content {
+.shop-owner-container .nav-content {
   width: 100%;
   max-width: 1200px;
   display: flex;
@@ -40,7 +40,7 @@ body {
   align-items: center;
 }
 
-.brand-logo {
+.shop-owner-container .brand-logo {
   font-size: 32px;
   letter-spacing: 1px;
   margin: 0;
@@ -48,29 +48,29 @@ body {
   font-weight: bold;
 }
 
-.nav-icons {
+.shop-owner-container .nav-icons {
   display: flex;
   gap: 25px;
 }
 
-.nav-icon {
+.shop-owner-container .nav-icon {
   font-size: 24px;
   cursor: pointer;
   color: #333;
   transition: transform 0.2s;
 }
 
-.nav-icon:hover { transform: scale(1.1); }
+.shop-owner-container .nav-icon:hover { transform: scale(1.1); }
 
 /* --- Main Content --- */
-.main-content {
+.shop-owner-container .main-content {
   flex: 1;
   padding: 40px 20px;
   display: flex;
   justify-content: center;
 }
 
-.content-wrapper {
+.shop-owner-container .content-wrapper {
   width: 100%;
   max-width: 700px; /* จำกัดความกว้างให้อยู่ตรงกลางสวยๆ */
   display: flex;
@@ -79,7 +79,7 @@ body {
 }
 
 /* --- 1. Profile Card --- */
-.profile-card {
+.shop-owner-container .profile-card {
   background: var(--white);
   border-radius: 20px;
   padding: 40px;
@@ -90,12 +90,12 @@ body {
   text-align: center;
 }
 
-.profile-image-section {
+.shop-owner-container .profile-image-section {
   position: relative;
   margin-bottom: 20px;
 }
 
-.profile-img-placeholder {
+.shop-owner-container .profile-img-placeholder {
   width: 150px;
   height: 150px;
   border-radius: 50%;
@@ -107,7 +107,7 @@ body {
 }
 
 /* CSS Art: Mountain & Cloud */
-.art-cloud {
+.shop-owner-container .art-cloud {
   width: 60px;
   height: 20px;
   background: white;
@@ -117,18 +117,18 @@ body {
   left: 50%;
   transform: translateX(-50%);
 }
-.art-cloud::after {
+.shop-owner-container .art-cloud::after {
   content: ''; position: absolute; width: 25px; height: 25px;
   background: white; border-radius: 50%; top: -15px; left: 10px;
 }
-.art-mountain {
+.shop-owner-container .art-mountain {
   width: 120%; height: 40%;
   background: #7cb342;
   position: absolute; bottom: 0; left: -10%;
   border-radius: 100% 100% 0 0;
 }
 
-.btn-edit-img {
+.shop-owner-container .btn-edit-img {
   position: absolute;
   bottom: 5px;
   left: 50%;
@@ -138,7 +138,7 @@ body {
   cursor: pointer;
 }
 
-.edit-text {
+.shop-owner-container .edit-text {
   font-size: 12px;
   color: #888;
   text-decoration: underline;
@@ -147,7 +147,7 @@ body {
   border-radius: 10px;
 }
 
-.profile-info-section {
+.shop-owner-container .profile-info-section {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -155,20 +155,20 @@ body {
   gap: 15px;
 }
 
-.name-row {
+.shop-owner-container .name-row {
   display: flex;
   align-items: center;
   gap: 10px;
   justify-content: center;
 }
 
-.shop-account-name {
+.shop-owner-container .shop-account-name {
   font-size: 28px;
   margin: 0;
   font-weight: 800;
 }
 
-.btn-edit-text {
+.shop-owner-container .btn-edit-text {
   background: none;
   border: none;
   color: #999;
@@ -180,7 +180,7 @@ body {
   text-decoration: underline;
 }
 
-.btn-my-products {
+.shop-owner-container .btn-my-products {
   background-color: #000; /* สีดำตามภาพ */
   color: #d4af37; /* ไอคอนสีทอง */
   border: none;
@@ -196,34 +196,34 @@ body {
   transition: transform 0.2s;
 }
 
-.btn-my-products:hover {
+.shop-owner-container .btn-my-products:hover {
   transform: translateY(-2px);
   background-color: #333;
 }
 
-.btn-icon { font-size: 18px; }
+.shop-owner-container .btn-icon { font-size: 18px; }
 
 /* --- 2. Status Dashboard --- */
-.status-dashboard {
+.shop-owner-container .status-dashboard {
   background: var(--white);
   border-radius: 20px;
   padding: 30px 40px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.03);
 }
 
-.section-title {
+.shop-owner-container .section-title {
   font-size: 18px;
   margin-bottom: 25px;
   font-weight: 600;
 }
 
-.status-grid {
+.shop-owner-container .status-grid {
   display: flex;
   justify-content: space-around;
   align-items: center;
 }
 
-.status-item {
+.shop-owner-container .status-item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -233,7 +233,7 @@ body {
   text-align: center;
 }
 
-.status-icon-box {
+.shop-owner-container .status-icon-box {
   width: 65px;
   height: 65px;
   background-color: #eee;
@@ -246,30 +246,30 @@ body {
   transition: 0.2s;
 }
 
-.status-icon-box.completed {
+.shop-owner-container .status-icon-box.completed {
   background-color: #000; /* สีดำทองตามภาพ */
   color: var(--gold-primary);
   border: 1px solid var(--gold-primary);
 }
 
-.status-item p {
+.shop-owner-container .status-item p {
   margin: 0;
   font-size: 14px;
   color: #333;
 }
 
-.status-item:hover .status-icon-box {
+.shop-owner-container .status-item:hover .status-icon-box {
   transform: translateY(-5px);
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 /* --- 3. Logout --- */
-.logout-section {
+.shop-owner-container .logout-section {
   margin-top: 10px;
   margin-bottom: 80px;
 }
 
-.btn-logout {
+.shop-owner-container .btn-logout {
   width: 100%;
   background: var(--white);
   color: var(--red-logout);
@@ -284,13 +284,13 @@ body {
   letter-spacing: 1px;
 }
 
-.btn-logout:hover {
+.shop-owner-container .btn-logout:hover {
   background: #fff5f5;
   transform: translateY(-2px);
 }
 
 /* --- Bottom Nav --- */
-.bottom-nav {
+.shop-owner-container .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -304,18 +304,18 @@ body {
   z-index: 100;
 }
 
-.nav-item {
+.shop-owner-container .nav-item {
   font-size: 28px;
   color: #ccc;
   cursor: pointer;
   transition: 0.2s;
 }
 
-.nav-item.active {
+.shop-owner-container .nav-item.active {
   color: var(--text-dark);
 }
 
-.nav-item:hover {
+.shop-owner-container .nav-item:hover {
   color: var(--text-dark);
   transform: scale(1.1);
 }

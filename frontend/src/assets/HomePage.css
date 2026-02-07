@@ -18,7 +18,7 @@ body {
 }
 
 /* --- Navbar (Header) --- */
-.navbar {
+.home-container .navbar {
   background: white;
   padding: 15px 40px; /* เพิ่ม padding ด้านข้าง */
   position: sticky;
@@ -30,7 +30,7 @@ body {
   min-height: 60px;
 }
 
-.nav-content {
+.home-container .nav-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -38,7 +38,7 @@ body {
   /* ลบ max-width: 1200px ออก */
 }
 
-.brand-logo {
+.home-container .brand-logo {
   font-size: 32px;
   letter-spacing: 2px;
   margin: 0;
@@ -46,31 +46,31 @@ body {
   font-weight: 800;
 }
 
-.nav-icons {
+.home-container .nav-icons {
   display: flex;
   gap: 20px;
   align-items: center; /* จัดแนวแกนตั้งให้ตรงกัน */
 }
 
-.icon-cart, .icon-logout {
+.home-container .icon-cart, .home-container .icon-logout {
   font-size: 24px;
   cursor: pointer;
   color: #333;
   transition: color 0.2s;
 }
 
-.icon-cart:hover, .icon-logout:hover {
+.home-container .icon-cart:hover, .home-container .icon-logout:hover {
   color: #b8922e; /* สีทองเมื่อ hover */
 }
 
-.cart-wrapper {
+.home-container .cart-wrapper {
   position: relative;
   display: flex;
   align-items: center;
   cursor: pointer;
 }
 
-.cart-badge {
+.home-container .cart-badge {
   position: absolute;
   top: -8px;
   right: -10px;
@@ -85,16 +85,18 @@ body {
 }
 
 /* --- Main Content --- */
-.main-content {
+.home-container .main-content {
   flex: 1;
   width: 100%; /* เต็มจอ */
   padding: 30px 40px; /* เว้นขอบซ้ายขวา 40px ไม่ให้ติดขอบเกินไป */
   box-sizing: border-box;
   /* ลบ max-width ออกเพื่อให้เนื้อหาขยายเต็มที่ */
+  display: flex;
+  flex-direction: column;
 }
 
 /* --- Trending Banner --- */
-.trending-banner {
+.home-container .trending-banner {
   background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
   border-radius: 20px;
   display: flex;
@@ -102,9 +104,11 @@ body {
   margin-bottom: 40px;
   height: 350px; /* เพิ่มความสูงให้ดูอลังการขึ้นบนจอคอม */
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  width: 100%;
+  flex-shrink: 0;
 }
 
-.banner-text {
+.home-container .banner-text {
   flex: 1;
   padding: 50px;
   display: flex;
@@ -112,13 +116,13 @@ body {
   justify-content: center;
 }
 
-.banner-text h2 {
+.home-container .banner-text h2 {
   font-size: 48px; /* ขยายตัวหนังสือ */
   margin-bottom: 25px;
   color: #1a1a1a;
 }
 
-.price-tag {
+.home-container .price-tag {
   background: white;
   padding: 12px 30px;
   border-radius: 50px;
@@ -131,14 +135,14 @@ body {
   align-items: center;
 }
 
-.price-tag small {
+.home-container .price-tag small {
   font-size: 16px;
   color: #666;
   font-weight: normal;
   margin-left: 15px;
 }
 
-.banner-image {
+.home-container .banner-image {
   flex: 1.5; /* ให้พื้นที่รูปภาพเยอะกว่าข้อความเล็กน้อย */
   position: relative;
   display: flex;
@@ -146,7 +150,7 @@ body {
   align-items: flex-end;
 }
 
-.placeholder-img {
+.home-container .placeholder-img {
   width: 80%;
   height: 90%;
   background: #c4c4c4;
@@ -155,7 +159,7 @@ body {
 }
 
 /* --- Product Grid (หัวใจสำคัญของการเต็มจอ) --- */
-.product-grid {
+.home-container .product-grid {
   display: grid;
   /* ปรับ minmax ให้ใหญ่ขึ้นนิดหน่อยเพื่อความสวยงามบนจอใหญ่ */
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
@@ -163,7 +167,7 @@ body {
   margin-bottom: 80px; /* เว้นที่ให้ Bottom Nav */
 }
 
-.product-card {
+.home-container .product-card {
   background: white;
   border-radius: 20px;
   overflow: hidden;
@@ -172,12 +176,12 @@ body {
   border: 1px solid #f0f0f0;
 }
 
-.product-card:hover {
+.home-container .product-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 10px 20px rgba(0,0,0,0.08);
 }
 
-.product-img-holder {
+.home-container .product-img-holder {
   height: 280px; /* รูปสูงขึ้น */
   background-color: #c4e4f5;
   width: 100%;
@@ -185,18 +189,18 @@ body {
   position: relative;
 }
 
-.product-img {
+.home-container .product-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
 }
 
-.product-info {
+.home-container .product-info {
   padding: 20px;
 }
 
-.p-category {
+.home-container .p-category {
   color: var(--gold-text);
   font-size: 14px;
   margin: 0;
@@ -204,33 +208,33 @@ body {
   font-weight: 600;
 }
 
-.p-title {
+.home-container .p-title {
   margin: 8px 0;
   font-size: 20px;
   color: #333;
 }
 
-.p-footer {
+.home-container .p-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 15px;
 }
 
-.p-price {
+.home-container .p-price {
   font-weight: bold;
   font-size: 22px;
   color: #1a1a1a;
 }
 
-.p-rent {
+.home-container .p-rent {
   margin-top: 5px;
   font-size: 14px;
   color: #888;
 }
 
 /* --- Bottom Nav (แถบล่าง) --- */
-.bottom-nav {
+.home-container .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -244,14 +248,14 @@ body {
   z-index: 100;
 }
 
-.nav-item {
+.home-container .nav-item {
   font-size: 28px;
   color: #ccc;
   cursor: pointer;
   transition: 0.2s;
 }
 
-.nav-item.active, .nav-item:hover {
+.home-container .nav-item.active, .home-container .nav-item:hover {
   color: #1a1a1a;
   transform: scale(1.1);
 }

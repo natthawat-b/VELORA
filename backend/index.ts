@@ -9,8 +9,8 @@ import shopRouters from "./routers/shop";
 const app = express();
 const { HOST_API_PORT } = config;
 app.use(middleware.cors);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 connectDB();
 
 app.use("/api/shop", shopRouters);
