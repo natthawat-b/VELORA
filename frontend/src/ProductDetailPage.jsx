@@ -1,10 +1,21 @@
-import React from 'react';
-import './ProductDetailPage.css';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import './assets/ProductDetailPage.css';
 import { FiChevronLeft, FiShoppingCart, FiHeart, FiMessageCircle, FiPlus } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
+import { useCart } from './context/CartContext.jsx';
 
 function ProductDetailPage() {
-  // ข้อมูลจำลอง (Mock Data)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { addToCart, cartCount } = useCart();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [addedToCart, setAddedToCart] = useState(false);
+
+  // ข้อมูลจำลอง (Mock Data) สำหรับรีวิว
   const reviews = [
     { id: 1, user: 'ชื่อบัญชีผู้ซื้อ', comment: 'เน้นแรก', rating: 5 },
     { id: 2, user: 'ชื่อบัญชีผู้ซื้อ', comment: 'เริ่ด', rating: 5 },
@@ -12,18 +23,96 @@ function ProductDetailPage() {
     { id: 4, user: 'ชื่อบัญชีผู้ซื้อ', comment: 'ใส่สบายมากค่ะ เสื้อแฟน', rating: 5 },
   ];
 
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3001/api/product/${id}`);
+        if (response.data.success) {
+          setProduct(response.data.payload);
+        } else {
+          setError('ไม่พบสินค้า');
+        }
+      } catch (err) {
+        console.error('Error fetching product:', err);
+        setError('เกิดข้อผิดพลาดในการโหลดข้อมูลสินค้า');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
+  // ใช้ mock shopId ก่อน (ในอนาคตจะใช้ product.shopId จริง)
+  const handleVisitShop = () => {
+    // TODO: เมื่อ Product มี shopId ให้ใช้ product.shopId แทน
+    navigate('/shop/demo');
+  };
+
+  // Function สำหรับกดซื้อสินค้า
+  const handleBuyNow = () => {
+    // ส่งข้อมูลสินค้าไปยังหน้า Checkout
+    navigate('/checkout', {
+      state: {
+        product: product,
+        type: 'buy',
+        price: product?.productPrice || 0
+      }
+    });
+  };
+
+  // Function สำหรับกดเช่าสินค้า
+  const handleRentNow = () => {
+    // ส่งข้อมูลสินค้าไปยังหน้า Checkout แบบเช่า
+    navigate('/checkout', {
+      state: {
+        product: product,
+        type: 'rent',
+        price: rentPrice
+      }
+    });
+  };
+
+  // Function สำหรับเพิ่มสินค้าลงตะกร้า
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product, 'buy');
+      setAddedToCart(true);
+      setTimeout(() => setAddedToCart(false), 2000);
+    }
+  };
+
+  if (loading) {
+    return <div className="loading">กำลังโหลด...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <p>{error}</p>
+        <button onClick={handleGoBack}>กลับหน้าหลัก</button>
+      </div>
+    );
+  }
+
+  const rentPrice = product?.productPrice ? Math.round(product.productPrice * 0.1) : 0;
+
   return (
     <div className="product-page-container">
       {/* --- Header --- */}
       <header className="product-header">
         <div className="header-inner">
-          <button className="btn-back">
+          <button className="btn-back" onClick={handleGoBack}>
             <FiChevronLeft />
           </button>
-          <h1 className="header-title">VELORA</h1> {/* เพิ่มโลโก้เพื่อให้ดูเต็มขึ้น */}
-          <button className="btn-cart">
+          <h1 className="header-title">VELORA</h1>
+          <button className="btn-cart" onClick={() => navigate('/cart')}>
             <FiShoppingCart />
-            <span className="cart-badge">1</span>
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </button>
         </div>
       </header>
@@ -34,9 +123,15 @@ function ProductDetailPage() {
         {/* Left Column: Product Image */}
         <div className="product-image-section">
           <div className="main-image-placeholder">
-            {/* CSS Art: Cloud & Mountain */}
-            <div className="art-cloud"></div>
-            <div className="art-mountain"></div>
+            {product?.productphoto ? (
+              <img src={product.productphoto} alt={product.productname} className="product-main-img" />
+            ) : (
+              <>
+                {/* CSS Art: Cloud & Mountain */}
+                <div className="art-cloud"></div>
+                <div className="art-mountain"></div>
+              </>
+            )}
           </div>
         </div>
 
@@ -46,16 +141,16 @@ function ProductDetailPage() {
           {/* Title & Price Part */}
           <div className="info-header">
             <div className="price-group">
-              <h2 className="buy-price">฿ X,XXX</h2>
-              <span className="rent-price">฿ X,XXX/วัน</span>
+              <h2 className="buy-price">฿ {product?.productPrice?.toLocaleString() || '0'}</h2>
+              <span className="rent-price">฿ {rentPrice?.toLocaleString()}/วัน</span>
             </div>
             <button className="btn-favorite">
               <FiHeart />
             </button>
           </div>
 
-          <h1 className="product-name">ชื่อสินค้า</h1>
-          <p className="product-description">รายละเอียดสินค้า....</p>
+          <h1 className="product-name">{product?.productname || 'ชื่อสินค้า'}</h1>
+          <p className="product-description">{product?.productdetail || 'รายละเอียดสินค้า....'}</p>
 
           <hr className="divider" />
 
@@ -65,12 +160,12 @@ function ProductDetailPage() {
               <div className="art-mountain-mini"></div>
             </div>
             <div className="seller-details">
-              <h3 className="seller-name">ชื่อร้านค้า</h3>
+              <h3 className="seller-name">{product?.shop?.name || 'ชื่อร้านค้า'}</h3>
               <div className="seller-rating">
                 <FaStar className="star-icon" /> 4.9
               </div>
             </div>
-            <button className="btn-visit-shop">ดูร้านค้า</button>
+            <button className="btn-visit-shop" onClick={handleVisitShop}>ดูร้านค้า</button>
           </div>
 
           <hr className="divider" />
@@ -105,12 +200,16 @@ function ProductDetailPage() {
             <button className="btn-action chat">
               <FiMessageCircle /> สอบถามร้าน
             </button>
-            <button className="btn-action add-cart">
-              <FiShoppingCart /> เพิ่มลงตะกร้า
+            <button className="btn-action add-cart" onClick={handleAddToCart}>
+              <FiShoppingCart /> {addedToCart ? 'เพิ่มแล้ว ✓' : 'เพิ่มลงตะกร้า'}
             </button>
-            <button className="btn-action buy-now">
+            <button className="btn-action rent" onClick={handleRentNow}>
+              <span className="rent-text">เช่า</span>
+              <span className="rent-price-btn">฿ {rentPrice?.toLocaleString()}/วัน</span>
+            </button>
+            <button className="btn-action buy-now" onClick={handleBuyNow}>
               <span className="buy-text">Buy</span>
-              <span className="buy-price-btn">฿ X,XXX</span>
+              <span className="buy-price-btn">฿ {product?.productPrice?.toLocaleString() || '0'}</span>
             </button>
           </div>
 

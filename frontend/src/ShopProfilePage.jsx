@@ -1,10 +1,15 @@
 import React from 'react';
-import './ShopProfilePage.css';
+import { useParams, useNavigate } from 'react-router-dom';
+import './assets/ShopProfilePage.css';
 import { FiChevronLeft, FiMessageCircle, FiShoppingCart, FiSearch, FiUser, FiMoreHorizontal } from 'react-icons/fi';
 import { FaStar, FaCircle } from 'react-icons/fa';
 
 function ShopProfilePage() {
-  // ข้อมูลจำลองร้านค้า
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  // Log shop ID for debugging (จะใช้ fetch ข้อมูลจาก API ในอนาคต)
+  console.log('Shop ID:', id);
   const shopInfo = {
     name: 'ชื่อร้านค้า',
     rating: 4.9,
@@ -22,16 +27,21 @@ function ShopProfilePage() {
     rent: 'xxx'
   }));
 
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="shop-page-container">
       {/* Navbar หลัก */}
+      {/* Navbar หลัก */}
       <header className="main-navbar">
         <div className="nav-left">
-          <button className="btn-back">
+          <button className="btn-back" onClick={handleGoBack}>
             <FiChevronLeft />
           </button>
-          <h1 className="brand-logo">VELORA</h1>
         </div>
+        <h1 className="brand-logo">VELORA</h1>
         <div className="nav-right">
           <FiShoppingCart className="nav-icon" />
           <FiUser className="nav-icon" />

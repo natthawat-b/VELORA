@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './assets/HomePage.css';
-import { FiShoppingCart, FiHome, FiSearch, FiUser } from 'react-icons/fi';
+import { FiShoppingCart, FiHome, FiSearch, FiUser, FiLogOut } from 'react-icons/fi';
 import axios from 'axios';
+import { useCart } from './context/CartContext.jsx';
 
 function HomePage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { cartCount } = useCart();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/product');
+        const response = await axios.get('http://localhost:3001/api/product');
         if (response.data.success) {
           setProducts(response.data.payload);
         }
@@ -24,6 +28,16 @@ function HomePage() {
     fetchProducts();
   }, []);
 
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
+  };
+
+  const handleLogout = () => {
+    if (window.confirm('คุณต้องการออกจากระบบหรือไม่?')) {
+      navigate('/');
+    }
+  };
+
   if (loading) {
     return <div className="loading">Loading...</div>;
   } 
@@ -36,7 +50,11 @@ function HomePage() {
           <h1 className="brand-logo">VELORA</h1>
           <div className="nav-icons">
             {/* คุณอาจจะย้ายเมนูค้นหาหรือ User มาไว้ตรงนี้สำหรับ Desktop ก็ได้ */}
-            <FiShoppingCart className="icon-cart" />
+            <div className="cart-wrapper" onClick={() => navigate('/cart')}>
+              <FiShoppingCart className="icon-cart" />
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </div>
+            <FiLogOut className="icon-logout" onClick={handleLogout} title="ออกจากระบบ" />
           </div>
         </div>
       </header>
@@ -62,19 +80,24 @@ function HomePage() {
         <section className="product-grid">
           {products.length > 0 ? (
             products.map((item) => (
-              <div key={item._id} className="product-card">
+              <div 
+                key={item._id} 
+                className="product-card"
+                onClick={() => handleProductClick(item._id)}
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="product-img-holder">
                   {/* แสดงรูปภาพสินค้าถ้ามี หรือใช้สีพื้นหลังถ้าไม่มี */}
-                  {item.image ? <img src={item.image} alt={item.name} className="product-img" /> : null}
+                  {item.productphoto ? <img src={item.productphoto} alt={item.productname} className="product-img" /> : null}
                 </div>
                 <div className="product-info">
-                  <p className="p-category">{item.category || 'Category'}</p>
-                  <h3 className="p-title">{item.name}</h3>
+                  <p className="p-category">{item.productstyle || 'Category'}</p>
+                  <h3 className="p-title">{item.productname}</h3>
                   <div className="p-footer">
-                    <span className="p-price">฿ {item.price?.toLocaleString()}</span>
+                    <span className="p-price">฿ {(item.productPrice || item.productprice)?.toLocaleString()}</span>
                     <span className="p-rating">★ 4.9</span>
                   </div>
-                  <p className="p-rent">เช่า: {Math.round(item.price * 0.1)}/วัน</p>
+                  <p className="p-rent">เช่า: {Math.round((item.productPrice || item.productprice) * 0.1)}/วัน</p>
                 </div>
               </div>
             ))
@@ -87,7 +110,7 @@ function HomePage() {
       {/* เมนูด้านล่าง */}
       <footer className="bottom-nav">
         <div className="nav-item active"><FiHome /></div>
-        <div className="nav-item"><FiSearch /></div>
+        <div className="nav-item" onClick={() => navigate('/search')}><FiSearch /></div>
         <div className="nav-item"><FiUser /></div>
       </footer>
     </div>

@@ -24,7 +24,8 @@ body {
   cursor: not-allowed;
 }
 
-.container {
+
+.login-container {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -44,7 +45,7 @@ body {
 }
 
 /* โลโก้ VELORA */
-.brand-logo {
+.login-brand-logo {
   font-size: 48px;
   font-weight: bold;
   color: #1a0a2e;
@@ -52,7 +53,7 @@ body {
   letter-spacing: 2px;
 }
 
-.section-title {
+.login-section-title {
   font-size: 22px;
   font-weight: 600;
   margin-bottom: 20px;

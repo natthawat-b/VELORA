@@ -29,7 +29,12 @@ async function searchproduct(req: Request<{}, {}, IProduct>, res: Response) {
 
 async function getproduct(req: Request, res: Response) {
     const data = await controller.get(req, res);
-    return data;
+    return res.status(data.code).json(data);
+}
+
+async function getProductById(req: Request<IdParams>, res: Response) {
+    const data = await controller.getById(req.params.id);
+    return res.status(data.code).json(data);
 }
 
 export default {
@@ -38,4 +43,6 @@ export default {
     editproduct,
     searchproduct,
     getproduct,
+    getProductById,
 }
+

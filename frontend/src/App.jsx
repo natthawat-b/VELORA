@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/App.css';
 
+
+
 // กำหนด URL ของ Backend API
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'http://localhost:3001/api';
 
 function App() {
   const navigate = useNavigate();
@@ -47,13 +49,13 @@ function App() {
   };
 
   return (
-    <div className="container">
+    <div className="login-container">
       <div className="login-card">
-        <h1 className="brand-logo">VELORA</h1>
+        <h1 className="login-brand-logo">VELORA</h1>
 
         {/* ส่วนเข้าสู่ระบบ (Login Section) */}
-        <div className="section">
-          <h2 className="section-title">เข้าสู่ระบบ</h2>
+        <div className="login-section">
+          <h2 className="login-section-title">เข้าสู่ระบบ</h2>
           <form className="login-form" onSubmit={handleLogin}>
             <div className="input-group">
               <label>ชื่อ</label>
@@ -81,8 +83,8 @@ function App() {
         </div>
 
         {/* ส่วนสร้างบัญชี (Create Account Section) */}
-        <div className="section">
-          <h2 className="section-title">สร้างบัญชี</h2>
+        <div className="login-section">
+          <h2 className="login-section-title">สร้างบัญชี</h2>
           <div className="button-group">
             <button className="btn-outline" onClick={() => navigate('/register')}>ลูกค้า</button>
             <button className="btn-outline" onClick={() => navigate('/registerShop')}>ผู้ขาย</button>

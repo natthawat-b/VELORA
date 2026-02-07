@@ -1,58 +1,32 @@
-import React, { useState } from 'react';
-import './CartPage.css';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './assets/CartPage.css';
 import { FiChevronLeft, FiTrash2, FiMinus, FiPlus, FiShoppingBag } from 'react-icons/fi';
+import { useCart } from './context/CartContext.jsx';
 
 function CartPage() {
-  // ข้อมูลจำลองสินค้าในตะกร้า
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      shopName: 'ชื่อร้าน A',
-      productName: 'รายละเอียดสินค้า A',
-      img: '', // URL รูปภาพ
-      options: 'M, 1 DAY',
-      price: 150,
-      quantity: 1,
-    },
-    {
-      id: 2,
-      shopName: 'ชื่อร้าน B',
-      productName: 'รายละเอียดสินค้า B',
-      img: '', // URL รูปภาพ
-      options: 'L',
-      price: 1200,
-      quantity: 1,
-    },
-    {
-      id: 3,
-      shopName: 'ชื่อร้าน A',
-      productName: 'รายละเอียดสินค้า C',
-      img: '', // URL รูปภาพ
-      options: 'S, 3 DAYS',
-      price: 450,
-      quantity: 2,
-    },
-  ]);
+  const navigate = useNavigate();
+  const { cartItems, removeFromCart, updateQuantity, updateItemType, cartTotal } = useCart();
 
   // คำนวณราคารวม
-  const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  const shipping = 50; // ค่าส่งสมมติ
+  const subtotal = cartTotal;
+  const shipping = cartItems.length > 0 ? 50 : 0; // ค่าส่งสมมติ
   const total = subtotal + shipping;
 
-  // ฟังก์ชันลบสินค้า (จำลอง)
-  const removeItem = (id) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
+  const handleGoBack = () => {
+    navigate(-1);
   };
 
-  // ฟังก์ชันเพิ่ม/ลดจำนวน
-  const updateQuantity = (id, change) => {
-    setCartItems(cartItems.map(item => {
-      if (item.id === id) {
-        const newQty = item.quantity + change;
-        return newQty > 0 ? { ...item, quantity: newQty } : item;
+  const handleCheckout = () => {
+    if (cartItems.length === 0) return;
+    
+    navigate('/checkout', {
+      state: {
+        cartItems: cartItems,
+        source: 'cart',
+        totalPrice: total
       }
-      return item;
-    }));
+    });
   };
 
   return (
@@ -61,7 +35,7 @@ function CartPage() {
       <header className="cart-header">
         <div className="header-inner">
           <div className="header-left">
-            <button className="btn-back"><FiChevronLeft /></button>
+            <button className="btn-back" onClick={handleGoBack}><FiChevronLeft /></button>
             <h1 className="page-title">รถเข็น ({cartItems.length})</h1>
           </div>
           <div className="brand-logo">VELORA</div>
@@ -85,7 +59,7 @@ function CartPage() {
                   {/* Shop Header inside card */}
                   <div className="card-shop-header">
                     <span className="shop-name">{item.shopName} &gt;</span>
-                    <button className="btn-delete" onClick={() => removeItem(item.id)}>
+                    <button className="btn-delete" onClick={() => removeFromCart(item.id)}>
                       ลบ <FiTrash2 />
                     </button>
                   </div>
@@ -98,17 +72,19 @@ function CartPage() {
 
                     {/* Product Image */}
                     <div className="product-img-box">
-                      {/* CSS Art Background */}
-                      <div className="img-placeholder-content"></div>
+                      {item.productPhoto ? (
+                        <img src={item.productPhoto} alt={item.productName} className="cart-product-img" />
+                      ) : (
+                        <div className="img-placeholder-content"></div>
+                      )}
                     </div>
 
                     {/* Product Details */}
                     <div className="product-details">
                       <h3 className="product-title">{item.productName}</h3>
-                      <div className="product-options">
-                        <span className="option-pill">{item.options}</span>
+                      <div className="product-price-row">
+                         <div className="product-price">฿ {item.productPrice?.toLocaleString()}</div>
                       </div>
-                      <div className="product-price">฿ {item.price.toLocaleString()}</div>
                     </div>
 
                     {/* Quantity Controls */}
@@ -128,6 +104,39 @@ function CartPage() {
             <div className="summary-card">
               <h2 className="summary-title">สรุปคำสั่งซื้อ</h2>
               
+              {/* Item Options Section */}
+              <div className="cart-options-section">
+                {cartItems.map((item) => (
+                  <div key={item.id} className="cart-option-item">
+                    <div className="option-item-name">{item.productName}</div>
+                    <div className="option-radio-group">
+                      <label className={`radio-label ${item.type === 'buy' ? 'active' : ''}`}>
+                        <input 
+                          type="radio" 
+                          name={`type-${item.id}`}
+                          value="buy"
+                          checked={item.type === 'buy'}
+                          onChange={() => updateItemType(item.id, 'buy')}
+                        />
+                        ซื้อ
+                      </label>
+                      <label className={`radio-label ${item.type === 'rent' ? 'active' : ''}`}>
+                        <input 
+                          type="radio" 
+                          name={`type-${item.id}`}
+                          value="rent"
+                          checked={item.type === 'rent'}
+                          onChange={() => updateItemType(item.id, 'rent')}
+                        />
+                        เช่า
+                      </label>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="divider"></div>
+
               <div className="summary-row">
                 <span>ยอดรวมสินค้า</span>
                 <span>฿ {subtotal.toLocaleString()}</span>
@@ -144,7 +153,7 @@ function CartPage() {
                 <span className="total-price">฿ {total.toLocaleString()}</span>
               </div>
 
-              <button className="btn-checkout">
+              <button className="btn-checkout" onClick={handleCheckout}>
                 ชำระเงิน ({cartItems.length})
               </button>
             </div>
