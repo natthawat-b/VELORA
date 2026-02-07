@@ -7,6 +7,26 @@ async function addproduct(req: Request, res: Response) {
     return res.status(data.code).json(data);
 }
 
+async function getAllProducts(req: Request, res: Response) {
+    const data = await controller.getAllProducts();
+    return res.status(data.code).json(data);
+}
+
+async function getProductsByShop(req: Request, res: Response) {
+    const shopId = req.params.shopId as string;
+    const data = await controller.getProductsByShop(shopId);
+    return res.status(data.code).json(data);
+}
+
+async function getProductById(req: Request, res: Response) {
+    const id = req.params.id as string;
+    const data = await controller.getProductById(id);
+    return res.status(data.code).json(data);
+}
+
 export default {
     addproduct,
+    getAllProducts,
+    getProductsByShop,
+    getProductById,
 }

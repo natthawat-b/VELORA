@@ -13,7 +13,15 @@ export default async function login(req: Request, res: Response) {
         if (shop.shopPassword !== shopPassword) {
             return res.status(401).json(errRes.BAD_REQUEST({ message: "Invalid password" }));
         }
-        return res.status(200).json(successRes({ message: "Login successful" }));
+        // ส่งข้อมูลร้านค้ากลับไปให้ frontend (ไม่รวม password)
+        const shopData = {
+            _id: shop._id,
+            shopusername: shop.shopusername,
+            shopname: shop.shopname,
+            shopEmail: shop.shopEmail,
+            shopPhone: shop.shopPhone
+        };
+        return res.status(200).json(successRes({ message: "Login successful", data: shopData }));
     } catch (error) {
         console.error("Login error", error);
         return res.status(500).json(errRes.INTERNAL_SERVER_ERROR({ message: "Internal server error" }));

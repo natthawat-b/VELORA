@@ -5,6 +5,7 @@ import middleware from "./middleware";
 import userRouters from "./routers/user";
 import productRouters from "./routers/product";
 import shopRouters from "./routers/shop";
+import cartRouters from "./routers/cart";
 
 const app = express();
 const { HOST_API_PORT } = config;
@@ -16,6 +17,7 @@ connectDB();
 app.use("/api/shop", shopRouters);
 app.use("/api/product", productRouters);
 app.use("/api/user", userRouters);
+app.use("/api/cart", cartRouters);
 app.get("/", (req, res) => res.send("ยินดีต้อนรับสู่ API"));
 
 
