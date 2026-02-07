@@ -6,7 +6,7 @@ import { useCart } from './context/CartContext.jsx';
 
 function CartPage() {
   const navigate = useNavigate();
-  const { cartItems, removeFromCart, updateQuantity, updateItemType, cartTotal } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, updateItemType, updateRentalDates, toggleDateMode, updateRentalDuration, toggleSelection, cartTotal } = useCart();
 
   // คำนวณราคารวม
   const subtotal = cartTotal;
@@ -18,11 +18,12 @@ function CartPage() {
   };
 
   const handleCheckout = () => {
-    if (cartItems.length === 0) return;
+    const selectedItems = cartItems.filter(item => item.isSelected !== false);
+    if (selectedItems.length === 0) return;
     
     navigate('/checkout', {
       state: {
-        cartItems: cartItems,
+        cartItems: selectedItems,
         source: 'cart',
         totalPrice: total
       }
@@ -65,9 +66,14 @@ function CartPage() {
                   </div>
 
                   <div className="card-body">
-                    {/* Checkbox (Optional) */}
+                    {/* Checkbox (Select Item) */}
                     <div className="checkbox-wrapper">
-                      <input type="checkbox" defaultChecked />
+                      <input 
+                        type="checkbox" 
+                        checked={item.isSelected !== false}
+                        onChange={() => toggleSelection && toggleSelection(item.id)}
+                        title="Select item for checkout"
+                      />
                     </div>
 
                     {/* Product Image */}
@@ -87,11 +93,63 @@ function CartPage() {
                       </div>
                     </div>
 
-                    {/* Quantity Controls */}
-                    <div className="quantity-controls">
-                      <button className="qty-btn" onClick={() => updateQuantity(item.id, -1)}><FiMinus /></button>
-                      <span className="qty-value">{item.quantity}</span>
-                      <button className="qty-btn" onClick={() => updateQuantity(item.id, 1)}><FiPlus /></button>
+                    {/* Quantity & Rental Days Controls */}
+                    <div className="quantity-controls-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                      <div className="quantity-controls">
+                        <button className="qty-btn" onClick={() => updateQuantity(item.id, -1)}><FiMinus /></button>
+                        <span className="qty-value">{item.quantity}</span>
+                        <button className="qty-btn" onClick={() => updateQuantity(item.id, 1)}><FiPlus /></button>
+                      </div>
+
+                      {/* Rental Date Range Selector */}
+                      {item.type === 'rent' && (
+                        <div className="rental-dates-control">
+                          
+                          {item.isDateSpecific !== false ? (
+                            // Date Specific Mode
+                            <>
+                              <div className="rental-date-row">
+                                <div className="rental-input-group">
+                                  <label className="rental-label">วันที่เริ่มเช่า:</label>
+                                  <input 
+                                    type="date"
+                                    className="rental-date-input"
+                                    value={item.rentalStartDate || ''}
+                                    min={new Date().toISOString().split('T')[0]}
+                                    onChange={(e) => updateRentalDates(item.id, e.target.value, item.rentalEndDate)}
+                                  />
+                                </div>
+                                <div className="rental-input-group">
+                                  <label className="rental-label">ถึงวันที่:</label>
+                                  <input 
+                                    type="date"
+                                    className="rental-date-input"
+                                    value={item.rentalEndDate || ''}
+                                    min={item.rentalStartDate ? new Date(new Date(item.rentalStartDate).getTime() + 86400000).toISOString().split('T')[0] : ''}
+                                    onChange={(e) => updateRentalDates(item.id, item.rentalStartDate, e.target.value)}
+                                  />
+                                </div>
+                              </div>
+                              <div className="rental-summary-box">
+                                <span>จำนวนวัน:</span>
+                                <span className="rental-days-highlight">{item.rentalDays || 1}</span>
+                                <span>วัน</span>
+                              </div>
+                            </>
+                          ) : (
+                            // Duration Only Mode
+                            <div className="rental-duration-row">
+                                <span style={{ fontSize: '0.9rem', color: '#333' }}>จำนวนวันที่เช่า:</span>
+                                <div className="quantity-controls" style={{ transform: 'scale(0.9)' }}>
+                                  <button className="qty-btn" onClick={() => updateRentalDuration(item.id, (item.rentalDays || 1) - 1)}><FiMinus /></button>
+                                  <span className="qty-value">{item.rentalDays || 1}</span>
+                                  <button className="qty-btn" onClick={() => updateRentalDuration(item.id, (item.rentalDays || 1) + 1)}><FiPlus /></button>
+                                </div>
+                                <span style={{ fontSize: '0.9rem', color: '#333' }}>วัน</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -1,205 +1,200 @@
-:root {
-  --bg-color: #f2f2f2;
-  --gold-text: #d4af37; /* สีทองสำหรับชื่อสินค้า */
-  --text-dark: #1a1a1a;
-  --border-black: #000000;
-}
-
-body {
-  margin: 0;
-  font-family: 'Kanit', sans-serif;
-  background-color: var(--bg-color);
-  overflow-x: hidden;
-}
+/* SelectedStylePage.css */
 
 .page-container {
   min-height: 100vh;
+  background-color: #f9f9f9;
+  font-family: 'Kanit', sans-serif;
   display: flex;
   flex-direction: column;
 }
 
-/* --- Header --- */
+/* Header */
 .top-header {
-  background-color: white;
-  padding: 15px 40px; /* Padding ด้านข้างสำหรับจอคอม */
+  background: white;
+  padding: 15px 20px;
   position: sticky;
   top: 0;
   z-index: 100;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  width: 100%;
-  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
 }
 
 .header-inner {
+  width: 100%;
+  max-width: 500px; /* Mobile-first usually */
   display: flex;
   align-items: center;
-  gap: 20px;
-  width: 100%;
+  gap: 15px;
 }
 
 .btn-back {
   background: none;
   border: none;
-  font-size: 32px;
+  font-size: 20px;
   cursor: pointer;
+  color: #333;
+  padding: 5px;
   display: flex;
   align-items: center;
-  color: var(--text-dark);
-  padding: 0;
-  transition: transform 0.2s;
-}
-
-.btn-back:hover {
-  transform: translateX(-5px);
+  justify-content: center;
 }
 
 .search-box-wrapper {
-  flex: 1; /* ยืดให้เต็ม */
-  position: relative;
+  flex: 1;
+  background: #f0f0f0;
+  padding: 8px 15px;
+  border-radius: 20px;
   display: flex;
   align-items: center;
 }
 
 .search-icon {
-  position: absolute;
-  left: 15px;
-  font-size: 20px;
-  color: #333;
-  z-index: 1;
+  color: #888;
+  margin-right: 10px;
 }
 
 .search-input {
-  width: 100%;
-  padding: 12px 12px 12px 45px;
-  font-size: 16px;
-  border: 2px solid var(--border-black); /* ขอบดำหนาตามภาพ */
-  border-radius: 5px; /* มุมโค้งเล็กน้อย */
+  border: none;
+  background: none;
   outline: none;
-  font-weight: 500;
-  background-color: white;
+  width: 100%;
+  font-size: 14px;
+  color: #333;
 }
 
-/* --- Product Grid (Full Screen) --- */
+/* Main Content */
 .main-content {
   flex: 1;
-  padding: 30px 40px; /* เว้นขอบซ้ายขวา */
-  width: 100%;
-  box-sizing: border-box;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
 }
 
-.product-grid {
+.selected-style-product-grid {
   display: grid;
-  /* Responsive Grid: ขยายจำนวนคอลัมน์อัตโนมัติตามความกว้างหน้าจอ */
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 30px;
-  padding-bottom: 80px; /* เผื่อที่ให้ Footer */
+  grid-template-columns: repeat(2, 1fr); /* 2 columns for mobile */
+  gap: 15px;
+  width: 100%;
+  max-width: 900px;
 }
 
-/* --- Product Card --- */
+/* Product Card */
 .product-card {
   background: white;
-  border-radius: 15px;
+  border-radius: 12px;
   overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s;
-  cursor: pointer;
-  border: 1px solid #eee;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 
 .card-image {
-  height: 250px; /* ความสูงรูปภาพ */
   width: 100%;
-  background-color: #dcedfc; /* สีฟ้าอ่อนตามภาพ */
+  aspect-ratio: 1 / 1;
+  background-color: #eee;
   position: relative;
 }
 
-/* ลวดลายภูเขา/เมฆ จำลอง (CSS Art) */
 .img-placeholder-content {
   width: 100%;
   height: 100%;
-  background: 
-    radial-gradient(circle at 50% 30%, white 15%, transparent 16%), /* เมฆ */
-    radial-gradient(circle at 40% 35%, white 10%, transparent 11%),
-    radial-gradient(circle at 60% 35%, white 10%, transparent 11%),
-    linear-gradient(to top, #7fae1d 0%, #7fae1d 20%, transparent 20%), /* พื้นหญ้า */
-    radial-gradient(ellipse at 50% 100%, #8bc34a 40%, transparent 41%); /* เนินเขา */
-  opacity: 0.8;
+  background: linear-gradient(45deg, #f3f3f3 25%, #e6e6e6 25%, #e6e6e6 50%, #f3f3f3 50%, #f3f3f3 75%, #e6e6e6 75%, #e6e6e6 100%);
+  background-size: 20px 20px;
 }
 
 .card-details {
-  padding: 15px 20px;
+  padding: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-name {
-  font-size: 16px;
-  color: var(--gold-text); /* สีเหลืองทอง */
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
   margin: 0 0 5px 0;
-  font-weight: 600;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .product-desc {
-  font-size: 18px;
-  color: var(--text-dark);
-  margin: 0 0 10px 0;
-  font-weight: bold;
+  font-size: 12px;
+  color: #888;
+  margin: 0 0 8px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .price-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
+  margin-top: auto;
 }
 
 .price-text {
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--text-dark);
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
 }
 
 .rating-badge {
-  background-color: #f0f0f0;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 12px;
-  color: #666;
+  font-size: 11px;
+  color: #1a1a1a;
   display: flex;
   align-items: center;
+  gap: 2px;
 }
 
 .rent-text {
   font-size: 12px;
-  color: #aaa; /* สีเทาจางๆ */
-  margin: 0;
+  color: #d4af37;
+  margin-top: 5px;
 }
 
-/* --- Bottom Nav --- */
+/* Bottom Nav */
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
   background: white;
+  border-top: 1px solid #eee;
+  padding: 10px 0;
   display: flex;
-  justify-content: center;
-  gap: 80px;
-  padding: 20px 0;
-  box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
-  z-index: 100;
+  justify-content: space-around;
+  position: sticky;
+  bottom: 0;
 }
 
 .nav-item {
-  font-size: 28px;
-  color: #ccc;
+  font-size: 24px;
+  color: #aaa;
   cursor: pointer;
-  transition: 0.2s;
+  padding: 5px 20px;
 }
 
-.nav-item.active, .nav-item:hover {
-  color: var(--text-dark);
-  transform: scale(1.1);
+.nav-item.active {
+  color: #1a1a1a;
+}
+
+@media (min-width: 600px) {
+  .selected-style-product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .selected-style-product-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }

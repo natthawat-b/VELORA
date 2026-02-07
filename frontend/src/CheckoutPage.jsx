@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './assets/CheckoutPage.css';
-import { FiChevronLeft, FiMapPin, FiPhone, FiTruck, FiShield, FiChevronRight, FiCreditCard, FiBox, FiSmartphone, FiDollarSign } from 'react-icons/fi';
+import { FiChevronLeft, FiMapPin, FiPhone, FiTruck, FiShield, FiChevronRight, FiCreditCard, FiBox, FiSmartphone, FiDollarSign, FiCheckCircle } from 'react-icons/fi';
 
 const PAYMENT_METHODS = [
   { id: 'promptpay', name: 'PromptPay (QR Code)', icon: <FiSmartphone />, description: 'สแกน QR Code เพื่อชำระเงิน' },
@@ -42,6 +42,9 @@ function CheckoutPage() {
   // --- Payment State ---
   const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS[0]); // Default to PromptPay
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+
   
   // Form State
   const [newAddress, setNewAddress] = useState({
@@ -144,7 +147,12 @@ function CheckoutPage() {
   };
 
   // คำนวณยอดรวมสินค้า
-  const productTotal = checkoutItems.reduce((sum, item) => sum + (item.productPrice * item.quantity), 0);
+  const productTotal = checkoutItems.reduce((sum, item) => {
+    const price = item.type === 'rent' 
+      ? (item.productPrice * (item.rentalDays || 1)) 
+      : item.productPrice;
+    return sum + (price * item.quantity);
+  }, 0);
   
   // ค่าจัดส่งและประกัน
   const standardShippingCost = 50;
@@ -262,7 +270,9 @@ function CheckoutPage() {
                     </div>
                     <div className="checkout-item-details">
                       <h4 className="item-name">{item.productName}</h4>
-                      <div className="item-variant">{item.type === 'rent' ? 'เช่า' : 'ซื้อ'}</div>
+                      <div className="item-variant">
+                        {item.type === 'rent' ? `เช่า (${item.rentalDays || 1} วัน)` : 'ซื้อ'}
+                      </div>
                       <div className="item-price-qty">
                         <span className="price">฿ {item.productPrice?.toLocaleString()}{item.type === 'rent' ? '/วัน' : ''}</span>
                         <span className="qty">x {item.quantity}</span>
@@ -313,7 +323,7 @@ function CheckoutPage() {
                 <span className="gold-text">฿ {total.toLocaleString()}</span>
               </div>
 
-              <button className="btn-place-order">
+              <button className="btn-place-order" onClick={() => setShowSuccessModal(true)}>
                 ยืนยันการสั่งซื้อ
               </button>
             </div>
@@ -490,6 +500,29 @@ function CheckoutPage() {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- Success Modal --- */}
+      {showSuccessModal && (
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ textAlign: 'center', padding: '40px 20px' }}>
+            <div style={{ fontSize: '60px', color: '#4CAF50', marginBottom: '20px', display: 'flex', justifyContent: 'center' }}>
+              <FiCheckCircle />
+            </div>
+            <h2 style={{ fontSize: '24px', marginBottom: '10px', color: '#333' }}>ชำระเงินเรียบร้อย</h2>
+            <p style={{ color: '#666', marginBottom: '30px' }}>ขอบคุณที่ไว้วางใจ VELORA</p>
+            <button 
+              className="btn-place-order" 
+              style={{ width: '100%', maxWidth: '200px', margin: '0 auto' }}
+              onClick={() => {
+                setShowSuccessModal(false);
+                navigate('/order-tracking'); 
+              }}
+            >
+              ตกลง
+            </button>
           </div>
         </div>
       )}

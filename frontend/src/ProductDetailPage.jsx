@@ -11,7 +11,7 @@ const API_URL = 'http://localhost:3000/api';
 function ProductDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { addToCart, cartCount } = useCart();
   
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -49,14 +49,19 @@ function ProductDetailPage() {
       
       if (response.data.success) {
         const productData = response.data.payload;
+        
+        // Normalize data (Handle case sensitivity issues from old/manual data)
+        if (!productData.productPrice && productData.productprice) {
+          productData.productPrice = productData.productprice;
+        }
+
         setProduct(productData);
         setEditFormData(productData);
         
         // Check if current user is owner
         const userType = localStorage.getItem('userType');
-        console.log('🔍 Debug - userType from localStorage:', userType);
-        console.log('🔍 Debug - isOwner will be:', userType === 'shop');
-        // For now, showing buttons to shop owners - you can add more specific checks
+        // console.log('🔍 Debug - userType from localStorage:', userType);
+        // console.log('🔍 Debug - isOwner will be:', userType === 'shop');
         setIsOwner(userType === 'shop');
       }
     } catch (err) {
@@ -163,9 +168,9 @@ function ProductDetailPage() {
             <FiChevronLeft />
           </button>
           <h1 className="header-title">VELORA</h1>
-          <button className="btn-cart">
+          <button className="btn-cart" onClick={() => navigate('/cart')}>
             <FiShoppingCart />
-            <span className="cart-badge">0</span>
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </button>
         </div>
       </header>

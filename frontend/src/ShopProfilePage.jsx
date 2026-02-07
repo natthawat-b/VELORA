@@ -4,12 +4,14 @@ import axios from 'axios';
 import './assets/ShopProfilePage.css';
 import { FiChevronLeft, FiMessageCircle, FiShoppingCart, FiSearch, FiUser, FiMoreHorizontal } from 'react-icons/fi';
 import { FaStar, FaCircle } from 'react-icons/fa';
+import { useCart } from './context/CartContext';
 
 const API_URL = 'http://localhost:3000/api';
 
 function ShopProfilePage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { cartCount } = useCart();
 
   const [shopData, setShopData] = useState(null);
   const [products, setProducts] = useState([]);
@@ -163,7 +165,24 @@ function ShopProfilePage() {
         </div>
         <h1 className="brand-logo">VELORA</h1>
         <div className="nav-right">
-          <FiShoppingCart className="nav-icon" onClick={() => navigate('/cart')} style={{ cursor: 'pointer' }} />
+          <div style={{ position: 'relative', display: 'inline-block', cursor: 'pointer' }} onClick={() => navigate('/cart')}>
+            <FiShoppingCart className="nav-icon" />
+            {cartCount > 0 && <span className="cart-badge" style={{
+                position: 'absolute',
+                top: '-8px',
+                right: '-8px',
+                background: 'red',
+                color: 'white',
+                fontSize: '10px',
+                width: '16px',
+                height: '16px',
+                borderRadius: '50%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontWeight: 'bold'
+              }}>{cartCount}</span>}
+          </div>
           <FiUser className="nav-icon" onClick={() => navigate('/shop-owner-profile')} style={{ cursor: 'pointer' }} />
         </div>
       </header>
@@ -246,7 +265,7 @@ function ShopProfilePage() {
               ร้านนี้ยังไม่มีสินค้า
             </div>
           ) : (
-            <div className="product-grid">
+            <div className="shop-profile-product-grid">
               {products.map((item) => (
                 <div 
                   key={item._id} 

@@ -63,8 +63,8 @@ body {
 /* Wallet / Balance */
 .balance-container {
   background: linear-gradient(135deg, #333 0%, #000 100%);
-  width: 85%;
-  max-width: 500px;
+  width: 90%;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   border-radius: 20px;
@@ -114,8 +114,8 @@ body {
 .seller-content {
   flex: 1;
   padding: 30px 20px;
-  max-width: 800px;
-  margin: 0 auto;
+  /* max-width: 800px;  Removed for full width */
+  margin: 0;
   width: 100%;
   box-sizing: border-box;
 }
@@ -200,6 +200,7 @@ body {
   color: #888;
   display: -webkit-box;
   -webkit-line-clamp: 1;
+  line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

@@ -225,7 +225,7 @@ body {
   color: var(--text-dark);
 }
 
-.product-grid {
+.shop-profile-product-grid {
   display: grid;
   /* Responsive Grid for Desktop */
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

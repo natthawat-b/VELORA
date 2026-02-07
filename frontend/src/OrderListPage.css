@@ -1,6 +1,6 @@
-/* OrderTrackingPage.css */
+/* OrderListPage.css */
 
-.tracking-page-container {
+.order-page-container {
   min-height: 100vh;
   background-color: #f9f9f9;
   font-family: 'Kanit', sans-serif;
@@ -9,7 +9,7 @@
 }
 
 /* Navbar */
-.tracking-navbar {
+.order-navbar {
   background: white;
   padding: 15px 20px;
   position: sticky;
@@ -34,24 +34,21 @@
   gap: 15px;
 }
 
-.tracking-navbar .btn-back {
-  background: white;
-  border: 1px solid #f0f0f0;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.order-navbar .btn-back {
+  background: none;
+  border: none;
+  font-size: 16px;
   cursor: pointer;
   color: #333;
-  font-size: 20px;
-  padding: 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
 }
 
-.tracking-navbar .btn-back:hover {
+.order-navbar .btn-back:hover {
   background-color: #f5f5f5;
 }
 
@@ -68,7 +65,7 @@
   border-radius: 20px;
   display: flex;
   align-items: center;
-  width: 280px;
+  width: 250px;
 }
 
 .search-box input {
@@ -80,81 +77,52 @@
   font-size: 14px;
 }
 
-/* Steps / Tabs */
-.steps-container {
+/* Tabs */
+.tabs-container {
   background: white;
-  padding: 20px 0;
-  margin-bottom: 2px;
+  padding: 0 20px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.02);
   display: flex;
   justify-content: center;
 }
 
-.steps-wrapper {
+.tabs-wrapper {
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  gap: 30px;
+  overflow-x: auto;
   max-width: 900px;
   width: 100%;
-  padding: 0 20px;
+  scrollbar-width: none; /* Hide scrollbar */
 }
 
-.step-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  position: relative;
-  cursor: pointer;
-  opacity: 0.5;
-  transition: all 0.3s;
-}
-
-.step-item.active {
-  opacity: 1;
-}
-
-.step-icon-circle {
-  width: 50px;
-  height: 50px;
-  background-color: #eee;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
+.tab-item {
+  padding: 15px 5px;
+  font-size: 15px;
   color: #666;
-  margin-bottom: 10px;
-  z-index: 2;
-  transition: all 0.3s;
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  transition: color 0.2s;
 }
 
-.step-item.active .step-icon-circle {
-  background-color: #d4af37;
-  color: white;
-  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+.tab-item.active {
+  color: #d4af37; /* Gold */
+  font-weight: 600;
 }
 
-.step-label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-}
-
-.step-line {
+.tab-item.active::after {
+  content: '';
   position: absolute;
-  top: 25px;
-  left: 50%;
+  bottom: 0;
+  left: 0;
   width: 100%;
   height: 3px;
-  background-color: #eee;
-  z-index: 1;
+  background-color: #d4af37;
+  border-radius: 3px 3px 0 0;
 }
 
-
-
 /* Content */
-.tracking-content {
+.order-content {
   flex: 1;
   padding: 20px;
   display: flex;
@@ -169,8 +137,8 @@
   gap: 20px;
 }
 
-/* Tracking Card */
-.tracking-card {
+/* Order Card */
+.order-card {
   background: white;
   border-radius: 12px;
   padding: 20px;
@@ -181,44 +149,20 @@
 .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding-bottom: 15px;
   border-bottom: 1px solid #f5f5f5;
   margin-bottom: 15px;
 }
 
-.shop-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.shop-name {
   font-weight: 600;
+  font-size: 16px;
   color: #333;
 }
 
-.shop-icon {
-  color: #d4af37;
-}
-
-.tracking-number {
+.order-status {
   font-size: 14px;
-  color: #666;
-}
-
-.tracking-number span {
-  color: #1a1a1a;
-  font-weight: 500;
-  margin-left: 5px;
-}
-
-.status-banner {
-  background-color: #fff9e6; /* Light yellow/gold */
   color: #d4af37;
-  padding: 10px 15px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
   font-weight: 500;
 }
 
@@ -229,11 +173,10 @@
 }
 
 .product-img {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   background-color: #eee;
   border-radius: 8px;
-  overflow: hidden;
 }
 
 .product-info {
@@ -242,19 +185,25 @@
 
 .p-name {
   font-size: 16px;
-  font-weight: 500;
   color: #333;
   margin-bottom: 5px;
 }
 
 .p-variant {
-  font-size: 14px;
+  font-size: 13px;
   color: #888;
+  margin-bottom: 5px;
+}
+
+.p-qty {
+  font-size: 13px;
+  color: #333;
 }
 
 .p-price {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
+  color: #1a1a1a;
 }
 
 .card-footer {
@@ -263,7 +212,11 @@
   align-items: center;
   padding-top: 15px;
   border-top: 1px solid #f5f5f5;
-  margin-top: 10px;
+}
+
+.total-text {
+  font-size: 14px;
+  color: #666;
 }
 
 .total-text span {
@@ -273,19 +226,39 @@
   margin-left: 5px;
 }
 
-.btn-track-detail {
-  padding: 8px 20px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 20px;
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-secondary, .btn-primary {
+  padding: 8px 15px;
+  border-radius: 6px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.btn-track-detail:hover {
-  background: #f5f5f5;
-  border-color: #ccc;
+.btn-secondary {
+  background: white;
+  border: 1px solid #ddd;
+  color: #555;
 }
+
+.btn-secondary:hover {
+  background: #f5f5f5;
+}
+
+.btn-primary {
+  background: #d4af37;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #c49f2f;
+}
+
 
 /* Empty State */
 .empty-state {
@@ -293,31 +266,31 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 20px;
+  padding: 50px 20px;
   text-align: center;
   color: #888;
   height: 100%;
 }
 
-.empty-icon-large {
-  font-size: 80px;
-  color: #eee;
+.empty-icon {
+  font-size: 60px;
   margin-bottom: 20px;
+  color: #ddd;
 }
 
 .empty-state h3 {
-  font-size: 20px;
+  font-size: 18px;
   color: #333;
   margin-bottom: 10px;
 }
 
-.btn-back-home {
-  margin-top: 25px;
-  padding: 12px 35px;
+.btn-shop-now {
+  margin-top: 20px;
+  padding: 10px 30px;
   background: #1a1a1a;
   color: white;
   border: none;
-  border-radius: 30px;
+  border-radius: 25px;
   font-size: 16px;
   cursor: pointer;
 }
@@ -331,13 +304,10 @@
   .search-box {
     width: 100%;
   }
-
-  .steps-wrapper {
-    padding: 0 10px;
-  }
   
-  .step-label {
-    font-size: 12px;
-    text-align: center;
+  .card-footer {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-end;
   }
 }

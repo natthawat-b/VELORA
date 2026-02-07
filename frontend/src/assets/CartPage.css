@@ -372,6 +372,82 @@ body {
   font-weight: 600;
 }
 
-.radio-label input {
-  accent-color: var(--gold-primary);
+
+/* Rental Date Custom Styling */
+.rental-dates-control {
+  background: #f8f8f8;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 15px;
+  border: 1px solid #eee;
+}
+
+.rental-date-row {
+  display: flex;
+  align-items: flex-end; /* Align inputs with button */
+  gap: 15px;
+  margin-bottom: 12px;
+}
+
+.rental-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.rental-label {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+.rental-date-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 14px;
+  color: #333;
+  box-sizing: border-box;
+  background: white;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.rental-date-input:focus {
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.1);
+}
+
+.rental-summary-box {
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+.rental-days-highlight {
+  color: var(--gold-primary);
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 4px;
+}
+
+/* Duration Only Mode */
+.rental-duration-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #eee;
 }

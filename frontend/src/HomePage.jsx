@@ -61,18 +61,29 @@ function HomePage() {
 
       <main className="main-content">
         {/* Banner */}
-        <section className="trending-banner">
+        <section className="trending-banner" onClick={() => products.length > 0 && handleProductClick(products[0]._id)} style={{ cursor: products.length > 0 ? 'pointer' : 'default' }}>
           <div className="banner-text">
             <h2>มาแรง 📈</h2>
-            <div className="price-tag main-price">
-              <span>฿ 2,000</span> <small>ราคาขาย</small>
-            </div>
-            <div className="price-tag sub-price">
-              <span>฿ 800</span> <small>ราคาเช่าต่อวัน</small>
-            </div>
+            {products.length > 0 ? (
+              <>
+                 <h3 style={{fontSize: '1.5rem', marginBottom: '10px'}}>{products[0].productname}</h3>
+                <div className="price-tag main-price">
+                  <span>฿ {(products[0].productPrice || products[0].productprice)?.toLocaleString()}</span> <small>ราคาขาย</small>
+                </div>
+                <div className="price-tag sub-price">
+                  <span>฿ {Math.round((products[0].productPrice || products[0].productprice) * 0.1)?.toLocaleString()}</span> <small>ราคาเช่าต่อวัน</small>
+                </div>
+              </>
+            ) : (
+              <p>กำลังโหลดสินค้าแนะนำ...</p>
+            )}
           </div>
           <div className="banner-image">
-            <div className="placeholder-img"></div>
+             {products.length > 0 && products[0].productphoto ? (
+              <img src={products[0].productphoto} alt={products[0].productname} style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px'}} />
+            ) : (
+              <div className="placeholder-img"></div>
+            )}
           </div>
         </section>
 
@@ -111,7 +122,7 @@ function HomePage() {
       <footer className="bottom-nav">
         <div className="nav-item active"><FiHome /></div>
         <div className="nav-item" onClick={() => navigate('/search')}><FiSearch /></div>
-        <div className="nav-item"><FiUser /></div>
+        <div className="nav-item" onClick={() => navigate('/profile')}><FiUser /></div>
       </footer>
     </div>
   );
