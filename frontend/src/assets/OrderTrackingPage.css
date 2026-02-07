@@ -35,17 +35,20 @@
 }
 
 .tracking-navbar .btn-back {
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  color: #333;
+  background: white;
+  border: 1px solid #f0f0f0;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: background 0.2s;
+  justify-content: center;
+  cursor: pointer;
+  color: #333;
+  font-size: 20px;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: all 0.2s;
 }
 
 .tracking-navbar .btn-back:hover {

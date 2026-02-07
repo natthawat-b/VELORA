@@ -218,7 +218,7 @@ const ProfilePage = () => {
       {/* Bottom Nav */}
       <nav className="bottom-nav">
         <FiHome className="nav-icon" onClick={() => navigate('/home')} />
-        <FiSearch className="nav-icon" />
+        <FiSearch className="nav-icon" onClick={() => navigate('/search')} />
         <FiUser className="nav-icon active" />
       </nav>
     </div>

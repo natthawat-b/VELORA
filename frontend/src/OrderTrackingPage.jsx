@@ -64,7 +64,7 @@ function OrderTrackingPage() {
         <div className="nav-inner">
           <div className="nav-left">
             <button className="btn-back" onClick={() => navigate(-1)}>
-              <FiChevronLeft /> ย้อนกลับ
+              <FiChevronLeft />
             </button>
             <h1 className="page-title">ติดตามสถานะ</h1>
           </div>
