@@ -1,0 +1,389 @@
+:root {
+  --gold-primary: #d4af37;
+  --gold-light: #f9f1d8;
+  --text-black: #1a1a1a;
+  --text-gray: #666;
+  --bg-page: #f9f9f9;
+}
+
+body {
+  margin: 0;
+  font-family: 'Kanit', sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-black);
+}
+
+.product-page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Header --- */
+.product-header {
+  background: white;
+  padding: 15px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 24px;
+  letter-spacing: 2px;
+  font-family: 'Times New Roman', serif;
+}
+
+.btn-back, .btn-cart {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.btn-back:hover, .btn-cart:hover {
+  background-color: #f0f0f0;
+}
+
+.cart-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: red;
+  color: white;
+  font-size: 10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- Main Layout --- */
+.product-main {
+  flex: 1;
+  display: flex;
+  gap: 50px;
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Left Column: Image */
+.product-image-section {
+  flex: 1.2; /* รูปใหญ่กว่าเนื้อหาเล็กน้อย */
+  position: sticky;
+  top: 100px; /* ให้รูปเลื่อนตามเวลาไถลง */
+  height: fit-content;
+}
+
+.main-image-placeholder {
+  width: 100%;
+  aspect-ratio: 4/5; /* สัดส่วนแนวตั้งเหมือนในมือถือ */
+  background-color: #e3f2fd; /* ฟ้าอ่อน */
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+/* สร้างภูเขาและเมฆด้วย CSS (Art) */
+.art-cloud {
+  width: 120px;
+  height: 40px;
+  background: white;
+  border-radius: 50px;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 10px 0 #fff inset;
+}
+.art-cloud::after {
+  content: '';
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: white;
+  border-radius: 50%;
+  top: -25px;
+  left: 20px;
+}
+.art-mountain {
+  width: 120%;
+  height: 40%;
+  background: #7cb342; /* เขียว */
+  position: absolute;
+  bottom: -10%;
+  left: -10%;
+  border-radius: 100% 100% 0 0;
+}
+
+/* Right Column: Info */
+.product-info-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.buy-price {
+  font-size: 36px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.rent-price {
+  font-size: 20px;
+  color: var(--gold-primary);
+  font-weight: 500;
+  margin-left: 10px;
+}
+
+.btn-favorite {
+  background: white;
+  border: 1px solid #ddd;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.btn-favorite:hover {
+  color: red;
+  border-color: red;
+}
+
+.product-name {
+  color: var(--gold-primary);
+  font-size: 28px;
+  margin: 10px 0 20px;
+}
+
+.product-description {
+  color: var(--text-gray);
+  line-height: 1.6;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 20px 0;
+  width: 100%;
+}
+
+/* Seller Card */
+.seller-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+.seller-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #e3f2fd;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.art-mountain-mini {
+  width: 100%;
+  height: 50%;
+  background: #7cb342;
+  position: absolute;
+  bottom: 0;
+}
+
+.seller-details {
+  flex: 1;
+}
+
+.seller-name {
+  margin: 0;
+  font-size: 18px;
+}
+
+.seller-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  color: var(--text-gray);
+  margin-top: 4px;
+}
+
+.star-icon { color: var(--gold-primary); }
+
+.btn-visit-shop {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-visit-shop:hover { background: #f5f5f5; }
+
+/* Reviews */
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 คอลัมน์สำหรับรีวิว */
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.review-card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #f0f0f0;
+}
+
+.review-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.user-avatar-small {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #ddd;
+  /* ใส่รูปจริงด้วย background-image: url(...) */
+  background: linear-gradient(to bottom, #a1c4fd, #c2e9fb); 
+}
+
+.user-name { font-size: 14px; font-weight: 500; }
+
+.star-yellow { color: #FFD700; font-size: 12px; }
+
+.review-comment {
+  font-size: 14px;
+  color: #555;
+  margin: 5px 0 0;
+}
+
+.btn-add-review {
+  background: #f0f0f0;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Action Buttons (Bottom) */
+.action-buttons-container {
+  display: flex;
+  gap: 15px;
+  margin-top: auto; /* ดันลงล่างสุดของ container */
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.btn-action {
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 500;
+  flex: 1; /* ขยายให้เท่ากัน */
+  transition: transform 0.1s;
+}
+
+.btn-action:active { transform: scale(0.98); }
+
+.chat {
+  background: white;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+.add-cart {
+  background: white;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+.buy-now {
+  background: var(--gold-primary);
+  border: none;
+  color: white;
+  flex: 1.5; /* ปุ่มซื้อใหญ่กว่าเพื่อน */
+  flex-direction: column; /* จัดราคาลงมาบรรทัดล่าง */
+  gap: 2px;
+}
+
+.buy-text { font-size: 18px; font-weight: bold; }
+.buy-price-btn { font-size: 14px; opacity: 0.9; }
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .product-main {
+    flex-direction: column;
+  }
+  .product-image-section {
+    position: static;
+  }
+  .reviews-grid {
+    grid-template-columns: 1fr;
+  }
+}

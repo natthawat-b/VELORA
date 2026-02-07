@@ -1,0 +1,321 @@
+:root {
+  --bg-color: #f5f5f5;
+  --text-dark: #1a1a1a;
+  --gold-primary: #d4af37;
+  --gold-light: #fdfbf0;
+  --red-logout: #d32f2f;
+  --white: #ffffff;
+}
+
+body {
+  margin: 0;
+  font-family: 'Kanit', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+}
+
+.shop-owner-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Navbar --- */
+.navbar {
+  background: var(--white);
+  padding: 15px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: center;
+}
+
+.nav-content {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-logo {
+  font-size: 32px;
+  letter-spacing: 1px;
+  margin: 0;
+  font-family: 'Times New Roman', serif;
+  font-weight: bold;
+}
+
+.nav-icons {
+  display: flex;
+  gap: 25px;
+}
+
+.nav-icon {
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  transition: transform 0.2s;
+}
+
+.nav-icon:hover { transform: scale(1.1); }
+
+/* --- Main Content --- */
+.main-content {
+  flex: 1;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.content-wrapper {
+  width: 100%;
+  max-width: 700px; /* จำกัดความกว้างให้อยู่ตรงกลางสวยๆ */
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* --- 1. Profile Card --- */
+.profile-card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  text-align: center;
+}
+
+.profile-image-section {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.profile-img-placeholder {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #e3f2fd;
+  overflow: hidden;
+  position: relative;
+  border: 5px solid var(--white);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* CSS Art: Mountain & Cloud */
+.art-cloud {
+  width: 60px;
+  height: 20px;
+  background: white;
+  border-radius: 20px;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.art-cloud::after {
+  content: ''; position: absolute; width: 25px; height: 25px;
+  background: white; border-radius: 50%; top: -15px; left: 10px;
+}
+.art-mountain {
+  width: 120%; height: 40%;
+  background: #7cb342;
+  position: absolute; bottom: 0; left: -10%;
+  border-radius: 100% 100% 0 0;
+}
+
+.btn-edit-img {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.edit-text {
+  font-size: 12px;
+  color: #888;
+  text-decoration: underline;
+  background: rgba(255,255,255,0.8);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.profile-info-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+
+.shop-account-name {
+  font-size: 28px;
+  margin: 0;
+  font-weight: 800;
+}
+
+.btn-edit-text {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: underline;
+}
+
+.btn-my-products {
+  background-color: #000; /* สีดำตามภาพ */
+  color: #d4af37; /* ไอคอนสีทอง */
+  border: none;
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+}
+
+.btn-my-products:hover {
+  transform: translateY(-2px);
+  background-color: #333;
+}
+
+.btn-icon { font-size: 18px; }
+
+/* --- 2. Status Dashboard --- */
+.status-dashboard {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 30px 40px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.section-title {
+  font-size: 18px;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+.status-grid {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  width: 120px;
+  text-align: center;
+}
+
+.status-icon-box {
+  width: 65px;
+  height: 65px;
+  background-color: #eee;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  color: #555;
+  transition: 0.2s;
+}
+
+.status-icon-box.completed {
+  background-color: #000; /* สีดำทองตามภาพ */
+  color: var(--gold-primary);
+  border: 1px solid var(--gold-primary);
+}
+
+.status-item p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.status-item:hover .status-icon-box {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* --- 3. Logout --- */
+.logout-section {
+  margin-top: 10px;
+  margin-bottom: 80px;
+}
+
+.btn-logout {
+  width: 100%;
+  background: var(--white);
+  color: var(--red-logout);
+  border: none;
+  padding: 16px;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  transition: 0.2s;
+  letter-spacing: 1px;
+}
+
+.btn-logout:hover {
+  background: #fff5f5;
+  transform: translateY(-2px);
+}
+
+/* --- Bottom Nav --- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  padding: 20px 0;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+  z-index: 100;
+}
+
+.nav-item {
+  font-size: 28px;
+  color: #ccc;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav-item.active {
+  color: var(--text-dark);
+}
+
+.nav-item:hover {
+  color: var(--text-dark);
+  transform: scale(1.1);
+}
