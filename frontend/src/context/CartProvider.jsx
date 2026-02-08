@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { CartContext } from './CartContext';
 
 export function CartProvider({ children }) {
@@ -24,14 +24,15 @@ export function CartProvider({ children }) {
   };
 
   // ฟังก์ชันสำหรับดึงข้อมูลสินค้าล่าสุดจาก Database เพื่ออัพเดทราคา/ข้อมูล
-  const refreshCartData = async () => {
+  const refreshCartData = useCallback(async () => {
     try {
-      if (cartItems.length === 0) return;
+      const currentItems = JSON.parse(localStorage.getItem('velora_cart') || '[]');
+      if (currentItems.length === 0) return;
 
       // สร้าง Array ของ Promise เพื่อดึงข้อมูลสินค้าแต่ละตัว
-      const updatedItemsPromises = cartItems.map(async (item) => {
+      const updatedItemsPromises = currentItems.map(async (item) => {
         try {
-          const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+          const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
           const response = await fetch(`${apiUrl}/api/product/${item.productId}`);
           const data = await response.json();
           
@@ -73,12 +74,16 @@ export function CartProvider({ children }) {
     } catch (error) {
       console.error('Error refreshing cart data:', error);
     }
-  };
-
-  // เรียกใช้ refreshCartData เมื่อโหลดหน้าเว็บครั้งแรก (หรือจะเรียกตอนเปิดหน้า Cart ก็ได้)
-  useEffect(() => {
-    refreshCartData();
   }, []);
+
+  // เรียกใช้ refreshCartData เมื่อโหลดหน้าเว็บครั้งแรก
+  useEffect(() => {
+    // Async function ภายใน useEffect เพื่อหลีกเลี่ยง warning
+    const loadInitialData = async () => {
+      await refreshCartData();
+    };
+    loadInitialData();
+  }, [refreshCartData]);
 
   // เพิ่มสินค้าลงตะกร้า
   const addToCart = (product, type = 'buy') => {

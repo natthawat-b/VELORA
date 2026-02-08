@@ -6,7 +6,7 @@ import { FiChevronLeft, FiMessageCircle, FiShoppingCart, FiSearch, FiUser, FiMor
 import { FaStar, FaCircle } from 'react-icons/fa';
 import { useCart } from './context/CartContext';
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = 'http://localhost:3000/api';
 
 function ShopProfilePage() {
   const { id } = useParams();

@@ -21,7 +21,7 @@ const SearchPage = () => {
     try {
       // If "ทั้งหมด" is selected and no search term, fetch all products
       if (selectedStyle === 'ทั้งหมด' && !searchTerm) {
-        const response = await axios.get('http://localhost:3001/api/product');
+        const response = await axios.get('http://localhost:3000/api/product');
         if (response.data.success) {
           setSearchResults(response.data.payload);
         } else {
@@ -36,7 +36,7 @@ const SearchPage = () => {
           searchQuery = searchTerm || selectedStyle;
         }
 
-        const response = await axios.post('http://localhost:3001/api/product/search', {
+        const response = await axios.post('http://localhost:3000/api/product/search', {
           productname: searchQuery
         });
         
