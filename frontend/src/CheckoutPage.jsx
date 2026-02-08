@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './assets/CheckoutPage.css';
 import { FiChevronLeft, FiMapPin, FiPhone, FiTruck, FiShield, FiChevronRight, FiCreditCard, FiBox, FiSmartphone, FiDollarSign, FiCheckCircle } from 'react-icons/fi';
+import { useCart } from './context/CartContext';
 
 const PAYMENT_METHODS = [
   { id: 'promptpay', name: 'PromptPay (QR Code)', icon: <FiSmartphone />, description: 'สแกน QR Code เพื่อชำระเงิน' },
@@ -168,6 +169,19 @@ function CheckoutPage() {
     navigate(-1);
   };
 
+  // Cart Context
+  const { removeItems } = useCart();
+
+  const handleConfirmOrder = () => {
+    // ถ้ามาจากการตระกร้าสินค้า (มี cartItems) ให้ลบสินค้าที่ซื้อออกจากตะกร้า
+    if (cartItems && cartItems.length > 0) {
+      const itemIds = cartItems.map(item => item.id);
+      removeItems(itemIds);
+    }
+    
+    setShowSuccessModal(true);
+  };
+
   return (
     <div className="checkout-container">
       {/* --- Header --- */}
@@ -323,7 +337,7 @@ function CheckoutPage() {
                 <span className="gold-text">฿ {total.toLocaleString()}</span>
               </div>
 
-              <button className="btn-place-order" onClick={() => setShowSuccessModal(true)}>
+              <button className="btn-place-order" onClick={handleConfirmOrder}>
                 ยืนยันการสั่งซื้อ
               </button>
             </div>

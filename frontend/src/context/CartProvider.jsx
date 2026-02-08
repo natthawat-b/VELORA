@@ -55,7 +55,6 @@ export function CartProvider({ children }) {
               rentalDays: item.rentalDays || calculateDays(item.rentalStartDate, item.rentalEndDate),
               rentalStartDate: item.rentalStartDate,
               rentalEndDate: item.rentalEndDate,
-              rentalEndDate: item.rentalEndDate,
               isDateSpecific: item.isDateSpecific !== undefined ? item.isDateSpecific : true,
               isSelected: item.isSelected !== undefined ? item.isSelected : true,
             };
@@ -208,6 +207,11 @@ export function CartProvider({ children }) {
     }));
   };
 
+  // ลบหลายสินค้าออกจากตะกร้า (สำหรับ Checkout)
+  const removeItems = (ids) => {
+    setCartItems(prev => prev.filter(item => !ids.includes(item.id)));
+  };
+
   // ล้างตะกร้า
   const clearCart = () => {
     setCartItems([]);
@@ -247,6 +251,7 @@ export function CartProvider({ children }) {
     updateRentalDuration,
     toggleSelection,
     clearCart,
+    removeItems,
     cartCount,
     cartTotal
   };

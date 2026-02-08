@@ -12,7 +12,7 @@ function ShopOwnerProfile() {
   const [loading, setLoading] = useState(true);
   const [shopPhoto, setShopPhoto] = useState('');
   const [photoPreview, setPhotoPreview] = useState('');
-  const API_URL = 'http://localhost:3000/api';
+  const API_URL = 'http://localhost:3001/api';
 
   useEffect(() => {
     fetchShopData();
