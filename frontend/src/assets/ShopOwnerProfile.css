@@ -92,7 +92,7 @@ body {
 
 .shop-owner-container .profile-image-section {
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 50px; /* Space for save photo button */
 }
 
 .shop-owner-container .profile-img-placeholder {
@@ -147,6 +147,40 @@ body {
   border-radius: 10px;
 }
 
+/* Profile Photo Styles */
+.shop-owner-container .profile-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.shop-owner-container .btn-save-photo {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  transition: all 0.2s;
+}
+
+.shop-owner-container .btn-save-photo:hover {
+  background-color: #45a049;
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
 .shop-owner-container .profile-info-section {
   width: 100%;
   display: flex;
@@ -178,6 +212,58 @@ body {
   align-items: center;
   gap: 4px;
   text-decoration: underline;
+}
+
+/* Edit mode styles */
+.shop-owner-container .edit-name-input {
+  font-size: 24px;
+  font-weight: 700;
+  padding: 8px 12px;
+  border: 2px solid #333;
+  border-radius: 8px;
+  outline: none;
+  text-align: center;
+  font-family: 'Kanit', sans-serif;
+  min-width: 250px;
+}
+
+.shop-owner-container .edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.shop-owner-container .btn-save,
+.shop-owner-container .btn-cancel {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.shop-owner-container .btn-save {
+  background-color: #4caf50;
+  color: white;
+}
+
+.shop-owner-container .btn-save:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.shop-owner-container .btn-cancel {
+  background-color: #f44336;
+  color: white;
+}
+
+.shop-owner-container .btn-cancel:hover {
+  background-color: #da190b;
+  transform: translateY(-2px);
 }
 
 .shop-owner-container .btn-my-products {

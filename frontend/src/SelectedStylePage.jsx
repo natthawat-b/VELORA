@@ -93,9 +93,9 @@ function SelectedStylePage() {
 
       {/* Bottom Navigation */}
       <footer className="bottom-nav">
-        <div className="nav-item" onClick={() => navigate('/home')}><FiHome /></div>
-        <div className="nav-item active"><FiSearch /></div>
-        <div className="nav-item" onClick={() => navigate('/profile')}><FiUser /></div>
+        <FiHome className="nav-icon" onClick={() => navigate('/home')} />
+        <FiSearch className="nav-icon active" />
+        <FiUser className="nav-icon" onClick={() => navigate('/profile')} />
       </footer>
     </div>
   );

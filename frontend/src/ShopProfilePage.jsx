@@ -1,41 +1,161 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './assets/ShopProfilePage.css';
 import { FiChevronLeft, FiMessageCircle, FiShoppingCart, FiSearch, FiUser, FiMoreHorizontal } from 'react-icons/fi';
 import { FaStar, FaCircle } from 'react-icons/fa';
 import { useCart } from './context/CartContext';
+
+const API_URL = 'http://localhost:3000/api';
 
 function ShopProfilePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { cartCount } = useCart();
 
-  // Log shop ID for debugging (จะใช้ fetch ข้อมูลจาก API ในอนาคต)
-  console.log('Shop ID:', id);
-  const shopInfo = {
-    name: 'ชื่อร้านค้า',
-    rating: 4.9,
-    status: 'ออนไลน์',
-    followers: '1.2k',
-    joined: '2 ปีที่แล้ว'
+  const [shopData, setShopData] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followLoading, setFollowLoading] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState(localStorage.getItem('userId'));
+
+  // Fetch shop data and products on mount or when shop ID changes
+  useEffect(() => {
+    fetchShopData();
+    fetchShopProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  // Listen for userId changes and re-fetch shop data
+  useEffect(() => {
+    const checkUserIdChange = () => {
+      const newUserId = localStorage.getItem('userId');
+      if (newUserId !== currentUserId) {
+        console.log('🔄 User changed from', currentUserId, 'to', newUserId);
+        setCurrentUserId(newUserId);
+        // Directly re-fetch shop data to update follow status
+        fetchShopData();
+      }
+    };
+
+    // Check every second for userId changes
+    const interval = setInterval(checkUserIdChange, 1000);
+
+    return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUserId]);
+
+  const fetchShopData = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/shop/${id}`);
+      
+      if (response.data.success) {
+        const shop = response.data.payload;
+        setShopData(shop);
+        
+        // Set follower count
+        const followers = shop.followers || [];
+        setFollowerCount(followers.length);
+        
+        // Check if current user is following
+        const currentUserId = localStorage.getItem('userId');
+        if (currentUserId) {
+          setIsFollowing(followers.includes(currentUserId));
+        } else {
+          // Reset follow state if no user is logged in
+          setIsFollowing(false);
+        }
+      } else {
+        setError('ไม่พบข้อมูลร้านค้า');
+      }
+    } catch (err) {
+      console.error('Error fetching shop data:', err);
+      setError('เกิดข้อผิดพลาดในการโหลดข้อมูลร้านค้า');
+    }
   };
 
-  // ข้อมูลจำลองสินค้า
-  const products = Array.from({ length: 12 }, (_, i) => ({
-    id: i + 1,
-    name: 'ชื่อสินค้า',
-    desc: 'รายละเอียดสินค้า',
-    price: 'XXXX',
-    rent: 'xxx'
-  }));
+  const fetchShopProducts = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/product`);
+      
+      if (response.data.success) {
+        // Filter products by shopId
+        const shopProducts = response.data.payload.filter(
+          product => product.shopId === id
+        );
+        setProducts(shopProducts);
+      }
+    } catch (err) {
+      console.error('Error fetching products:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleGoBack = () => {
     navigate(-1);
   };
 
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
+  };
+
+  const handleFollowToggle = async () => {
+    const currentUserId = localStorage.getItem('userId');
+    
+    if (!currentUserId) {
+      alert('กรุณาเข้าสู่ระบบก่อนติดตามร้านค้า');
+      return;
+    }
+
+    setFollowLoading(true);
+    
+    try {
+      const action = isFollowing ? 'unfollow' : 'follow';
+      
+      const requestData = {
+        userId: currentUserId,
+        action: action
+      };
+      
+      const response = await axios.put(`${API_URL}/shop/${id}/follow`, requestData);
+
+      if (response.data.success) {
+        const { followerCount: newCount, isFollowing: newFollowStatus } = response.data.payload;
+        setFollowerCount(newCount);
+        setIsFollowing(newFollowStatus);
+      } else {
+        console.error('❌ API returned success:false');
+      }
+    } catch (err) {
+      console.error('❌ Error toggling follow:', err);
+      alert('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+    } finally {
+      setFollowLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="shop-page-container">
+        <div style={{ textAlign: 'center', padding: '50px' }}>กำลังโหลด...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="shop-page-container">
+        <div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="shop-page-container">
-      {/* Navbar หลัก */}
       {/* Navbar หลัก */}
       <header className="main-navbar">
         <div className="nav-left">
@@ -63,7 +183,7 @@ function ShopProfilePage() {
                 fontWeight: 'bold'
               }}>{cartCount}</span>}
           </div>
-          <FiUser className="nav-icon" />
+          <FiUser className="nav-icon" onClick={() => navigate('/shop-owner-profile')} style={{ cursor: 'pointer' }} />
         </div>
       </header>
 
@@ -75,29 +195,44 @@ function ShopProfilePage() {
             {/* รูปโปรไฟล์ร้าน */}
             <div className="shop-avatar-container">
               <div className="shop-avatar-placeholder">
-                 {/* CSS Art: Cloud & Mountain */}
-                 <div className="art-cloud-mini"></div>
-                 <div className="art-mountain-mini"></div>
+                {shopData?.shopPhoto ? (
+                  <img 
+                    src={shopData.shopPhoto} 
+                    alt={shopData.shopname} 
+                    style={{
+                      width: '100%', 
+                      height: '100%', 
+                      objectFit: 'cover', 
+                      borderRadius: '50%'
+                    }} 
+                  />
+                ) : (
+                  <>
+                    {/* CSS Art: Cloud & Mountain */}
+                    <div className="art-cloud-mini"></div>
+                    <div className="art-mountain-mini"></div>
+                  </>
+                )}
               </div>
             </div>
 
             {/* รายละเอียดร้าน */}
             <div className="shop-text-info">
               <div className="shop-name-row">
-                <h2 className="shop-name">{shopInfo.name}</h2>
+                <h2 className="shop-name">{shopData?.shopname || 'ชื่อร้านค้า'}</h2>
                 <div className="status-badge">
-                  <FaCircle className="dot-icon" /> <span>{shopInfo.status}</span>
+                  <FaCircle className="dot-icon" /> <span>ออนไลน์</span>
                 </div>
               </div>
 
               <div className="shop-stats">
                 <div className="stat-item">
                   <FaStar className="star-icon" />
-                  <span>{shopInfo.rating} คะแนนร้านค้า</span>
+                  <span>4.9 คะแนนร้านค้า</span>
                 </div>
                 <div className="stat-divider">|</div>
                 <div className="stat-item">
-                  <span>ผู้ติดตาม {shopInfo.followers}</span>
+                  <span>ผู้ติดตาม {followerCount}</span>
                 </div>
               </div>
             </div>
@@ -107,8 +242,12 @@ function ShopProfilePage() {
                <button className="btn-shop-action chat">
                  <FiMessageCircle /> แชทเลย
                </button>
-               <button className="btn-shop-action outline">
-                 ติดตาม
+               <button 
+                 className="btn-shop-action outline" 
+                 onClick={handleFollowToggle}
+                 disabled={followLoading}
+               >
+                 {followLoading ? 'กำลังโหลด...' : (isFollowing ? 'เลิกติดตาม' : 'ติดตาม')}
                </button>
                <button className="btn-more">
                  <FiMoreHorizontal />
@@ -119,28 +258,53 @@ function ShopProfilePage() {
 
         {/* ตารางสินค้าของร้าน (Product Grid) */}
         <section className="shop-products-section">
-          <h3 className="section-title">รายการสินค้า</h3>
+          <h3 className="section-title">รายการสินค้า ({products.length})</h3>
           
-          <div className="shop-profile-product-grid">
-            {products.map((item) => (
-              <div key={item.id} className="product-card">
-                <div className="card-image">
-                  <div className="img-placeholder-content">
-                    {/* CSS Art Background */}
+          {products.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '30px', color: '#888' }}>
+              ร้านนี้ยังไม่มีสินค้า
+            </div>
+          ) : (
+            <div className="shop-profile-product-grid">
+              {products.map((item) => (
+                <div 
+                  key={item._id} 
+                  className="product-card"
+                  onClick={() => handleProductClick(item._id)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="card-image">
+                    {item.productphoto ? (
+                      <img 
+                        src={item.productphoto} 
+                        alt={item.productname}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover'
+                        }}
+                      />
+                    ) : (
+                      <div className="img-placeholder-content">
+                        {/* CSS Art Background */}
+                      </div>
+                    )}
+                  </div>
+                  <div className="card-details">
+                    <h4 className="product-name">{item.productname}</h4>
+                    <p className="product-desc">{item.productdetail}</p>
+                    
+                    <div className="price-info">
+                      <span className="sell-price">฿ {item.productPrice?.toLocaleString()}</span>
+                      {item.productAllowedToRent && (
+                        <span className="rent-price">เช่า: {Math.round(item.productPrice * 0.1)}/วัน</span>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <div className="card-details">
-                  <h4 className="product-name">{item.name}</h4>
-                  <p className="product-desc">{item.desc}</p>
-                  
-                  <div className="price-info">
-                    <span className="sell-price">฿ {item.price}</span>
-                    <span className="rent-price">เช่า: {item.rent}/วัน</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
 
       </main>

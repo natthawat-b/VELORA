@@ -244,20 +244,27 @@ body {
   right: 0;
   background: white;
   display: flex;
-  justify-content: space-around; /* กระจายไอคอนให้เต็มความกว้าง */
-  padding: 20px 0;
-  box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-  z-index: 100;
+  justify-content: center; /* เปลี่ยนจาก space-around เป็น center */
+  gap: 60px; /* เพิ่มระยะห่างระหว่างไอคอนที่กำหนดเอง */
+  padding: 15px 0;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+  z-index: 1000;
 }
 
-.home-container .nav-item {
-  font-size: 28px;
-  color: #ccc;
+/* .nav-item replaced by .nav-icon to match UserProfilePage */
+.home-container .nav-icon {
+  font-size: 26px;
+  color: #888; /* Match UserProfilePage default color */
   cursor: pointer;
   transition: 0.2s;
 }
 
-.home-container .nav-item.active, .home-container .nav-item:hover {
+.home-container .nav-icon:hover {
+  transform: scale(1.1);
+  color: #1a1a1a;
+}
+
+.home-container .nav-icon.active {
   color: #1a1a1a;
   transform: scale(1.1);
 }

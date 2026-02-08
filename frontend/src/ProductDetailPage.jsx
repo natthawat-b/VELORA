@@ -6,7 +6,7 @@ import { FiChevronLeft, FiShoppingCart, FiHeart, FiMessageCircle, FiPlus, FiEdit
 import { FaStar } from 'react-icons/fa';
 import { useCart } from './context/CartContext';
 
-const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001') + '/api';
+const API_URL = 'http://localhost:3000/api';
 
 function ProductDetailPage() {
   const { id } = useParams();
@@ -121,13 +121,11 @@ function ProductDetailPage() {
   };
 
   const handleVisitShop = () => {
-    if (product?.shop?.id) {
-      navigate(`/shop/${product.shop.id}`);
-    } else if (product?.shop?._id) {
+    if (product?.shop?._id) {
       navigate(`/shop/${product.shop._id}`);
     } else {
       console.warn('Shop ID not found in product data');
-      // Helper: try to find shopId from cached products or refetch if needed
+      alert('ไม่พบข้อมูลร้านค้า');
     }
   };
 
@@ -230,7 +228,11 @@ function ProductDetailPage() {
           {/* Seller Info */}
           <div className="seller-card">
             <div className="seller-avatar">
-              <div className="art-mountain-mini"></div>
+              {product?.shop?.photo ? (
+                <img src={product.shop.photo} alt="Shop Profile" style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%'}} />
+              ) : (
+                <div className="art-mountain-mini"></div>
+              )}
             </div>
             <div className="seller-details">
               <h3 className="seller-name">{product?.shop?.name || 'ชื่อร้านค้า'}</h3>

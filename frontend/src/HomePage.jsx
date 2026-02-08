@@ -14,8 +14,7 @@ function HomePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-        const response = await axios.get(`${apiUrl}/api/product`);
+        const response = await axios.get('http://localhost:3000/api/product');
         if (response.data.success) {
           setProducts(response.data.payload);
         }
@@ -121,9 +120,9 @@ function HomePage() {
 
       {/* เมนูด้านล่าง */}
       <footer className="bottom-nav">
-        <div className="nav-item active"><FiHome /></div>
-        <div className="nav-item" onClick={() => navigate('/search')}><FiSearch /></div>
-        <div className="nav-item" onClick={() => navigate('/profile')}><FiUser /></div>
+        <FiHome className="nav-icon active" />
+        <FiSearch className="nav-icon" onClick={() => navigate('/search')} />
+        <FiUser className="nav-icon" onClick={() => navigate('/profile')} />
       </footer>
     </div>
   );
