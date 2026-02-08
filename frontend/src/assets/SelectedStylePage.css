@@ -171,20 +171,28 @@
   border-top: 1px solid #eee;
   padding: 10px 0;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 60px;
   position: sticky;
   bottom: 0;
 }
 
-.nav-item {
-  font-size: 24px;
+/* .nav-item replaced by .nav-icon */
+.nav-icon {
+  font-size: 26px;
   color: #aaa;
   cursor: pointer;
-  padding: 5px 20px;
+  transition: 0.2s;
 }
 
-.nav-item.active {
+.nav-icon:hover {
+  transform: scale(1.1);
   color: #1a1a1a;
+}
+
+.nav-icon.active {
+  color: #1a1a1a;
+  transform: scale(1.1);
 }
 
 @media (min-width: 600px) {

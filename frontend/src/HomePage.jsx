@@ -120,9 +120,9 @@ function HomePage() {
 
       {/* เมนูด้านล่าง */}
       <footer className="bottom-nav">
-        <div className="nav-item active"><FiHome /></div>
-        <div className="nav-item" onClick={() => navigate('/search')}><FiSearch /></div>
-        <div className="nav-item" onClick={() => navigate('/profile')}><FiUser /></div>
+        <FiHome className="nav-icon active" />
+        <FiSearch className="nav-icon" onClick={() => navigate('/search')} />
+        <FiUser className="nav-icon" onClick={() => navigate('/profile')} />
       </footer>
     </div>
   );
