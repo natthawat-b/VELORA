@@ -33,15 +33,8 @@ export default defineConfig({
 
   /* ส่วนที่แก้ไขเพิ่มความเสถียร */
  webServer: {
-    // 1. แก้ Path: ต้องเป็น ../VELORA (ตัวพิมพ์ใหญ่ตามรูป) และ /frontend
-    command: 'npm run dev --prefix ../VELORA/frontend', 
-    
-    // 2. แก้ Port: เปลี่ยนเป็น 5174 ตามที่ Vite แจ้งว่าพอร์ต 5173 ถูกใช้ไปแล้ว
-    url: 'http://localhost:5173',
-    
-    reuseExistingServer: !process.env.CI,
-    stdout: 'pipe',
-    stderr: 'pipe',
-    timeout: 120 * 1000,
+    command: 'npm run dev --prefix ../frontend', // สมมติว่า frontend อยู่ขนานกับ e2e-testing
+    url: 'http://localhost:5173', // ตรวจสอบให้ชัวร์ว่า frontend รันพอร์ตนี้จริงๆ
+    reuseExistingServer: true, 
   },
 });

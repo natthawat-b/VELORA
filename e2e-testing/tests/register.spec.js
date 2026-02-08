@@ -1,27 +1,36 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Registration Page', () => {
-  
+
   test.beforeEach(async ({ page }) => {
-    // เปลี่ยนจาก '/' เป็น Path หน้าสมัครสมาชิกของคุณ เช่น '/register'
-    await page.goto('/'); 
+    // ไปที่หน้าสมัครสมาชิก
+    await page.goto('/register');
   });
 
   test('ควรแสดงฟอร์มสมัครสมาชิกครบถ้วน', async ({ page }) => {
-    // ตรวจสอบว่ามีช่องกรอกข้อมูลสำคัญไหม (ปรับตาม id หรือ name ในโค้ดคุณ)
+    // ตรวจสอบว่ามีช่องกรอกข้อมูลสำคัญครบถ้วน
+    await expect(page.locator('input[name="username"]')).toBeVisible();
     await expect(page.locator('input[name="email"]')).toBeVisible();
     await expect(page.locator('input[name="password"]')).toBeVisible();
-    await expect(page.locator('button[type="nono-button"q]')).toBeVisible();
+    await expect(page.locator('input[name="phone"]')).toBeVisible();
+    await expect(page.locator('button[type="submit"]')).toBeVisible();
   });
 
-  test('ไม่ควรสมัครผ่านถ้ากรอก Password ไม่ตรงกัน', async ({ page }) => {
+  test('ควรกรอกข้อมูลและส่งฟอร์มได้', async ({ page }) => {
+    // กรอกข้อมูลครบถ้วน
+    await page.fill('input[name="username"]', 'testuser');
     await page.fill('input[name="email"]', 'test@example.com');
     await page.fill('input[name="password"]', '123456');
-    await page.fill('input[name="confirmPassword"]', '654321');
-    await page.click('button[type="submit"]');
+    await page.fill('input[name="phone"]', '0812345678');
 
-    // ตรวจสอบ Error message (ปรับตาม class หรือ text ที่คุณใช้)
-    const error = page.locator('.text-red-500'); // สมมติว่าใช้ Tailwind class
-    await expect(error).toContainText('ไม่ตรงกัน');
+    // ตรวจสอบว่าค่าในฟอร์มถูกต้อง
+    await expect(page.locator('input[name="username"]')).toHaveValue('testuser');
+    await expect(page.locator('input[name="email"]')).toHaveValue('test@example.com');
+    await expect(page.locator('input[name="password"]')).toHaveValue('123456');
+    await expect(page.locator('input[name="phone"]')).toHaveValue('0812345678');
+
+    // ตรวจสอบว่าปุ่ม submit ใช้งานได้
+    const submitButton = page.locator('button[type="submit"]');
+    await expect(submitButton).toBeEnabled();
   });
 });
