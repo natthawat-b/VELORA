@@ -14,7 +14,8 @@ function HomePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/product');
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+        const response = await axios.get(`${apiUrl}/api/product`);
         if (response.data.success) {
           setProducts(response.data.payload);
         }
@@ -89,8 +90,8 @@ function HomePage() {
 
         {/* Product Grid เต็มหน้าจอ */}
         <section className="product-grid">
-          {products.length > 0 ? (
-            products.map((item) => (
+          {products.filter(item => item.productname && item.productphoto).length > 0 ? (
+            products.filter(item => item.productname && item.productphoto).map((item) => (
               <div 
                 key={item._id} 
                 className="product-card"

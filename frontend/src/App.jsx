@@ -6,7 +6,7 @@ import './assets/App.css';
 
 
 // กำหนด URL ของ Backend API
-const API_URL = 'http://localhost:3001/api';
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001') + '/api';
 
 function App() {
   const navigate = useNavigate();

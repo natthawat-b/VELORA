@@ -7,7 +7,7 @@ import { FiChevronLeft, FiPlus, FiImage, FiX } from 'react-icons/fi';
 function EditProductPage() {
   const navigate = useNavigate();
   const { id } = useParams(); // Get product ID from URL
-  const API_URL = 'http://localhost:3001/api';
+  const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001') + '/api';
   
   // State สำหรับเก็บข้อมูล
   const [productName, setProductName] = useState('');

@@ -15,7 +15,8 @@ const SearchPage = () => {
   const performSearch = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3001/api/product/search', {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const response = await axios.post(`${apiUrl}/api/product/search`, {
         productname: searchTerm
       });
       if (response.data.success) {
