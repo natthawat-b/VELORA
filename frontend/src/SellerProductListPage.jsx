@@ -13,6 +13,35 @@ function SellerProductListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Fetch products function
+  const fetchProducts = useCallback(async () => {
+    try {
+      setLoading(true);
+      
+      // Get shop ID from localStorage
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      const shopId = userData._id;
+      
+      if (!shopId) {
+        setError('ไม่พบข้อมูลร้านค้า กรุณา login ใหม่');
+        setLoading(false);
+        return;
+      }
+
+      // Fetch products filtered by shopId directly from backend
+      const response = await axios.get(`${API_URL}/product/?shopId=${shopId}`);
+      
+      if (response.data.success) {
+        setProducts(response.data.payload);
+      }
+    } catch (err) {
+      console.error('Error fetching products:', err);
+      setError('เกิดข้อผิดพลาดในการโหลดข้อมูลสินค้า');
+    } finally {
+      setLoading(false);
+    }
+  }, []); // เอา API_URL ออกจาก dependencies เพราะเป็น constant
+
   // Fetch products on mount
   useEffect(() => {
     fetchProducts();
@@ -45,34 +74,6 @@ function SellerProductListPage() {
     // Navigate to edit page with product ID
     navigate(`/edit-product/${productId}`);
   };
-
-  const fetchProducts = useCallback(async () => {
-    try {
-      setLoading(true);
-      
-      // Get shop ID from localStorage
-      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-      const shopId = userData._id;
-      
-      if (!shopId) {
-        setError('ไม่พบข้อมูลร้านค้า กรุณา login ใหม่');
-        setLoading(false);
-        return;
-      }
-
-      // Fetch products filtered by shopId directly from backend
-      const response = await axios.get(`${API_URL}/product/?shopId=${shopId}`);
-      
-      if (response.data.success) {
-        setProducts(response.data.payload);
-      }
-    } catch (err) {
-      console.error('Error fetching products:', err);
-      setError('เกิดข้อผิดพลาดในการโหลดข้อมูลสินค้า');
-    } finally {
-      setLoading(false);
-    }
-  }, [API_URL]);
 
   return (
     <div className="seller-page-container">
