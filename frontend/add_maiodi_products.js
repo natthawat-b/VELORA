@@ -31,10 +31,10 @@ const products = [
 ];
 
 const addProducts = async () => {
-  console.log('Adding products to http://localhost:3001/api/product/add ...');
+  console.log('Adding products to https://velora-1.onrender.com/api/product/add ...');
   for (const product of products) {
     try {
-      const response = await axios.post('http://localhost:3001/api/product/add', product);
+      const response = await axios.post('https://velora-1.onrender.com/api/product/add', product);
       console.log(`Added ${product.productname}:`, response.data.message || 'Success');
     } catch (error) {
       console.error(`Error adding ${product.productname}:`, error.message);
