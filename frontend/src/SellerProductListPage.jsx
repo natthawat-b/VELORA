@@ -6,7 +6,7 @@ import { FiChevronLeft, FiPlus, FiGrid, FiList, FiEdit, FiTrash2, FiDollarSign }
 
 function SellerProductListPage() {
   const navigate = useNavigate();
-  const API_URL = 'https://velora-x8m0.onrender.com/api/user/register';
+  const API_URL = 'https://velora-x8m0.onrender.com/api';
   
   const [balance] = useState(0);
   const [products, setProducts] = useState([]);
