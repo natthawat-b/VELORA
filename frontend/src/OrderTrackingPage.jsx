@@ -32,7 +32,7 @@ function OrderTrackingPage() {
         const userId = userData.id || userData._id; // รองรับทั้ง id และ _id
         
         // เรียก API
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        const apiUrl = import.meta.env.VITE_API_URL || 'https://velora.onrender.com';
         const response = await axios.get(`${apiUrl}/api/order/user?userId=${userId}`);
         
         if (response.data.success) {
