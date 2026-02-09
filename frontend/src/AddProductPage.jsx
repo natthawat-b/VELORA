@@ -121,7 +121,7 @@ function AddProductPage() {
       {/* --- Header --- */}
       <header className="page-header">
         <div className="header-inner">
-          <button className="btn-back">
+          <button className="btn-back" onClick={() => navigate('/seller-products')}>
             <FiChevronLeft /> ย้อนกลับ
           </button>
           <h1 className="header-title">เพิ่มรายการสินค้า</h1>
