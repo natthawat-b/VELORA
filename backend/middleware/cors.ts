@@ -2,7 +2,7 @@ import cors from "cors";
 
 
 const corsOption: cors.CorsOptions = {
-  origin: "*",
+  origin: "https://velora-mu-vert.vercel.app",
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: [
     "Content-Type",
