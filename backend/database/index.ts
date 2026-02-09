@@ -1,14 +1,12 @@
 import mongoose from "mongoose";
-import config from "@/config";
 
-
-export async function connectDB() {
+export const connectDB = async () => {
   try {
-    await mongoose.connect(
-      config.DATABASE_URL ?? "mongodb://127.0.0.1:27017/velora"
-    );
-    console.log("Mongo DB connected");
+    // ต้องใช้ process.env.MONGODB_URI เท่านั้น ห้ามใส่ localhost
+    const conn = await mongoose.connect(process.env.MONGODB_URI as string);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error("Mongo DB connection error", error);
+    console.error("Database connection failed:", error);
+    process.exit(1);
   }
-}
+};
