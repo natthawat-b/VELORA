@@ -6,7 +6,7 @@ import { FiChevronLeft, FiShoppingCart, FiHeart, FiMessageCircle, FiPlus, FiEdit
 import { FaStar } from 'react-icons/fa';
 import { useCart } from './context/CartContext';
 
-const API_URL = 'https://velora-x8m0.onrender.com';
+const API_URL = 'https://velora-x8m0.onrender.com/api/user/register';
 
 function ProductDetailPage() {
   const { id } = useParams();

@@ -6,7 +6,7 @@ import { FiChevronLeft, FiPlus, FiImage, FiX } from 'react-icons/fi';
 
 function AddProductPage() {
   const navigate = useNavigate();
-  const API_URL = 'https://velora-x8m0.onrender.com';
+  const API_URL = 'https://velora-x8m0.onrender.com/api/user/register';
   
   // State สำหรับเก็บข้อมูล
   const [productName, setProductName] = useState('');

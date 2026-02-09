@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/register.css';
 
-const API_URL = 'https://velora-x8m0.onrender.com';
+const API_URL = 'https://velora-x8m0.onrender.com/api/user/register';
 
 const SellerSignup = () => {
   const navigate = useNavigate();
