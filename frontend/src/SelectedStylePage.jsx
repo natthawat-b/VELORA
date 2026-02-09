@@ -14,7 +14,7 @@ function SelectedStylePage() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const apiUrl = import.meta.env.VITE_API_URL || 'https://velora.onrender.com';
+        const apiUrl = import.meta.env.VITE_API_URL || 'https://velora-1.onrender.com';
         const response = await axios.get(`${apiUrl}/api/product?style=${styleName}`);
         if (response.data.success) {
           setProducts(response.data.payload);

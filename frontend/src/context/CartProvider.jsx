@@ -32,7 +32,7 @@ export function CartProvider({ children }) {
       // สร้าง Array ของ Promise เพื่อดึงข้อมูลสินค้าแต่ละตัว
       const updatedItemsPromises = currentItems.map(async (item) => {
         try {
-          const apiUrl = import.meta.env.VITE_API_URL || 'https://velora.onrender.com';
+          const apiUrl = import.meta.env.VITE_API_URL || 'https://velora-1.onrender.com';
           const response = await fetch(`${apiUrl}/api/product/${item.productId}`);
           const data = await response.json();
           

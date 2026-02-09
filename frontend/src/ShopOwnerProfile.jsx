@@ -12,7 +12,7 @@ function ShopOwnerProfile() {
   const [loading, setLoading] = useState(true);
   const [shopPhoto, setShopPhoto] = useState('');
   const [photoPreview, setPhotoPreview] = useState('');
-  const API_URL = 'https://velora.onrender.com/api';
+  const API_URL = 'https://velora-1.onrender.com/api';
 
   useEffect(() => {
     fetchShopData();
