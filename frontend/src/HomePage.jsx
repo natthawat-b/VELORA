@@ -14,7 +14,7 @@ function HomePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('https://velora-1.onrender.com/api/product');
+        const response = await axios.get('https://velora-x8m0.onrender.com/product');
         if (response.data.success) {
           setProducts(response.data.payload);
         }

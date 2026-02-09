@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://velora-1.onrender.com/api';
+const API_URL = 'https://velora-x8m0.onrender.com';
 const NEW_PLACEHOLDER = 'https://placehold.co/300x400/EEE/31343C';
 
 async function fixProductImages() {

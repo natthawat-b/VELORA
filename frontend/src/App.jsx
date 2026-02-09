@@ -6,7 +6,7 @@ import './assets/App.css';
 
 
 // กำหนด URL ของ Backend API
-const API_URL = 'https://velora-1.onrender.com/api';
+const API_URL = 'https://velora-x8m0.onrender.com';
 
 function App() {
   const navigate = useNavigate();
