@@ -15,6 +15,15 @@ export default async function registerShop(data: IShop) {
       return errRes.BAD_REQUEST({ message: "รหัสผ่านต้องมีตัวอักษรพิมพ์ใหญ่อย่างน้อย 1 ตัว" });
     }
 
+    // 3. เช็คเลขบัตรประชาชนเป็นเลขซ้ำกันทั้งหมดหรือไม่ (เช่น 1111111111111)
+    if (data.shopIDcard && /^(\d)\1+$/.test(data.shopIDcard)) {
+      return errRes.BAD_REQUEST({ message: "เลขบัตรประชาชนไม่ถูกต้อง ห้ามเป็นเลขซ้ำกันทั้งหมด" });
+    }
+
+    // 4. เช็คเลขบัญชีเป็นเลขซ้ำกันทั้งหมดหรือไม่ (เช่น 0000000000)
+    if (data.shopBankNumber && /^(\d)\1+$/.test(data.shopBankNumber)) {
+      return errRes.BAD_REQUEST({ message: "เลขบัญชีไม่ถูกต้อง ห้ามเป็นเลขซ้ำกันทั้งหมด" });
+    }
     // --- Logic เดิมของคุณ ---
     // เช็คว่า Username หรือ Email ซ้ำไหม
     const existingUser = await Shop.findOne({

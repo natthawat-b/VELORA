@@ -16,6 +16,7 @@ function AddProductPage() {
   const [price, setPrice] = useState('');
   const [productPhoto, setProductPhoto] = useState(''); // Base64 string
   const [photoPreview, setPhotoPreview] = useState(''); // For preview
+  const [additionalPhotos, setAdditionalPhotos] = useState([]); // Array of base64 strings
   const [isRentable, setIsRentable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -59,12 +60,52 @@ function AddProductPage() {
       const base64String = reader.result;
       setProductPhoto(base64String);
       setPhotoPreview(base64String);
-      setError(''); // Clear any previous errors
+      setError('');
+      e.target.value = ''; // Reset input so same file can be selected again
     };
     reader.onerror = () => {
       setError('เกิดข้อผิดพลาดในการอ่านไฟล์');
     };
     reader.readAsDataURL(file);
+  };
+
+  // Handle additional image upload
+  const handleAdditionalImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (additionalPhotos.length >= 4) {
+      setError('สามารถอัปโหลดรูปภาพเพิ่มเติมได้สูงสุด 4 รูป');
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setError('ขนาดไฟล์รูปภาพต้องไม่เกิน 10MB');
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      setError('กรุณาเลือกไฟล์รูปภาพเท่านั้น');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAdditionalPhotos((prev) => [...prev, reader.result]);
+      setError('');
+      e.target.value = ''; // Reset input
+    };
+    reader.onerror = () => {
+      setError('เกิดข้อผิดพลาดในการอ่านไฟล์');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Remove additional image
+  const removeAdditionalImage = (index) => {
+    const newPhotos = [...additionalPhotos];
+    newPhotos.splice(index, 1);
+    setAdditionalPhotos(newPhotos);
   };
 
   // Handle form submission
@@ -96,6 +137,7 @@ function AddProductPage() {
         productname: productName,
         productdetail: description,
         productphoto: productPhoto, // Base64 string
+        productAdditionalImages: additionalPhotos, // Array of Base64 strings
         productstyle: selectedStyle,
         productsize: selectedSizes.join(', '), // Convert array to string
         productAllowedToRent: isRentable,
@@ -189,14 +231,49 @@ function AddProductPage() {
               )}
             </div>
             
-            {/* Gallery Thumbnails (จำลองว่ามีรูปเล็กๆ) */}
-            <div className="image-thumbnails">
-              <div className={`thumb-box ${photoPreview ? 'active' : ''}`}>
-                {photoPreview ? <FiImage /> : <FiPlus />}
-              </div>
-              <div className="thumb-box"><FiPlus /></div>
-              <div className="thumb-box"><FiPlus /></div>
-              <div className="thumb-box"><FiPlus /></div>
+            {/* Gallery Thumbnails */}
+            <div className="image-thumbnails" style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
+              {additionalPhotos.map((photo, index) => (
+                <div key={index} className="thumb-box active" style={{ position: 'relative', width: '60px', height: '60px', borderRadius: '8px', overflow: 'hidden' }}>
+                  <img src={photo} alt={`Additional ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <button
+                    type="button"
+                    onClick={() => removeAdditionalImage(index)}
+                    style={{
+                      position: 'absolute',
+                      top: '2px',
+                      right: '2px',
+                      background: 'rgba(0,0,0,0.6)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '18px',
+                      height: '18px',
+                      fontSize: '10px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <FiX />
+                  </button>
+                </div>
+              ))}
+              
+              {/* Add More Button (shows if less than 4 photos) */}
+              {additionalPhotos.length < 4 && (
+                <label htmlFor="additional-upload" className="thumb-box" style={{ width: '60px', height: '60px', borderRadius: '8px', border: '2px dashed #ccc', display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', color: '#999' }}>
+                  <FiPlus />
+                  <input
+                    id="additional-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAdditionalImageUpload}
+                    style={{ display: 'none' }}
+                  />
+                </label>
+              )}
             </div>
           </div>
 

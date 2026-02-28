@@ -7,24 +7,65 @@ import API_URL from './config/api';
 function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    name: '',
     username: '',
     email: '',
     password: '',
     phone: ''
   });
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // จำกัดรหัสผ่านให้ใส่ได้แค่ตัวอักษรและตัวเลขเท่านั้น
+    if (name === 'password') {
+      const filtered = value.replace(/[^a-zA-Z0-9]/g, '');
+      setFormData({ ...formData, password: filtered });
+      return;
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    const filtered = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+    setConfirmPassword(filtered);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    // ตรวจสอบรหัสผ่านตรงกันหรือไม่
+    if (formData.password !== confirmPassword) {
+      setError('รหัสผ่านไม่ตรงกัน กรุณากรอกใหม่');
+      return;
+    }
+
+    // ตรวจสอบเบอร์โทรขึ้นต้นด้วย 0
+    if (formData.phone && !formData.phone.startsWith('0')) {
+      setError('เบอร์โทรศัพท์ต้องขึ้นต้นด้วย 0');
+      return;
+    }
+
+    // ตรวจสอบตัวเลขซ้ำเกิน 6 ตัว
+    if (formData.phone) {
+      const digitCounts = {};
+      for (const char of formData.phone) {
+        digitCounts[char] = (digitCounts[char] || 0) + 1;
+        if (digitCounts[char] > 6) {
+          setError('เบอร์โทรศัพท์ห้ามมีตัวเลขซ้ำกันเกิน 6 ตัว');
+          return;
+        }
+      }
+    }
+
     setLoading(true);
 
     try {
@@ -68,6 +109,17 @@ function Register() {
             <label>ชื่อ</label>
             <input 
               type="text" 
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>ชื่อผู้ใช้</label>
+            <input 
+              type="text" 
               name="username"
               value={formData.username}
               onChange={handleChange}
@@ -93,6 +145,17 @@ function Register() {
               name="password"
               value={formData.password}
               onChange={handleChange}
+              placeholder="อย่างน้อย 6 ตัว และมีตัวพิมพ์ใหญ่"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>ยืนยันรหัสผ่าน</label>
+            <input 
+              type="password" 
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
               required
             />
           </div>
@@ -104,6 +167,7 @@ function Register() {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
+              placeholder="ตัวเลขเท่านั้น ไม่ต้องใส่ - เช่น 0812345678"
             />
           </div>
 

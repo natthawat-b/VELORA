@@ -5,10 +5,16 @@ import { IShop } from "../../../types/shop";
 
 export default async function login(req: Request, res: Response) {
     try {
-        const { shopname, shopPassword } = req.body;
-        const shop = await Shop.findOne({ shopname });
+        const { shopusername, shopPassword } = req.body;
+        // ค้นหาทั้ง shopusername และ shopname เพื่อรองรับข้อมูลเก่า
+        const shop = await Shop.findOne({
+            $or: [
+                { shopusername: shopusername },
+                { shopname: shopusername }
+            ]
+        });
         if (!shop) {
-            return res.status(404).json(errRes.DATA_NOT_FOUND({ message: "Shop not found" }));
+            return res.status(404).json(errRes.DATA_NOT_FOUND({ message: "ไม่พบผู้ใช้นี้" }));
         }
         if (shop.shopPassword !== shopPassword) {
             return res.status(401).json(errRes.BAD_REQUEST({ message: "Invalid password" }));

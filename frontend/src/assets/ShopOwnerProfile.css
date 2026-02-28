@@ -130,21 +130,25 @@ body {
 
 .shop-owner-container .btn-edit-img {
   position: absolute;
-  bottom: 5px;
+  bottom: -35px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-70%);
   background: none;
   border: none;
   cursor: pointer;
 }
 
 .shop-owner-container .edit-text {
-  font-size: 12px;
+  font-size: 13px;
   color: #888;
   text-decoration: underline;
-  background: rgba(255,255,255,0.8);
-  padding: 2px 8px;
-  border-radius: 10px;
+  background: rgba(255,255,255,0.9);
+  padding: 4px 10px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
 }
 
 /* Profile Photo Styles */
@@ -157,27 +161,28 @@ body {
 
 .shop-owner-container .btn-save-photo {
   position: absolute;
-  bottom: -40px;
+  bottom: -35px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(10%);
   background-color: #4caf50;
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
+  padding: 4px 10px;
+  border-radius: 15px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 14px;
+  gap: 4px;
+  font-size: 13px;
   font-weight: 500;
+  white-space: nowrap;
   box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
   transition: all 0.2s;
 }
 
 .shop-owner-container .btn-save-photo:hover {
   background-color: #45a049;
-  transform: translateX(-50%) translateY(-2px);
+  transform: translateX(10%) translateY(-2px);
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
 }
 
@@ -403,4 +408,141 @@ body {
 .shop-owner-container .nav-item:hover {
   color: var(--text-dark);
   transform: scale(1.1);
+}
+
+/* --- Modal ข้อมูลเพิ่มเติม --- */
+.info-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.info-modal {
+  background: var(--white);
+  border-radius: 20px;
+  width: 90%;
+  max-width: 420px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.info-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.info-modal-header h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.btn-close-modal {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #999;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.btn-close-modal:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.info-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-item-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.info-label {
+  font-size: 14px;
+  color: #888;
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+.info-input,
+.info-select {
+  width: 100%;
+  padding: 12px 20px;
+  background: #d9d9d9;
+  border: none;
+  border-radius: 25px;
+  font-size: 15px;
+  font-family: 'Kanit', sans-serif;
+  outline: none;
+  box-sizing: border-box;
+  transition: background-color 0.3s;
+}
+
+.info-input:focus,
+.info-select:focus {
+  background-color: #cecece;
+}
+
+.info-select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+.btn-save-info {
+  width: 100%;
+  padding: 14px;
+  background-color: #000;
+  color: #d4af37;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  font-family: 'Kanit', sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.btn-save-info:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+}
+
+.btn-save-info:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

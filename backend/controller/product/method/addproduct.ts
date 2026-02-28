@@ -22,6 +22,8 @@ export default async function addproduct(data: Omit<IProduct, 'productid'>) {
         const formattedId = String(nextId).padStart(4, '0');
 
         // 4. สร้าง Product ใหม่
+        console.log("=== Add Product Debug ===");
+        console.log("Received productAdditionalImages:", data.productAdditionalImages ? data.productAdditionalImages.length : 0);
         const newProduct = await Product.create({
             ...data,
             productid: formattedId

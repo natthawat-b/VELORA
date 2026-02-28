@@ -13,10 +13,7 @@ const SellerSignup = () => {
     shopname: '',
     shopEmail: '',
     shopPassword: '',
-    shopPhone: '',
-    shopIDcard: '',
-    shopBank: '',
-    shopBankNumber: ''
+    shopPhone: ''
   });
   
   const [error, setError] = useState('');
@@ -96,12 +93,13 @@ const SellerSignup = () => {
             />
           </div>
           <div className="form-group">
-            <label>รหัสผ่าน (อย่างน้อย 6 ตัว, มีตัวพิมพ์ใหญ่)</label>
+            <label>รหัสผ่าน</label>
             <input 
               type="password" 
               name="shopPassword"
               value={formData.shopPassword}
               onChange={handleChange}
+              placeholder="อย่างน้อย 6 ตัว และมีตัวพิมพ์ใหญ่"
               required
               minLength="6"
             />
@@ -113,37 +111,7 @@ const SellerSignup = () => {
               name="shopPhone"
               value={formData.shopPhone}
               onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>เลขบัตรประชาชน</label>
-            <input 
-              type="text" 
-              name="shopIDcard"
-              value={formData.shopIDcard}
-              onChange={handleChange}
-              maxLength="13" 
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>ธนาคาร</label>
-            <input 
-              type="text" 
-              name="shopBank"
-              value={formData.shopBank}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>เลขบัญชี</label>
-            <input 
-              type="text" 
-              name="shopBankNumber"
-              value={formData.shopBankNumber}
-              onChange={handleChange}
+              placeholder="ตัวเลขเท่านั้น ไม่ต้องใส่ - เช่น 0812345678"
               required
             />
           </div>
