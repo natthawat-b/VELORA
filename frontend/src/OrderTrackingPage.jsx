@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/OrderTrackingPage.css';
 import { FiChevronLeft, FiSearch, FiBox, FiTruck, FiCheckCircle, FiPackage } from 'react-icons/fi';
+import API_URL from './config/api';
 
 function OrderTrackingPage() {
   const navigate = useNavigate();
@@ -32,8 +33,7 @@ function OrderTrackingPage() {
         const userId = userData.id || userData._id; // รองรับทั้ง id และ _id
         
         // เรียก API
-        const apiUrl = import.meta.env.VITE_API_URL || 'https://velora-1.onrender.com';
-        const response = await axios.get(`${apiUrl}/api/order/user?userId=${userId}`);
+        const response = await axios.get(`${API_URL}/order/user?userId=${userId}`);
         
         if (response.data.success) {
             setOrders(response.data.payload || []);

@@ -3,11 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './assets/AddProductPage.css'; // Reuse same CSS
 import { FiChevronLeft, FiPlus, FiImage, FiX } from 'react-icons/fi';
+import API_URL from './config/api';
 
 function EditProductPage() {
   const navigate = useNavigate();
   const { id } = useParams(); // Get product ID from URL
-  const API_URL = 'https://velora-x8m0.onrender.com/api';
   
   // State สำหรับเก็บข้อมูล
   const [productName, setProductName] = useState('');

@@ -5,8 +5,7 @@ import './assets/ProductDetailPage.css';
 import { FiChevronLeft, FiShoppingCart, FiHeart, FiMessageCircle, FiPlus, FiEdit, FiTrash2, FiX } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
 import { useCart } from './context/CartContext';
-
-const API_URL = 'https://velora-x8m0.onrender.com/api';
+import API_URL from './config/api';
 
 function ProductDetailPage() {
   const { id } = useParams();

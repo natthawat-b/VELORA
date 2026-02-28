@@ -3,10 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/App.css';
 
-
+import API_URL from './config/api';
 
 // กำหนด URL ของ Backend API
-const API_URL = 'https://velora-x8m0.onrender.com/api';
 
 function App() {
   const navigate = useNavigate();

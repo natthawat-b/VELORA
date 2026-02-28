@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { CartContext } from './CartContext';
+import API_URL from '../config/api';
 
 export function CartProvider({ children }) {
   // โหลดข้อมูลจาก localStorage เมื่อเริ่มต้น
@@ -32,8 +33,7 @@ export function CartProvider({ children }) {
       // สร้าง Array ของ Promise เพื่อดึงข้อมูลสินค้าแต่ละตัว
       const updatedItemsPromises = currentItems.map(async (item) => {
         try {
-          const apiUrl = import.meta.env.VITE_API_URL || 'https://velora-1.onrender.com';
-          const response = await fetch(`${apiUrl}/api/product/${item.productId}`);
+          const response = await fetch(`${API_URL}/product/${item.productId}`);
           const data = await response.json();
           
           if (data.success && data.payload) {

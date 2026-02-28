@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/SellerProductListPage.css';
 import { FiChevronLeft, FiPlus, FiGrid, FiList, FiEdit, FiTrash2, FiDollarSign } from 'react-icons/fi';
+import API_URL from './config/api';
 
 function SellerProductListPage() {
   const navigate = useNavigate();
-  const API_URL = 'https://velora-x8m0.onrender.com/api';
   
   const [balance] = useState(0);
   const [products, setProducts] = useState([]);

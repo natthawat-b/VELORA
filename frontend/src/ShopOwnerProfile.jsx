@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/ShopOwnerProfile.css';
 import { FiShoppingCart, FiMessageSquare, FiBox, FiTruck, FiCheckCircle, FiHome, FiSearch, FiUser, FiEdit2, FiCamera, FiShoppingBag, FiLogOut, FiCheck, FiX } from 'react-icons/fi';
+import API_URL from './config/api';
 
 function ShopOwnerProfile() {
   const navigate = useNavigate();
@@ -12,7 +13,6 @@ function ShopOwnerProfile() {
   const [loading, setLoading] = useState(true);
   const [shopPhoto, setShopPhoto] = useState('');
   const [photoPreview, setPhotoPreview] = useState('');
-  const API_URL = 'https://velora-x8m0.onrender.com/api';
 
   useEffect(() => {
     fetchShopData();

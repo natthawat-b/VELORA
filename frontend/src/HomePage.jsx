@@ -4,6 +4,7 @@ import './assets/HomePage.css';
 import { FiShoppingCart, FiHome, FiSearch, FiUser, FiLogOut } from 'react-icons/fi';
 import axios from 'axios';
 import { useCart } from './context/CartContext.jsx';
+import API_URL from './config/api';
 
 function HomePage() {
   const [products, setProducts] = useState([]);
@@ -14,7 +15,7 @@ function HomePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('https://velora-x8m0.onrender.com/api/product');
+        const response = await axios.get(`${API_URL}/product`);
         if (response.data.success) {
           setProducts(response.data.payload);
         }

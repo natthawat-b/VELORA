@@ -4,6 +4,7 @@ import axios from 'axios';
 import { FiArrowLeft, FiSearch, FiShoppingCart } from 'react-icons/fi';
 import './assets/SearchPage.css';
 import { useCart } from './context/CartContext.jsx';
+import API_URL from './config/api';
 
 const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,7 +22,7 @@ const SearchPage = () => {
     try {
       // If "ทั้งหมด" is selected and no search term, fetch all products
       if (selectedStyle === 'ทั้งหมด' && !searchTerm) {
-        const response = await axios.get('https://velora-x8m0.onrender.com/api/product');
+        const response = await axios.get(`${API_URL}/product`);
         if (response.data.success) {
           setSearchResults(response.data.payload);
         } else {
@@ -36,7 +37,7 @@ const SearchPage = () => {
           searchQuery = searchTerm || selectedStyle;
         }
 
-        const response = await axios.post('https://velora-x8m0.onrender.com/api/product/search', {
+        const response = await axios.post(`${API_URL}/product/search`, {
           productname: searchQuery
         });
         

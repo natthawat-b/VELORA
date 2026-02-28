@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/SelectedStylePage.css';
 import { FiChevronLeft, FiSearch, FiHome, FiUser } from 'react-icons/fi';
+import API_URL from './config/api';
 
 function SelectedStylePage() {
   const { styleName } = useParams();
@@ -14,8 +15,7 @@ function SelectedStylePage() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const apiUrl = import.meta.env.VITE_API_URL || 'https://velora-1.onrender.com';
-        const response = await axios.get(`${apiUrl}/api/product?style=${styleName}`);
+        const response = await axios.get(`${API_URL}/product?style=${styleName}`);
         if (response.data.success) {
           setProducts(response.data.payload);
         }

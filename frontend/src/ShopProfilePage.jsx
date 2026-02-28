@@ -5,8 +5,7 @@ import './assets/ShopProfilePage.css';
 import { FiChevronLeft, FiMessageCircle, FiShoppingCart, FiSearch, FiUser, FiMoreHorizontal } from 'react-icons/fi';
 import { FaStar, FaCircle } from 'react-icons/fa';
 import { useCart } from './context/CartContext';
-
-const API_URL = 'https://velora-x8m0.onrender.com/api';
+import API_URL from './config/api';
 
 function ShopProfilePage() {
   const { id } = useParams();
