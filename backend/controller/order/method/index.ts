@@ -1,4 +1,4 @@
-import create from "./create";
+mimport create from "./create";
 import getByUser from "./getByUser";
 
 export default {
