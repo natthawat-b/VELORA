@@ -2,70 +2,73 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Kanit', sans-serif; /* แนะนำให้ใช้ font ภาษาไทยที่ดูโมเดิร์น */
+  font-family: 'Kanit', sans-serif;
   background-color: #f5f5f5;
-  /* display: flex;  <-- REMOVED caused layout issues in other pages */
-  /* justify-content: center; <-- REMOVED */
-  /* align-items: center; <-- REMOVED */
   min-height: 100vh;
 }
 
 /* Error message */
 .error-message {
   color: #e74c3c;
-  font-size: 14px;
-  margin: 10px 0;
+  font-size: 13px;
+  margin: 5px 0;
   text-align: center;
+  background: #fef2f2;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
 }
 
-/* ปุ่ม disabled */
-.btn-login:disabled {
-  background-color: #999;
-  cursor: not-allowed;
-}
-
-
+/* ========== Login Page ========== */
 .login-container {
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center; /* Added to center login card vertically */
-  min-height: 100vh; /* Added to ensure full height for centering */
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(160deg, #f8f6f0 0%, #ede8dc 50%, #f0ece4 100%);
 }
 
-/* การ์ดหลักตรงกลางจอ */
+/* การ์ดหลัก */
 .login-card {
   background-color: white;
-  padding: 40px 60px;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 48px 56px;
+  border-radius: 20px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 400px;/* จำกัดความกว้างบนหน้าจอคอม */
+  max-width: 400px;
   text-align: center;
 }
 
 /* โลโก้ VELORA */
 .login-brand-logo {
-  font-size: 48px;
-  font-weight: bold;
+  font-size: 44px;
+  font-weight: 700;
   color: #1a0a2e;
-  margin-bottom: 40px;
-  letter-spacing: 2px;
+  margin-bottom: 36px;
+  letter-spacing: 4px;
+  font-family: 'Times New Roman', serif;
+}
+
+/* หัวข้อ section */
+.login-section {
+  margin-bottom: 28px;
 }
 
 .login-section-title {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 600;
   margin-bottom: 20px;
-  color: #000;
+  color: #333;
+  letter-spacing: 0.5px;
 }
 
-/* ฟอร์มและ Input */
+/* ========== Form & Input ========== */
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-bottom: 40px;
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
 .input-group {
@@ -74,72 +77,120 @@ body {
 
 .input-group label {
   display: block;
-  font-size: 14px;
-  color: #888;
-  margin-bottom: 5px;
-  margin-left: 10px;
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 6px;
+  margin-left: 4px;
+  font-weight: 500;
 }
 
 .input-group input {
   width: 100%;
-  padding: 12px 20px;
-  border: none;
-  background-color: #d9d9d9;
-  border-radius: 25px;
+  padding: 13px 18px;
+  border: 1.5px solid #e0dcd4;
+  background-color: #fafaf8;
+  border-radius: 12px;
   box-sizing: border-box;
   outline: none;
+  font-size: 15px;
+  font-family: 'Kanit', sans-serif;
+  color: #333;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* ปุ่มต่างๆ */
+.input-group input:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+  background-color: #fff;
+}
+
+.input-group input::placeholder {
+  color: #bbb;
+}
+
+/* ========== Buttons ========== */
+
+/* ปุ่มเข้าสู่ระบบ — สีทอง (primary action) */
 .btn-login {
-  background-color: #1a1a1a;
+  background: linear-gradient(135deg, #d4af37 0%, #c49f2f 100%);
   color: white;
   border: none;
-  padding: 12px;
-  border-radius: 25px;
+  padding: 14px;
+  border-radius: 12px;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  margin-top: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s, background 0.3s;
+  margin-top: 8px;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  transition: transform 0.2s, box-shadow 0.3s;
+  letter-spacing: 0.5px;
+  font-family: 'Kanit', sans-serif;
 }
 
 .btn-login:hover {
-  background-color: #333;
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
 }
 
+.btn-login:active {
+  transform: translateY(0);
+}
+
+.btn-login:disabled {
+  background: #ccc;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ปุ่มสร้างบัญชี — outline style */
 .button-group {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
 .btn-outline {
-  background-color: white;
-  color: #000;
-  border: 1px solid #eee;
-  padding: 12px;
-  border-radius: 25px;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s;
-}
-
-.btn-gold {
-  background-color: #d4af37; /* สีทองตามภาพ */
-  color: #000;
-  border: none;
-  padding: 12px;
-  border-radius: 25px;
-  font-size: 16px;
+  flex: 1;
+  background-color: #fafaf8;
+  color: #333;
+  border: 1.5px solid #e0dcd4;
+  padding: 13px;
+  border-radius: 12px;
+  font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
-  transition: transform 0.2s;
+  transition: all 0.2s;
+  font-family: 'Kanit', sans-serif;
 }
 
-.btn-outline:hover, .btn-gold:hover {
+.btn-outline:hover {
+  border-color: #d4af37;
+  color: #c49f2f;
+  background-color: #fffdf5;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.1);
+}
+
+.btn-outline:active {
+  transform: translateY(0);
+}
+
+/* ปุ่มทอง (สำรอง) */
+.btn-gold {
+  background: linear-gradient(135deg, #d4af37 0%, #c49f2f 100%);
+  color: white;
+  border: none;
+  padding: 13px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+  transition: transform 0.2s;
+  font-family: 'Kanit', sans-serif;
+}
+
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.4);
 }

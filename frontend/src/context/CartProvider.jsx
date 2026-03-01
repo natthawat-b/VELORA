@@ -52,6 +52,8 @@ export function CartProvider({ children }) {
               productPhoto: product.productphoto,
               productPrice: newPrice,
               fullPrice: price, // เก็บราคาเต็มไว้คำนวณกรณีเปลี่ยน type
+              maxStock: product.productStock || 99,
+              shopId: product.shopId || product.shop?._id || item.shopId || '',
               shopName: product.shop?.name || 'ร้านค้า',
               rentalDays: item.rentalDays || calculateDays(item.rentalStartDate, item.rentalEndDate),
               rentalStartDate: item.rentalStartDate,
@@ -87,6 +89,22 @@ export function CartProvider({ children }) {
 
   // เพิ่มสินค้าลงตะกร้า
   const addToCart = (product, type = 'buy') => {
+    // เช็คว่าสินค้าเดียวกัน + type เดียวกันอยู่ในตะกร้าแล้วหรือไม่
+    const existingItem = cartItems.find(
+      item => item.productId === product._id && item.type === type
+    );
+
+    if (existingItem) {
+      // ถ้ามีอยู่แล้ว → เพิ่มจำนวน +1
+      setCartItems(prev => prev.map(item =>
+        item.id === existingItem.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      ));
+      return true;
+    }
+
+    // ถ้ายังไม่มี → สร้าง item ใหม่
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -103,14 +121,15 @@ export function CartProvider({ children }) {
         : price,
       fullPrice: price,
       type: type,
-      shopId: product.shopId || '',
+      shopId: product.shopId || product.shop?._id || '',
       shopName: product.shop?.name || 'ร้านค้า',
       quantity: 1,
+      maxStock: product.productStock || 99,
       rentalDays: 1, 
       rentalStartDate: type === 'rent' ? today.toISOString().split('T')[0] : null,
       rentalEndDate: type === 'rent' ? tomorrow.toISOString().split('T')[0] : null,
       isDateSpecific: true,
-      isSelected: true, // Default selected
+      isSelected: true,
     };
 
     setCartItems(prev => [...prev, cartItem]);
@@ -202,12 +221,27 @@ export function CartProvider({ children }) {
     setCartItems(prev => prev.filter(item => item.id !== id));
   };
 
-  // อัพเดทจำนวนสินค้า
+  // อัพเดทจำนวนสินค้า (จำกัดไม่เกิน stock)
   const updateQuantity = (id, change) => {
     setCartItems(prev => prev.map(item => {
       if (item.id === id) {
         const newQty = item.quantity + change;
-        return newQty > 0 ? { ...item, quantity: newQty } : item;
+        const max = item.maxStock || 99;
+        if (newQty < 1) return item;
+        if (newQty > max) return item;
+        return { ...item, quantity: newQty };
+      }
+      return item;
+    }));
+  };
+
+  // ตั้งค่าจำนวนสินค้าโดยตรง (สำหรับพิมพ์ตัวเลข)
+  const setQuantity = (id, newQty) => {
+    setCartItems(prev => prev.map(item => {
+      if (item.id === id) {
+        const max = item.maxStock || 99;
+        const qty = Math.max(1, Math.min(newQty, max));
+        return { ...item, quantity: qty };
       }
       return item;
     }));
@@ -251,6 +285,7 @@ export function CartProvider({ children }) {
     addToCart,
     removeFromCart,
     updateQuantity,
+    setQuantity,
     updateItemType,
     updateRentalDates,
     toggleDateMode,

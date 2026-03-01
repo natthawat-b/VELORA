@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import './PaymentMethodPage.css';
+import './assets/SharedNavbar.css';
 import { FiChevronLeft, FiChevronDown, FiCreditCard } from 'react-icons/fi';
 import { FaMoneyBillWave, FaUniversity } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 function PaymentMethodPage() {
+  const navigate = useNavigate();
   const [selectedMethod, setSelectedMethod] = useState('bank'); // 'cash' or 'bank'
   const [bank, setBank] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
@@ -20,12 +23,13 @@ function PaymentMethodPage() {
   return (
     <div className="payment-page-container">
       {/* --- Header --- */}
-      <header className="payment-navbar">
-        <div className="nav-inner">
-          <button className="btn-back">
-            <FiChevronLeft /> ย้อนกลับ
+      <header className="velora-navbar">
+        <div className="nav-content">
+          <button className="nav-back-btn" onClick={() => navigate(-1)}>
+            <FiChevronLeft />
           </button>
-          <h1 className="page-title">เลือกวิธีการชำระเงิน</h1>
+          <h1 className="nav-title">เลือกวิธีการชำระเงิน</h1>
+          <div className="nav-spacer"></div>
         </div>
       </header>
 

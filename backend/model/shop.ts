@@ -12,7 +12,7 @@ const ShopSchema = new mongoose.Schema(
         shopBankNumber: { type: String },
         shopPhoto: { type: String }, // Profile photo (base64)
         followers: [{ type: String }], // Array of user IDs who follow this shop
-        
+        lastActive: { type: Date, default: null }, // Last time shop owner was active
     },
      { timestamps:true, versionKey: false}
     );

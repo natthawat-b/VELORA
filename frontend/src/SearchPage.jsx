@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FiArrowLeft, FiSearch, FiShoppingCart } from 'react-icons/fi';
+import { FiArrowLeft, FiSearch, FiShoppingCart, FiChevronLeft } from 'react-icons/fi';
 import './assets/SearchPage.css';
+import './assets/SharedNavbar.css';
 import { useCart } from './context/CartContext.jsx';
 import API_URL from './config/api';
 
@@ -82,31 +83,35 @@ const SearchPage = () => {
 
   return (
     <div className="search-page-container">
-      <header className="search-header">
-        <button onClick={() => navigate(-1)} className="back-button">
-          <FiArrowLeft />
-        </button>
-        <form 
-          className="search-bar-wrapper" 
-          onSubmit={(e) => {
-            e.preventDefault();
-            performSearch();
-          }}
-        >
-          <button type="submit" style={{background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center'}}>
-            <FiSearch className="search-icon" />
+      <header className="velora-navbar">
+        <div className="nav-content">
+          <button className="nav-back-btn" onClick={() => navigate(-1)}>
+            <FiChevronLeft />
           </button>
-          <input
-            type="text"
-            placeholder="ค้นหาสไตล์สินค้า..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            autoFocus
-          />
-        </form>
-        <div className="cart-wrapper" onClick={() => navigate('/cart')}>
-          <FiShoppingCart className="icon-cart" />
-          {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+          <form 
+            className="search-bar-wrapper" 
+            onSubmit={(e) => {
+              e.preventDefault();
+              performSearch();
+            }}
+          >
+            <button type="submit" style={{background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center'}}>
+              <FiSearch className="search-icon" />
+            </button>
+            <input
+              type="text"
+              placeholder="ค้นหาสไตล์สินค้า..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              autoFocus
+            />
+          </form>
+          <div className="nav-icons">
+            <div className="cart-icon-wrapper" onClick={() => navigate('/cart')}>
+              <FiShoppingCart className="nav-icon" />
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </div>
+          </div>
         </div>
       </header>
 
@@ -143,10 +148,10 @@ const SearchPage = () => {
                   <p className="search-p-category">{item.productstyle || 'Category'}</p>
                   <h3 className="search-p-title">{item.productname}</h3>
                   <div className="search-p-footer">
-                    <span className="search-p-price">฿ {item.productPrice?.toLocaleString()}</span>
+                    <span className="search-p-price">฿ {(item.productPrice || item.productprice)?.toLocaleString()}</span>
                     <span className="search-p-rating">★ 4.9</span>
                   </div>
-                  <p className="search-p-rent">เช่า: {Math.round(item.productPrice * 0.1)}/วัน</p>
+                  <p className="search-p-rent">เช่า: ฿ {(item.productRentPrice || Math.round((item.productPrice || item.productprice || 0) * 0.1))?.toLocaleString()}/วัน</p>
                 </div>
               </div>
             ))}

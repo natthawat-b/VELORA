@@ -21,12 +21,12 @@ body {
 
 /* --- Main Navbar --- */
 .main-navbar {
-  background: white;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   padding: 15px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -37,32 +37,35 @@ body {
 .nav-left {
   display: flex;
   align-items: center;
-  flex: 1; /* Occupy left space */
+  flex: 1;
   justify-content: flex-start;
 }
 
 .brand-logo {
   font-size: 28px;
-  font-family: 'Times New Roman', serif;
   margin: 0;
-  letter-spacing: 1px;
+  letter-spacing: 4px;
   text-align: center;
-  flex: 0 0 auto; /* Don't grow/shrink */
-  /* align-self: center; Implied by align-items: center */
+  flex: 0 0 auto;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff 0%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Ensure Logo is centered by balancing left/right */
 .nav-right {
   display: flex;
   gap: 20px;
-  flex: 1; /* Occupy right space */
+  flex: 1;
   justify-content: flex-end;
   align-items: center;
 }
 
 .shop-page-container .btn-back {
-  background: white;
-  border: 1px solid #ddd;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
   font-size: 24px;
   cursor: pointer;
   display: flex;
@@ -71,14 +74,13 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  transition: all 0.2s;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transition: all 0.3s;
   padding: 0;
+  color: #fff;
 }
 
 .shop-page-container .btn-back:hover {
-  background-color: #f0f0f0;
-  transform: scale(1.05);
+  background: rgba(255,255,255,0.2);
 }
 
 .shop-page-container .btn-back svg {
@@ -90,7 +92,7 @@ body {
 .nav-icon {
   font-size: 24px;
   cursor: pointer;
-  color: #333;
+  color: rgba(255,255,255,0.85);
 }
 
 /* --- Shop Header Section --- */

@@ -20,6 +20,10 @@ export default async function login(req: Request, res: Response) {
             return res.status(401).json(errRes.BAD_REQUEST({ message: "Invalid password" }));
         }
         
+        // Update lastActive timestamp
+        shop.lastActive = new Date();
+        await shop.save();
+        
         // Return shop data with userType for role-based navigation
         const shopData = {
             _id: shop._id,

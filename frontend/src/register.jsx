@@ -16,7 +16,6 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -67,6 +66,12 @@ function Register() {
     }
 
     setLoading(true);
+
+    if (formData.password !== confirmPassword) {
+      setError('รหัสผ่านไม่ตรงกัน กรุณากรอกใหม่');
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await axios.post(`${API_URL}/user/register`, formData);

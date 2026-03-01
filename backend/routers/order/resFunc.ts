@@ -22,4 +22,22 @@ async function updateOrderStatus(req: Request, res: Response) {
     return res.status(data.code).json(data);
 }
 
-export default { createOrder, getOrdersByUser, getOrdersByShop, updateOrderStatus };
+export default { 
+  create,
+  getByUser, 
+  createOrder, 
+  getOrdersByUser, 
+  getOrdersByShop, 
+  updateOrderStatus 
+};
+
+async function create(req: Request, res: Response) {
+  const data = await controller.create(req.body);
+  return res.status(data.code).json(data);
+}
+
+async function getByUser(req: Request, res: Response) {
+  const userId = req.query.userId as string;
+  const data = await controller.getByUser(userId);
+  return res.status(data.code).json(data);
+}

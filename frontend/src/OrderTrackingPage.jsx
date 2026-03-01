@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/OrderTrackingPage.css';
-import { FiChevronLeft, FiSearch, FiBox, FiTruck, FiCheckCircle, FiPackage } from 'react-icons/fi';
+import './assets/SharedNavbar.css';
+import { FiChevronLeft, FiSearch, FiBox, FiTruck, FiCheckCircle, FiPackage, FiShoppingCart } from 'react-icons/fi';
+import { useCart } from './context/CartContext.jsx';
 import API_URL from './config/api';
 
 function OrderTrackingPage() {
   const navigate = useNavigate();
+  const { cartCount } = useCart();
   // State สำหรับเก็บ Tab ที่เลือก (ค่าเริ่มต้น: 'picked_up' ตามรูปที่ 19)
   const [activeTab, setActiveTab] = useState('shipping');
   const [orders, setOrders] = useState([]);
@@ -60,17 +63,17 @@ function OrderTrackingPage() {
   return (
     <div className="tracking-page-container">
       {/* --- Navbar --- */}
-      <header className="tracking-navbar">
-        <div className="nav-inner">
-          <div className="nav-left">
-            <button className="btn-back" onClick={() => navigate(-1)}>
-              <FiChevronLeft />
-            </button>
-            <h1 className="page-title">ติดตามสถานะ</h1>
-          </div>
-          <div className="search-box">
-            <FiSearch />
-            <input type="text" placeholder="ค้นหาเลขพัสดุ / ชื่อสินค้า..." />
+      <header className="velora-navbar">
+        <div className="nav-content">
+          <button className="nav-back-btn" onClick={() => navigate(-1)}>
+            <FiChevronLeft />
+          </button>
+          <h1 className="nav-title">ติดตามสถานะ</h1>
+          <div className="nav-icons">
+            <div className="cart-icon-wrapper" onClick={() => navigate('/cart')}>
+              <FiShoppingCart className="nav-icon" />
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </div>
           </div>
         </div>
       </header>

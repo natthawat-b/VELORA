@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/SelectedStylePage.css';
-import { FiChevronLeft, FiSearch, FiHome, FiUser } from 'react-icons/fi';
+import './assets/SharedNavbar.css';
+import { FiChevronLeft, FiSearch, FiHome, FiUser, FiShoppingCart } from 'react-icons/fi';
+import { useCart } from './context/CartContext.jsx';
 import API_URL from './config/api';
 
 function SelectedStylePage() {
   const { styleName } = useParams();
   const navigate = useNavigate();
+  const { cartCount } = useCart();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   
@@ -37,20 +40,18 @@ function SelectedStylePage() {
 
   return (
     <div className="page-container">
-      {/* Header: ปุ่มย้อนกลับ + Search Bar */}
-      <header className="top-header">
-        <div className="header-inner">
-          <button className="btn-back" onClick={() => navigate(-1)}>
+      {/* Header */}
+      <header className="velora-navbar">
+        <div className="nav-content">
+          <button className="nav-back-btn" onClick={() => navigate(-1)}>
             <FiChevronLeft />
           </button>
-          <div className="search-box-wrapper">
-            <FiSearch className="search-icon" />
-            <input 
-              type="text" 
-              placeholder={`สไตล์ ${styleName}...`}
-              className="search-input" 
-              defaultValue={styleName} 
-            />
+          <h1 className="nav-title">สไตล์ {styleName}</h1>
+          <div className="nav-icons">
+            <div className="cart-icon-wrapper" onClick={() => navigate('/cart')}>
+              <FiShoppingCart className="nav-icon" />
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </div>
           </div>
         </div>
       </header>
@@ -80,7 +81,7 @@ function SelectedStylePage() {
                     </div>
                     
                      {item.productAllowedToRent && (
-                        <p className="rent-text">เช่า: {Math.round(item.productPrice * 0.1)}/วัน</p>
+                        <p className="rent-text">เช่า: {item.productRentPrice || Math.round(item.productPrice * 0.1)}/วัน</p>
                      )}
                   </div>
                 </div>

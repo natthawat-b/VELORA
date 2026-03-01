@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { registerShop as registerShopController, loginShop as loginShopController, getById, editShop as editShopController, getAllShops as getAllShopsController, followShop as followShopController } from "../../controller/shop/method/index";
 import { IShop } from "@/types/shop";
+import Shop from "../../model/shop";
 
 interface IdParams {
     id: string;
@@ -36,6 +37,22 @@ async function followShopRoute(req: Request<IdParams>, res: Response) {
     return res.status(data.code).json(data);
 }
 
+async function heartbeat(req: Request<IdParams>, res: Response) {
+    try {
+        const shop = await Shop.findByIdAndUpdate(
+            req.params.id,
+            { lastActive: new Date() },
+            { new: true }
+        );
+        if (!shop) {
+            return res.status(404).json({ success: false, message: 'Shop not found' });
+        }
+        return res.status(200).json({ success: true });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
+
 export default {
     register,
     login,
@@ -43,4 +60,5 @@ export default {
     editShop,
     getAllShops,
     followShopRoute,
+    heartbeat,
 };

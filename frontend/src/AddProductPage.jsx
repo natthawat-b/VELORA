@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/AddProductPage.css';
+import './assets/SharedNavbar.css';
 import { FiChevronLeft, FiPlus, FiImage, FiX } from 'react-icons/fi';
 import API_URL from './config/api';
 
@@ -18,6 +19,7 @@ function AddProductPage() {
   const [photoPreview, setPhotoPreview] = useState(''); // For preview
   const [additionalPhotos, setAdditionalPhotos] = useState([]); // Array of base64 strings
   const [isRentable, setIsRentable] = useState(false);
+  const [rentPrice, setRentPrice] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
@@ -152,6 +154,15 @@ function AddProductPage() {
       setError('ราคาสินค้าต้องไม่เกิน 10,000,000 บาท');
       return;
     }
+    if (parseFloat(price) < 1) {
+      setError('ราคาขายต้องมีค่าอย่างน้อย 1 บาท');
+      return;
+    }
+
+    if (isRentable && (!rentPrice || parseFloat(rentPrice) < 1)) {
+      setError('ราคาเช่าต้องมีค่าอย่างน้อย 1 บาท/วัน');
+      return;
+    }
 
     setLoading(true);
     
@@ -175,7 +186,8 @@ function AddProductPage() {
         productstyle: selectedStyle,
         productsize: selectedSizes.join(', '), // Convert array to string
         productAllowedToRent: isRentable,
-        productPrice: parseFloat(price)
+        productPrice: parseFloat(price),
+        productRentPrice: isRentable ? parseFloat(rentPrice) || 0 : 0
       };
 
       const response = await axios.post(`${API_URL}/product/add`, productData);
@@ -201,7 +213,8 @@ function AddProductPage() {
           <button className="btn-back" onClick={() => navigate('/seller-products')}>
             <FiChevronLeft />
           </button>
-          <h1 className="header-title">เพิ่มรายการสินค้า</h1>
+          <h1 className="nav-title">เพิ่มรายการสินค้า</h1>
+          <div className="nav-spacer"></div>
         </div>
       </header>
 
@@ -410,7 +423,7 @@ function AddProductPage() {
                     setPrice(val);
                   }
                 }}
-                min="0"
+                min="1"
                 max="10000000"
                 step="1"
               />
@@ -430,6 +443,21 @@ function AddProductPage() {
                 <span className="slider round"></span>
               </label>
             </div>
+
+            {/* ราคาเช่า (แสดงเมื่อเปิดอนุญาตเช่า) */}
+            {isRentable && (
+              <div className="form-group">
+                <label>ราคาเช่า (บาท/วัน)</label>
+                <input 
+                  type="number" 
+                  placeholder="ระบุราคาเช่าต่อวัน..." 
+                  value={rentPrice}
+                  onChange={(e) => setRentPrice(e.target.value)}
+                  min="1"
+                  required
+                />
+              </div>
+            )}
 
             {/* ปุ่ม Submit */}
             <div className="form-actions">

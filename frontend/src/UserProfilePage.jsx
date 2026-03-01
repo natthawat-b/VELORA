@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './assets/UserProfilePage.css';
-import { FiHome, FiSearch, FiUser, FiShoppingCart, FiMessageCircle, FiBox, FiTruck, FiCheckCircle, FiEdit2 } from 'react-icons/fi';
+import { FiHome, FiSearch, FiUser, FiShoppingCart, FiMessageCircle, FiBox, FiTruck, FiCheckCircle, FiEdit2, FiChevronLeft } from 'react-icons/fi';
 import { useCart } from './context/CartContext';
 
 const ProfilePage = () => {
@@ -36,6 +36,11 @@ const ProfilePage = () => {
     const handleLogout = () => {
         localStorage.removeItem('userData');
         localStorage.removeItem('userType');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('velora_cart');
+        localStorage.removeItem('velora_favorites');
+        localStorage.removeItem('velora_addresses');
+        localStorage.removeItem('userProfileImage');
         navigate('/');
     };
 
@@ -88,7 +93,10 @@ const ProfilePage = () => {
       {/* ... Navbar ... */}
       <header className="navbar">
         <div className="nav-content">
-          <h1 className="brand-logo">VELORA</h1>
+          <button className="nav-back-btn" onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', color: '#fff', fontSize: '22px', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '8px' }}>
+            <FiChevronLeft />
+          </button>
+          <h1 className="brand-logo" style={{ flex: 1, textAlign: 'center', fontSize: '18px', fontWeight: '700' }}>โปรไฟล์</h1>
           <div className="nav-icons">
             <div style={{ position: 'relative', display: 'inline-block' }} onClick={() => navigate('/cart')}>
               <FiShoppingCart className="nav-icon" />
@@ -107,7 +115,6 @@ const ProfilePage = () => {
                 alignItems: 'center'
               }}>{cartCount}</span>}
             </div>
-            <FiMessageCircle className="nav-icon" />
           </div>
         </div>
       </header>
@@ -182,23 +189,26 @@ const ProfilePage = () => {
 
           {/* Section 2: Status Dashboard */}
           <section className="status-dashboard">
-            <h3 className="section-title">รายการซื้อ</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 className="section-title">รายการซื้อ</h3>
+              <span style={{ color: '#888', cursor: 'pointer', fontSize: '14px' }} onClick={() => navigate('/order-list')}>ดูทั้งหมด &gt;</span>
+            </div>
             <div className="status-grid">
-              <div className="status-item">
+              <div className="status-item" onClick={() => navigate('/order-list')} style={{ cursor: 'pointer' }}>
                 <div className="status-icon-box">
                   <FiBox />
                 </div>
                 <p>ที่ต้องได้รับ</p>
               </div>
               
-              <div className="status-item">
+              <div className="status-item" onClick={() => navigate('/order-tracking')} style={{ cursor: 'pointer' }}>
                 <div className="status-icon-box">
                   <FiTruck />
                 </div>
                 <p>กำลังจัดส่ง</p>
               </div>
               
-              <div className="status-item">
+              <div className="status-item" onClick={() => navigate('/order-list')} style={{ cursor: 'pointer' }}>
                 <div className="status-icon-box completed">
                   <FiCheckCircle />
                 </div>

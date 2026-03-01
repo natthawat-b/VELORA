@@ -17,7 +17,15 @@ function HomePage() {
       try {
         const response = await axios.get(`${API_URL}/product`);
         if (response.data.success) {
-          setProducts(response.data.payload);
+          // เรียงตามยอดไลค์ (มากไปน้อย) แล้วราคาถูกสุด
+          const sorted = response.data.payload.sort((a, b) => {
+            const likeDiff = (b.likeCount || 0) - (a.likeCount || 0);
+            if (likeDiff !== 0) return likeDiff;
+            const priceA = a.productPrice || a.productprice || 0;
+            const priceB = b.productPrice || b.productprice || 0;
+            return priceA - priceB;
+          });
+          setProducts(sorted);
         }
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -35,6 +43,13 @@ function HomePage() {
 
   const handleLogout = () => {
     if (window.confirm('คุณต้องการออกจากระบบหรือไม่?')) {
+      localStorage.removeItem('userData');
+      localStorage.removeItem('userType');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('velora_cart');
+      localStorage.removeItem('velora_favorites');
+      localStorage.removeItem('velora_addresses');
+      localStorage.removeItem('userProfileImage');
       navigate('/');
     }
   };
@@ -72,7 +87,7 @@ function HomePage() {
                   <span>฿ {(products[0].productPrice || products[0].productprice)?.toLocaleString()}</span> <small>ราคาขาย</small>
                 </div>
                 <div className="price-tag sub-price">
-                  <span>฿ {Math.round((products[0].productPrice || products[0].productprice) * 0.1)?.toLocaleString()}</span> <small>ราคาเช่าต่อวัน</small>
+                  <span>฿ {products[0].productRentPrice || Math.round((products[0].productPrice || products[0].productprice) * 0.1)?.toLocaleString()}</span> <small>ราคาเช่าต่อวัน</small>
                 </div>
               </>
             ) : (
@@ -81,14 +96,15 @@ function HomePage() {
           </div>
           <div className="banner-image">
              {products.length > 0 && products[0].productphoto ? (
-              <img src={products[0].productphoto} alt={products[0].productname} style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px'}} />
+              <img src={products[0].productphoto} alt={products[0].productname} />
             ) : (
               <div className="placeholder-img"></div>
             )}
           </div>
         </section>
 
-        {/* Product Grid เต็มหน้าจอ */}
+        {/* Product Grid */}
+        <h2 className="section-title">สินค้าแนะนำ ✨</h2>
         <section className="product-grid">
           {products.filter(item => item.productname && item.productphoto).length > 0 ? (
             products.filter(item => item.productname && item.productphoto).map((item) => (
@@ -107,9 +123,9 @@ function HomePage() {
                   <h3 className="p-title">{item.productname}</h3>
                   <div className="p-footer">
                     <span className="p-price">฿ {(item.productPrice || item.productprice)?.toLocaleString()}</span>
-                    <span className="p-rating">★ 4.9</span>
+                    <span className="p-rating">❤ {item.likeCount || 0}</span>
                   </div>
-                  <p className="p-rent">เช่า: {Math.round((item.productPrice || item.productprice) * 0.1)}/วัน</p>
+                  <p className="p-rent">เช่า: ฿ {(item.productRentPrice || Math.round((item.productPrice || item.productprice || 0) * 0.1))?.toLocaleString()}/วัน</p>
                 </div>
               </div>
             ))

@@ -12,7 +12,9 @@ const ProductSchema = new mongoose.Schema(
         productsize: { type: String, required: true},
         productAllowedToRent: { type: Boolean, required: true},
         productPrice: { type: Number, required: true},
-        productStock: { type: Number, default: 1},
+        productRentPrice: { type: Number, default: 0 },
+        productStock: { type: Number, default: 99 },
+        likeCount: { type: Number, default: 0 },
     }
 )
 

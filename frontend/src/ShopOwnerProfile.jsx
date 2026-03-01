@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/ShopOwnerProfile.css';
 import './assets/ChatListPage.css';
+import './assets/SharedNavbar.css';
 import { FiShoppingCart, FiMessageSquare, FiBox, FiTruck, FiCheckCircle, FiHome, FiSearch, FiUser, FiEdit2, FiCamera, FiShoppingBag, FiLogOut, FiCheck, FiX, FiInfo } from 'react-icons/fi';
 import API_URL from './config/api';
 
@@ -22,6 +23,7 @@ function ShopOwnerProfile() {
   useEffect(() => {
     fetchShopData();
     fetchChatCount();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchChatCount = async () => {
@@ -160,6 +162,11 @@ function ShopOwnerProfile() {
   const handleLogout = () => {
     localStorage.removeItem('userData');
     localStorage.removeItem('userType');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('velora_cart');
+    localStorage.removeItem('velora_favorites');
+    localStorage.removeItem('velora_addresses');
+    localStorage.removeItem('userProfileImage');
     navigate('/');
   };
 
@@ -170,14 +177,18 @@ function ShopOwnerProfile() {
   return (
     <div className="shop-owner-container">
       {/* --- Navbar --- */}
-      <header className="navbar">
+      <header className="velora-navbar">
         <div className="nav-content">
-          <h1 className="brand-logo">VELORA</h1>
+          <button className="nav-back-btn" onClick={() => navigate(-1)}>
+            <FiChevronLeft />
+          </button>
+          <h1 className="nav-title">โปรไฟล์ร้านค้า</h1>
           <div className="nav-icons">
             <div className="nav-icon-wrapper" onClick={() => navigate('/chat-list')} title="แชท">
               <FiMessageSquare className="nav-icon" />
               {chatCount > 0 && <span className="nav-chat-badge">{chatCount > 99 ? '99+' : chatCount}</span>}
             </div>
+            <FiShoppingCart className="nav-icon" onClick={() => navigate('/cart')} title="ตะกร้า" />
             <FiLogOut className="nav-icon" onClick={handleLogout} style={{ color: '#d32f2f', cursor: 'pointer' }} title="ออกจากระบบ" />
           </div>
         </div>

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios'; // Removed unused import
 import './assets/CheckoutPage.css';
+import './assets/SharedNavbar.css';
 import { FiChevronLeft, FiMapPin, FiPhone, FiTruck, FiShield, FiChevronRight, FiCreditCard, FiBox, FiSmartphone, FiDollarSign, FiCheckCircle } from 'react-icons/fi';
 import { useCart } from './context/CartContext';
 import API_URL from './config/api';
+import ThaiAddressSelect from './components/ThaiAddressSelect';
 
 const PAYMENT_METHODS = [
   { id: 'promptpay', name: 'PromptPay (QR Code)', icon: <FiSmartphone />, description: 'สแกน QR Code เพื่อชำระเงิน' },
@@ -159,9 +161,10 @@ function CheckoutPage() {
     return sum + (price * item.quantity);
   }, 0);
   
-  // ค่าจัดส่งและประกัน
-  const standardShippingCost = 50;
-  const fastShippingCost = 100;
+  // ค่าจัดส่งและประกัน (คำนวณตามจำนวนชิ้น)
+  const totalQuantity = checkoutItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const standardShippingCost = productTotal >= 5000 ? 0 : 30 + (totalQuantity * 20); // ฟรีเมื่อครบ 5,000
+  const fastShippingCost = 50 + (totalQuantity * 30);
   const insuranceCost = 200;
 
   // คำนวณยอดรวมสุทธิ
@@ -176,17 +179,29 @@ function CheckoutPage() {
   // Cart Context
   const { removeItems } = useCart();
 
+  // Removed duplicate state declaration
+
   const handleConfirmOrder = async () => {
+    // ตรวจสอบว่าเลือกที่อยู่จัดส่งแล้วหรือยัง
     if (!selectedAddress) {
-      alert('กรุณาเลือกที่อยู่จัดส่ง');
+      alert('กรุณาเลือกหรือเพิ่มที่อยู่จัดส่งก่อนยืนยันการสั่งซื้อ');
       return;
     }
 
-    setOrdering(true);
-    try {
-      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-      const userId = userData._id || userData.id || '';
+    // ดึง userId จาก localStorage
+    const userDataStr = localStorage.getItem('userData');
+    if (!userDataStr) {
+      alert('กรุณาเข้าสู่ระบบก่อนทำการสั่งซื้อ');
+      navigate('/');
+      return;
+    }
+    const userData = JSON.parse(userDataStr);
+    const userId = userData._id || userData.id;
 
+    setOrdering(true);
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const orderData = {
         userId,
         items: checkoutItems.map(item => ({
@@ -196,31 +211,39 @@ function CheckoutPage() {
           price: item.productPrice,
           quantity: item.quantity,
           type: item.type || 'buy',
-          rentalDays: item.rentalDays,
+          rentalDays: item.rentalDays || 0,
+          shopName: item.shopName || 'ร้านค้า',
           shopId: item.shopId || '',
-          shopName: item.shopName || 'ร้านค้า'
         })),
         shippingAddress: selectedAddress,
         shippingMethod,
-        paymentMethod: paymentMethod?.id || 'promptpay',
-        productTotal,
         shippingCost: currentShippingCost,
         insuranceCost: currentInsuranceCost,
-        totalAmount: total
+        paymentMethod: paymentMethod?.id || 'promptpay',
+        totalPrice: total,
       };
 
-      await axios.post(`${API_URL}/order/create`, orderData);
+      const response = await fetch(`${apiUrl}/api/order/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData),
+      });
 
-      // ลบสินค้าออกจากตะกร้า
-      if (cartItems && cartItems.length > 0) {
-        const itemIds = cartItems.map(item => item.id);
-        removeItems(itemIds);
+      const result = await response.json();
+
+      if (result.success) {
+        // ลบสินค้าออกจากตะกร้า
+        if (cartItems && cartItems.length > 0) {
+          const itemIds = cartItems.map(item => item.id);
+          removeItems(itemIds);
+        }
+        setShowSuccessModal(true);
+      } else {
+        alert(result.error?.message || 'เกิดข้อผิดพลาดในการสั่งซื้อ');
       }
-
-      setShowSuccessModal(true);
-    } catch (err) {
-      console.error('Order error:', err);
-      alert('เกิดข้อผิดพลาดในการสั่งซื้อ: ' + (err.response?.data?.error?.message || err.message));
+    } catch (error) {
+      console.error('Order error:', error);
+      alert('ไม่สามารถเชื่อมต่อ server ได้ กรุณาลองใหม่อีกครั้ง');
     } finally {
       setOrdering(false);
     }
@@ -229,17 +252,52 @@ function CheckoutPage() {
   return (
     <div className="checkout-container">
       {/* --- Header --- */}
-      <header className="checkout-navbar">
-        <div className="nav-inner">
-          <button className="btn-back" onClick={handleGoBack}>
+      <header className="velora-navbar">
+        <div className="nav-content">
+          <button className="nav-back-btn" onClick={handleGoBack}>
             <FiChevronLeft />
           </button>
-          <h1 className="page-title">ทำการสั่งซื้อ</h1>
+          <h1 className="nav-title">ทำการสั่งซื้อ</h1>
           <div className="nav-spacer"></div>
         </div>
       </header>
 
       <main className="checkout-content">
+        {/* Step Indicator */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '8px',
+          padding: '15px 20px',
+          background: '#f9f9f9',
+          borderBottom: '1px solid #eee',
+          flexWrap: 'wrap'
+        }}>
+          {['1. ที่อยู่จัดส่ง', '2. ตัวเลือกจัดส่ง', '3. เลือกการชำระเงิน', '4. ยืนยันคำสั่งซื้อ'].map((step, i) => (
+            <div key={i} style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}>
+              <span style={{
+                background: '#333',
+                color: '#fff',
+                borderRadius: '50%',
+                width: '24px',
+                height: '24px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '12px',
+                fontWeight: 'bold',
+                flexShrink: 0
+              }}>{i + 1}</span>
+              <span style={{ fontSize: '13px', color: '#555', whiteSpace: 'nowrap' }}>{step.substring(3)}</span>
+              {i < 3 && <span style={{ color: '#ccc', margin: '0 4px' }}>→</span>}
+            </div>
+          ))}
+        </div>
+
         <div className="checkout-grid">
           
           {/* --- Left Column: Details --- */}
@@ -342,17 +400,25 @@ function CheckoutPage() {
               ))}
             </section>
 
-            {/* 5. Payment Method */}
-            <section className="info-card" onClick={() => setShowPaymentModal(true)} style={{ cursor: 'pointer' }}>
+            {/* 5. Payment Method - แสดงตัวเลือกทั้งหมดเลย */}
+            <section className="info-card">
               <h3 className="card-title">ชำระเงินโดย</h3>
-              <div className="info-row">
-                <div className="info-icon">{paymentMethod?.icon || <FiCreditCard />}</div>
-                <div className="info-text">
-                  <p className="main-text font-bold">{paymentMethod?.name || 'เลือกวิธีการชำระเงิน'}</p>
-                  {paymentMethod?.description && <p className="sub-text text-sm text-gray-500">{paymentMethod.description}</p>}
+              {PAYMENT_METHODS.map(method => (
+                <div
+                  key={method.id}
+                  className={`option-box ${paymentMethod?.id === method.id ? 'selected' : ''}`}
+                  onClick={() => setPaymentMethod(method)}
+                >
+                  <div className="option-icon">{method.icon}</div>
+                  <div className="option-details">
+                    <span className="option-name">{method.name}</span>
+                    <span className="option-desc">{method.description}</span>
+                  </div>
+                  {paymentMethod?.id === method.id && (
+                    <span style={{ color: '#4CAF50', fontWeight: 'bold', fontSize: '18px' }}>✓</span>
+                  )}
                 </div>
-                <FiChevronRight className="arrow-icon" />
-              </div>
+              ))}
             </section>
           </div>
 
@@ -372,6 +438,10 @@ function CheckoutPage() {
               <div className="summary-line">
                 <span>ค่าประกัน</span>
                 <span>฿ {currentInsuranceCost}</span>
+              </div>
+              <div className="summary-line">
+                <span>ชำระโดย</span>
+                <span style={{ fontWeight: '500' }}>{paymentMethod?.name || '-'}</span>
               </div>
 
               <div className="summary-divider"></div>
@@ -472,44 +542,8 @@ function CheckoutPage() {
                     required 
                   />
                 </div>
-                <div className="form-group">
-                  <label>จังหวัด</label>
-                  <input 
-                    type="text" 
-                    value={newAddress.province} 
-                    onChange={e => setNewAddress({...newAddress, province: e.target.value})}
-                    required 
-                  />
-                </div>
-                <div className="form-group">
-                  <label>เขต/อำเภอ</label>
-                  <input 
-                    type="text" 
-                    value={newAddress.district} 
-                    onChange={e => setNewAddress({...newAddress, district: e.target.value})}
-                    required 
-                  />
-                </div>
-                <div className="form-group">
-                  <label>แขวง/ตำบล</label>
-                  <input 
-                    type="text" 
-                    value={newAddress.subDistrict} 
-                    onChange={e => setNewAddress({...newAddress, subDistrict: e.target.value})}
-                    required 
-                  />
-                </div>
-                <div className="form-group">
-                  <label>รหัสไปรษณีย์</label>
-                  <input 
-                    type="text" 
-                    value={newAddress.postalCode} 
-                    onChange={e => setNewAddress({...newAddress, postalCode: e.target.value})}
-                    required 
-                  />
-                </div>
                 <div className="form-group full">
-                  <label>รายละเอียดที่อยู่ (บ้านเลขที่, ซอย, ถนน)</label>
+                  <label>รายละเอียดที่อยู่ (บ้านเลขที่, ซอย, หมู่, ถนน)</label>
                   <textarea 
                     value={newAddress.details} 
                     onChange={e => setNewAddress({...newAddress, details: e.target.value})}
@@ -518,7 +552,13 @@ function CheckoutPage() {
                   ></textarea>
                 </div>
                 
-                <button type="submit" className="btn-save-address">บันทึกที่อยู่</button>
+                {/* Thai Address Select Component (Province, District, SubDistrict, PostalCode) */}
+                <ThaiAddressSelect 
+                  address={newAddress} 
+                  onChange={setNewAddress} 
+                />
+                
+                <button type="submit" className="btn-save-address" style={{ marginTop: '20px' }}>บันทึกที่อยู่</button>
               </form>
             </div>
           </div>
@@ -570,6 +610,8 @@ function CheckoutPage() {
               <FiCheckCircle />
             </div>
             <h2 style={{ fontSize: '24px', marginBottom: '10px', color: '#333' }}>ชำระเงินเรียบร้อย</h2>
+            <p style={{ color: '#666', marginBottom: '8px' }}>ชำระผ่าน: <strong>{paymentMethod?.name}</strong></p>
+            <p style={{ color: '#333', fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>฿ {total.toLocaleString()}</p>
             <p style={{ color: '#666', marginBottom: '30px' }}>ขอบคุณที่ไว้วางใจ VELORA</p>
             <button 
               className="btn-place-order" 
