@@ -21,9 +21,9 @@ body {
 
 /* --- Header --- */
 .cart-header {
-  background: white;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   padding: 20px 40px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -37,31 +37,42 @@ body {
   align-items: center;
 }
 
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+.page-title {
+  flex: 1;
+  text-align: center;
 }
 
 .btn-back {
-  background: none;
-  border: none;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
   font-size: 24px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  color: #fff;
+  padding: 8px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  transition: all 0.3s;
 }
 
 .page-title {
-  font-size: 24px;
+  font-size: 22px;
   margin: 0;
+  color: #fff;
+  font-weight: 600;
 }
 
 .brand-logo {
   font-size: 24px;
-  font-family: 'Times New Roman', serif;
-  font-weight: bold;
-  letter-spacing: 1px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, #fff 0%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* --- Main Content Layout --- */

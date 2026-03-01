@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/ProductDetailPage.css';
+import './assets/SharedNavbar.css';
 import { FiChevronLeft, FiShoppingCart, FiHeart, FiMessageCircle, FiPlus, FiEdit, FiTrash2, FiX } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
 import { useCart } from './context/CartContext';
@@ -27,13 +28,68 @@ function ProductDetailPage() {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const [addedToCart, setAddedToCart] = useState(false);
-  const rentPrice = product ? Math.round(product.productPrice * 0.1) : 0;
+  const [isFavorite, setIsFavorite] = useState(false);
+  const rentPrice = product ? (product.productRentPrice || Math.round(product.productPrice * 0.1)) : 0;
 
-  // Mock reviews (you can replace with API later)
-  const reviews = [
-    { id: 1, user: 'ชื่อบัญชีผู้ซื้อ', comment: 'เน้นแรก', rating: 5 },
-    { id: 2, user: 'ชื่อบัญชีผู้ซื้อ', comment: 'เริ่ด', rating: 5 },
-  ];
+  // โหลดสถานะ favorite จาก localStorage
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem('velora_favorites') || '[]');
+    if (id && favorites.includes(id)) {
+      setIsFavorite(true);
+    }
+  }, [id]);
+
+  const handleToggleFavorite = async () => {
+    const favorites = JSON.parse(localStorage.getItem('velora_favorites') || '[]');
+    let updatedFavorites;
+    const action = isFavorite ? 'unlike' : 'like';
+    if (isFavorite) {
+      updatedFavorites = favorites.filter(fav => fav !== id);
+    } else {
+      updatedFavorites = [...favorites, id];
+    }
+    localStorage.setItem('velora_favorites', JSON.stringify(updatedFavorites));
+    setIsFavorite(!isFavorite);
+
+    // อัพเดท likeCount ใน DB
+    try {
+      await axios.post(`${API_URL}/product/${id}/like`, { action });
+    } catch (err) {
+      console.error('Error toggling like:', err);
+    }
+  };
+
+  // Review State
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+
+  const [userReviews, setUserReviews] = useState(() => {
+    const saved = localStorage.getItem(`velora_reviews_${id}`);
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const reviews = userReviews;
+
+  const handleSubmitReview = () => {
+    if (!reviewComment.trim()) {
+      alert('กรุณาเขียนความคิดเห็น');
+      return;
+    }
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    const newReview = {
+      id: Date.now(),
+      user: userData.username || 'ผู้ใช้',
+      comment: reviewComment,
+      rating: reviewRating,
+    };
+    const updated = [...userReviews, newReview];
+    setUserReviews(updated);
+    localStorage.setItem(`velora_reviews_${id}`, JSON.stringify(updated));
+    setReviewComment('');
+    setReviewRating(5);
+    setShowReviewModal(false);
+  };
 
   // Fetch product data on mount
   useEffect(() => {
@@ -161,16 +217,18 @@ function ProductDetailPage() {
   return (
     <div className="product-page-container">
       {/* --- Header --- */}
-      <header className="product-header">
-        <div className="header-inner">
-          <button className="btn-back" onClick={() => navigate(-1)}>
+      <header className="velora-navbar">
+        <div className="nav-content">
+          <button className="nav-back-btn" onClick={() => navigate(-1)}>
             <FiChevronLeft />
           </button>
-          <h1 className="header-title">VELORA</h1>
-          <button className="btn-cart" onClick={() => navigate('/cart')}>
-            <FiShoppingCart />
-            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-          </button>
+          <h1 className="nav-title">รายละเอียดสินค้า</h1>
+          <div className="nav-icons">
+            <div className="cart-icon-wrapper" onClick={() => navigate('/cart')}>
+              <FiShoppingCart />
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </div>
+          </div>
         </div>
       </header>
 
@@ -194,21 +252,37 @@ function ProductDetailPage() {
         {/* Right Column: Product Info */}
         <div className="product-info-section">
           
-          {/* Title & Price */}
+          {/* Title & Description */}
+          <h1 className="product-name">{product.productname}</h1>
+          <p className="product-description">{product.productdetail}</p>
+          
+          {/* Price */}
           <div className="info-header">
             <div className="price-group">
-              <h2 className="buy-price">฿ {product.productPrice?.toLocaleString()}</h2>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                <span style={{ fontSize: '13px', color: '#888', fontWeight: '500' }}>ราคาขาย</span>
+                <h2 className="buy-price">฿ {product.productPrice?.toLocaleString()}</h2>
+              </div>
               {product.productAllowedToRent && (
-                <span className="rent-price">฿ {Math.round(product.productPrice * 0.1)}/วัน</span>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginTop: '4px' }}>
+                  <span style={{ fontSize: '13px', color: '#888', fontWeight: '500' }}>ราคาเช่า</span>
+                  <span className="rent-price">฿ {(product.productRentPrice || Math.round(product.productPrice * 0.1))?.toLocaleString()}/วัน</span>
+                </div>
               )}
             </div>
-            <button className="btn-favorite">
-              <FiHeart />
+            <button className={`btn-favorite ${isFavorite ? 'active' : ''}`} onClick={handleToggleFavorite}>
+              <FiHeart style={isFavorite ? { fill: '#e74c3c', color: '#e74c3c' } : {}} />
             </button>
           </div>
 
-          <h1 className="product-name">{product.productname}</h1>
-          <p className="product-description">{product.productdetail}</p>
+          <p style={{ 
+            fontSize: '14px', 
+            fontWeight: '500',
+            color: (product.productStock || 99) > 0 ? '#4CAF50' : '#f44336',
+            margin: '0 0 15px 0'
+          }}>
+            คงเหลือ: {product.productStock ?? 99} ชิ้น
+          </p>
           
           {/* Owner Actions */}
           {isOwner && (
@@ -236,7 +310,7 @@ function ProductDetailPage() {
             <div className="seller-details">
               <h3 className="seller-name">{product?.shop?.name || 'ชื่อร้านค้า'}</h3>
               <div className="seller-rating">
-                <FaStar className="star-icon" /> 4.9
+                <FaStar className="star-icon" /> {reviews.length > 0 ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1) : 'ยังไม่มีรีวิว'}
               </div>
             </div>
             <button className="btn-visit-shop" onClick={handleVisitShop}>ดูร้านค้า</button>
@@ -248,7 +322,7 @@ function ProductDetailPage() {
           <div className="reviews-section">
             <div className="reviews-header">
               <h3>รีวิว</h3>
-              <button className="btn-add-review"><FiPlus /></button>
+              <button className="btn-add-review" onClick={() => setShowReviewModal(true)}><FiPlus /></button>
             </div>
             
             <div className="reviews-grid">
@@ -260,7 +334,7 @@ function ProductDetailPage() {
                   </div>
                   <div className="review-stars">
                     {[...Array(5)].map((_, i) => (
-                      <FaStar key={i} className="star-yellow" />
+                      <FaStar key={i} className={i < review.rating ? 'star-yellow' : 'star-gray'} />
                     ))}
                   </div>
                   <p className="review-comment">{review.comment}</p>
@@ -375,6 +449,51 @@ function ProductDetailPage() {
               <button className="btn-delete-confirm" onClick={handleDelete} disabled={deleteLoading}>
                 {deleteLoading ? 'กำลังลบ...' : 'ลบสินค้า'}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Add Review Modal */}
+      {showReviewModal && (
+        <div className="modal-overlay" onClick={() => setShowReviewModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>เขียนรีวิว</h2>
+              <button className="btn-close-modal" onClick={() => setShowReviewModal(false)}>
+                <FiX />
+              </button>
+            </div>
+            <div style={{ padding: '20px' }}>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>ให้คะแนน</label>
+                <div style={{ display: 'flex', gap: '5px' }}>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar
+                      key={star}
+                      onClick={() => setReviewRating(star)}
+                      style={{
+                        cursor: 'pointer',
+                        fontSize: '28px',
+                        color: star <= reviewRating ? '#f5a623' : '#ddd',
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>ความคิดเห็น</label>
+                <textarea
+                  value={reviewComment}
+                  onChange={(e) => setReviewComment(e.target.value)}
+                  rows="4"
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px', resize: 'vertical' }}
+                  placeholder="เขียนรีวิวของคุณ..."
+                />
+              </div>
+              <div className="modal-actions">
+                <button className="btn-cancel" onClick={() => setShowReviewModal(false)}>ยกเลิก</button>
+                <button className="btn-save" onClick={handleSubmitReview}>ส่งรีวิว</button>
+              </div>
             </div>
           </div>
         </div>

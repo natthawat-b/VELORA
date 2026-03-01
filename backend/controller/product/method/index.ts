@@ -4,6 +4,7 @@ import editproduct from "./editproduct";
 import searchproduct from "./searchproduct";
 import get from "./get";
 import getById from "./getById";
+import toggleLike from "./toggleLike";
 
 export default {
     addproduct,
@@ -12,5 +13,6 @@ export default {
     searchproduct,
     get,
     getById,
+    toggleLike,
 }
 

@@ -37,6 +37,11 @@ async function getProductById(req: Request<IdParams>, res: Response) {
     return res.status(data.code).json(data);
 }
 
+async function toggleLike(req: Request<IdParams>, res: Response) {
+    const data = await controller.toggleLike(req.params.id, req.body.action || 'like');
+    return res.status(data.code).json(data);
+}
+
 export default {
     addproduct,
     deleteproduct,
@@ -44,5 +49,6 @@ export default {
     searchproduct,
     getproduct,
     getProductById,
+    toggleLike,
 }
 

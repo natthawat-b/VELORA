@@ -1,16 +1,22 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './assets/CartPage.css';
-import { FiChevronLeft, FiTrash2, FiMinus, FiPlus, FiShoppingBag } from 'react-icons/fi';
+import './assets/SharedNavbar.css';
+import { FiChevronLeft, FiTrash2, FiMinus, FiPlus, FiShoppingBag, FiShoppingCart } from 'react-icons/fi';
 import { useCart } from './context/CartContext.jsx';
 
 function CartPage() {
   const navigate = useNavigate();
-  const { cartItems, removeFromCart, updateQuantity, updateItemType, updateRentalDates, toggleDateMode, updateRentalDuration, toggleSelection, cartTotal } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, setQuantity, updateItemType, updateRentalDates, toggleDateMode, updateRentalDuration, toggleSelection, cartTotal } = useCart();
 
   // คำนวณราคารวม
   const subtotal = cartTotal;
-  const shipping = cartItems.length > 0 ? 50 : 0; // ค่าส่งสมมติ
+  // คำนวณค่าจัดส่งตามจำนวนชิ้น (เฉพาะที่เลือก)
+  const selectedItems = cartItems.filter(i => i.isSelected !== false);
+  const totalQuantity = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
+  const shipping = selectedItems.length === 0 ? 0 
+    : subtotal >= 5000 ? 0  // ฟรีค่าส่งเมื่อซื้อครบ 5,000 บาท
+    : 30 + (totalQuantity * 20); // ฐาน 30 + 20 บาท/ชิ้น
   const total = subtotal + shipping;
 
   const handleGoBack = () => {
@@ -33,13 +39,15 @@ function CartPage() {
   return (
     <div className="cart-page-container">
       {/* Header */}
-      <header className="cart-header">
-        <div className="header-inner">
-          <div className="header-left">
-            <button className="btn-back" onClick={handleGoBack}><FiChevronLeft /></button>
-            <h1 className="page-title">รถเข็น ({cartItems.length})</h1>
+      <header className="velora-navbar">
+        <div className="nav-content">
+          <button className="nav-back-btn" onClick={handleGoBack}><FiChevronLeft /></button>
+          <h1 className="nav-title">รถเข็น ({cartItems.length})</h1>
+          <div className="nav-icons">
+            <div className="cart-icon-wrapper" onClick={() => navigate('/cart')}>
+              <FiShoppingCart className="nav-icon" />
+            </div>
           </div>
-          <div className="brand-logo">VELORA</div>
         </div>
       </header>
 
@@ -96,10 +104,26 @@ function CartPage() {
                     {/* Quantity & Rental Days Controls */}
                     <div className="quantity-controls-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                       <div className="quantity-controls">
-                        <button className="qty-btn" onClick={() => updateQuantity(item.id, -1)}><FiMinus /></button>
-                        <span className="qty-value">{item.quantity}</span>
-                        <button className="qty-btn" onClick={() => updateQuantity(item.id, 1)}><FiPlus /></button>
+                        <button className="qty-btn" onClick={() => updateQuantity(item.id, -1)} disabled={item.quantity <= 1}><FiMinus /></button>
+                        <input 
+                          type="number" 
+                          className="qty-value qty-input"
+                          value={item.quantity}
+                          min={1}
+                          max={item.maxStock || 99}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value);
+                            if (!isNaN(val)) setQuantity(item.id, val);
+                          }}
+                          onBlur={(e) => {
+                            const val = parseInt(e.target.value);
+                            if (isNaN(val) || val < 1) setQuantity(item.id, 1);
+                          }}
+                          style={{ width: '45px', textAlign: 'center', border: '1px solid #eee', borderRadius: '6px', padding: '4px 2px', fontSize: '14px', fontWeight: '600' }}
+                        />
+                        <button className="qty-btn" onClick={() => updateQuantity(item.id, 1)} disabled={item.quantity >= (item.maxStock || 99)}><FiPlus /></button>
                       </div>
+                      <span style={{ fontSize: '12px', color: '#999' }}>คงเหลือ {item.maxStock || 99} ชิ้น</span>
 
                       {/* Rental Date Range Selector */}
                       {item.type === 'rent' && (
@@ -164,7 +188,7 @@ function CartPage() {
               
               {/* Item Options Section */}
               <div className="cart-options-section">
-                {cartItems.map((item) => (
+                {cartItems.filter(item => item.isSelected !== false).map((item) => (
                   <div key={item.id} className="cart-option-item">
                     <div className="option-item-name">{item.productName}</div>
                     <div className="option-radio-group">
@@ -200,9 +224,14 @@ function CartPage() {
                 <span>฿ {subtotal.toLocaleString()}</span>
               </div>
               <div className="summary-row">
-                <span>ค่าจัดส่ง</span>
-                <span>฿ {shipping.toLocaleString()}</span>
+                <span>ค่าจัดส่ง ({totalQuantity} ชิ้น)</span>
+                <span>{shipping === 0 && subtotal >= 5000 ? <span style={{color: '#4CAF50', fontWeight: 600}}>ฟรี!</span> : `฿ ${shipping.toLocaleString()}`}</span>
               </div>
+              {subtotal > 0 && subtotal < 5000 && (
+                <div style={{ fontSize: '12px', color: '#d4af37', textAlign: 'right', marginTop: '-5px' }}>
+                  ซื้อเพิ่มอีก ฿{(5000 - subtotal).toLocaleString()} ฟรีค่าส่ง!
+                </div>
+              )}
               
               <div className="divider"></div>
               
@@ -211,8 +240,8 @@ function CartPage() {
                 <span className="total-price">฿ {total.toLocaleString()}</span>
               </div>
 
-              <button className="btn-checkout" onClick={handleCheckout}>
-                ชำระเงิน ({cartItems.length})
+              <button className="btn-checkout" onClick={handleCheckout} disabled={cartItems.filter(i => i.isSelected !== false).length === 0}>
+                ชำระเงิน ({cartItems.filter(i => i.isSelected !== false).length})
               </button>
             </div>
           </aside>

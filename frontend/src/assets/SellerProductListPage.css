@@ -22,12 +22,12 @@ body {
 
 /* --- Header (Dark Section) --- */
 .seller-header-section {
-  background-color: var(--bg-dark);
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   color: var(--text-white);
   padding: 20px 0 40px;
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 30px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 
 .seller-navbar {

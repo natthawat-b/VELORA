@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/ShopProfilePage.css';
+import './assets/SharedNavbar.css';
 import { FiChevronLeft, FiMessageCircle, FiShoppingCart, FiSearch, FiUser, FiMoreHorizontal } from 'react-icons/fi';
 import { FaStar, FaCircle } from 'react-icons/fa';
 import { useCart } from './context/CartContext';
@@ -156,33 +157,18 @@ function ShopProfilePage() {
   return (
     <div className="shop-page-container">
       {/* Navbar หลัก */}
-      <header className="main-navbar">
-        <div className="nav-left">
-          <button className="btn-back" onClick={handleGoBack}>
+      <header className="velora-navbar">
+        <div className="nav-content">
+          <button className="nav-back-btn" onClick={handleGoBack}>
             <FiChevronLeft />
           </button>
-        </div>
-        <h1 className="brand-logo">VELORA</h1>
-        <div className="nav-right">
-          <div style={{ position: 'relative', display: 'inline-block', cursor: 'pointer' }} onClick={() => navigate('/cart')}>
-            <FiShoppingCart className="nav-icon" />
-            {cartCount > 0 && <span className="cart-badge" style={{
-                position: 'absolute',
-                top: '-8px',
-                right: '-8px',
-                background: 'red',
-                color: 'white',
-                fontSize: '10px',
-                width: '16px',
-                height: '16px',
-                borderRadius: '50%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontWeight: 'bold'
-              }}>{cartCount}</span>}
+          <h1 className="nav-title">ร้านค้า</h1>
+          <div className="nav-icons">
+            <div className="cart-icon-wrapper" onClick={() => navigate('/cart')}>
+              <FiShoppingCart className="nav-icon" />
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </div>
           </div>
-          <FiUser className="nav-icon" onClick={() => navigate('/shop-owner-profile')} style={{ cursor: 'pointer' }} />
         </div>
       </header>
 
@@ -219,17 +205,19 @@ function ShopProfilePage() {
             <div className="shop-text-info">
               <div className="shop-name-row">
                 <h2 className="shop-name">{shopData?.shopname || 'ชื่อร้านค้า'}</h2>
-                <div className="status-badge">
-                  <FaCircle className="dot-icon" /> <span>ออนไลน์</span>
-                </div>
+                {(() => {
+                  const lastActive = shopData?.lastActive ? new Date(shopData.lastActive) : null;
+                  const isOnline = lastActive && (Date.now() - lastActive.getTime()) < 5 * 60 * 1000;
+                  return (
+                    <div className="status-badge" style={isOnline ? {} : { color: '#999' }}>
+                      <FaCircle className="dot-icon" style={isOnline ? { color: '#4caf50' } : { color: '#ccc' }} /> 
+                      <span>{isOnline ? 'ออนไลน์' : 'ออฟไลน์'}</span>
+                    </div>
+                  );
+                })()}
               </div>
 
               <div className="shop-stats">
-                <div className="stat-item">
-                  <FaStar className="star-icon" />
-                  <span>4.9 คะแนนร้านค้า</span>
-                </div>
-                <div className="stat-divider">|</div>
                 <div className="stat-item">
                   <span>ผู้ติดตาม {followerCount}</span>
                 </div>
@@ -296,7 +284,7 @@ function ShopProfilePage() {
                     <div className="price-info">
                       <span className="sell-price">฿ {item.productPrice?.toLocaleString()}</span>
                       {item.productAllowedToRent && (
-                        <span className="rent-price">เช่า: {Math.round(item.productPrice * 0.1)}/วัน</span>
+                        <span className="rent-price">เช่า: ฿ {(item.productRentPrice || Math.round((item.productPrice || item.productprice || 0) * 0.1))?.toLocaleString()}/วัน</span>
                       )}
                     </div>
                   </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/AddProductPage.css';
+import './assets/SharedNavbar.css';
 import { FiChevronLeft, FiPlus, FiImage, FiX } from 'react-icons/fi';
 import API_URL from './config/api';
 
@@ -17,6 +18,7 @@ function AddProductPage() {
   const [productPhoto, setProductPhoto] = useState(''); // Base64 string
   const [photoPreview, setPhotoPreview] = useState(''); // For preview
   const [isRentable, setIsRentable] = useState(false);
+  const [rentPrice, setRentPrice] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
@@ -78,6 +80,16 @@ function AddProductPage() {
       return;
     }
 
+    if (parseFloat(price) < 1) {
+      setError('ราคาขายต้องมีค่าอย่างน้อย 1 บาท');
+      return;
+    }
+
+    if (isRentable && (!rentPrice || parseFloat(rentPrice) < 1)) {
+      setError('ราคาเช่าต้องมีค่าอย่างน้อย 1 บาท/วัน');
+      return;
+    }
+
     setLoading(true);
     
     try {
@@ -99,7 +111,8 @@ function AddProductPage() {
         productstyle: selectedStyle,
         productsize: selectedSizes.join(', '), // Convert array to string
         productAllowedToRent: isRentable,
-        productPrice: parseFloat(price)
+        productPrice: parseFloat(price),
+        productRentPrice: isRentable ? parseFloat(rentPrice) || 0 : 0
       };
 
       const response = await axios.post(`${API_URL}/product/add`, productData);
@@ -120,12 +133,13 @@ function AddProductPage() {
   return (
     <div className="add-product-container">
       {/* --- Header --- */}
-      <header className="page-header">
-        <div className="header-inner">
-          <button className="btn-back" onClick={() => navigate('/seller-products')}>
-            <FiChevronLeft /> ย้อนกลับ
+      <header className="velora-navbar">
+        <div className="nav-content">
+          <button className="nav-back-btn" onClick={() => navigate('/seller-products')}>
+            <FiChevronLeft />
           </button>
-          <h1 className="header-title">เพิ่มรายการสินค้า</h1>
+          <h1 className="nav-title">เพิ่มรายการสินค้า</h1>
+          <div className="nav-spacer"></div>
         </div>
       </header>
 
@@ -283,7 +297,7 @@ function AddProductPage() {
                 placeholder="ระบุราคาสินค้า..." 
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                min="0"
+                min="1"
               />
             </div>
 
@@ -301,6 +315,21 @@ function AddProductPage() {
                 <span className="slider round"></span>
               </label>
             </div>
+
+            {/* ราคาเช่า (แสดงเมื่อเปิดอนุญาตเช่า) */}
+            {isRentable && (
+              <div className="form-group">
+                <label>ราคาเช่า (บาท/วัน)</label>
+                <input 
+                  type="number" 
+                  placeholder="ระบุราคาเช่าต่อวัน..." 
+                  value={rentPrice}
+                  onChange={(e) => setRentPrice(e.target.value)}
+                  min="1"
+                  required
+                />
+              </div>
+            )}
 
             {/* ปุ่ม Submit */}
             <div className="form-actions">

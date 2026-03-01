@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './assets/AddProductPage.css'; // Reuse same CSS
+import './assets/SharedNavbar.css';
 import { FiChevronLeft, FiPlus, FiImage, FiX } from 'react-icons/fi';
 import API_URL from './config/api';
 
@@ -179,12 +180,13 @@ function EditProductPage() {
   return (
     <div className="add-product-container">
       {/* --- Header --- */}
-      <header className="page-header">
-        <div className="header-inner">
-          <button className="btn-back" onClick={() => navigate('/seller-products')}>
-            <FiChevronLeft /> ย้อนกลับ
+      <header className="velora-navbar">
+        <div className="nav-content">
+          <button className="nav-back-btn" onClick={() => navigate('/seller-products')}>
+            <FiChevronLeft />
           </button>
-          <h1 className="header-title">แก้ไขรายการสินค้า</h1>
+          <h1 className="nav-title">แก้ไขรายการสินค้า</h1>
+          <div className="nav-spacer"></div>
         </div>
       </header>
 

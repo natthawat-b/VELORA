@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/ShopOwnerProfile.css';
-import { FiShoppingCart, FiMessageSquare, FiBox, FiTruck, FiCheckCircle, FiHome, FiSearch, FiUser, FiEdit2, FiCamera, FiShoppingBag, FiLogOut, FiCheck, FiX } from 'react-icons/fi';
+import './assets/SharedNavbar.css';
+import { FiShoppingCart, FiMessageSquare, FiBox, FiTruck, FiCheckCircle, FiHome, FiSearch, FiUser, FiEdit2, FiCamera, FiShoppingBag, FiLogOut, FiCheck, FiX, FiChevronLeft } from 'react-icons/fi';
 import API_URL from './config/api';
 
 function ShopOwnerProfile() {
@@ -16,6 +17,23 @@ function ShopOwnerProfile() {
 
   useEffect(() => {
     fetchShopData();
+  }, []);
+
+  // Heartbeat: update lastActive every 2 minutes
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    const shopId = userData._id;
+    if (!shopId) return;
+
+    // Send heartbeat immediately on mount
+    axios.put(`${API_URL}/shop/${shopId}/heartbeat`).catch(() => {});
+
+    // Then every 2 minutes
+    const interval = setInterval(() => {
+      axios.put(`${API_URL}/shop/${shopId}/heartbeat`).catch(() => {});
+    }, 2 * 60 * 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const fetchShopData = async () => {
@@ -136,6 +154,11 @@ function ShopOwnerProfile() {
   const handleLogout = () => {
     localStorage.removeItem('userData');
     localStorage.removeItem('userType');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('velora_cart');
+    localStorage.removeItem('velora_favorites');
+    localStorage.removeItem('velora_addresses');
+    localStorage.removeItem('userProfileImage');
     navigate('/');
   };
 
@@ -146,12 +169,14 @@ function ShopOwnerProfile() {
   return (
     <div className="shop-owner-container">
       {/* --- Navbar --- */}
-      <header className="navbar">
+      <header className="velora-navbar">
         <div className="nav-content">
-          <h1 className="brand-logo">VELORA</h1>
+          <button className="nav-back-btn" onClick={() => navigate(-1)}>
+            <FiChevronLeft />
+          </button>
+          <h1 className="nav-title">โปรไฟล์ร้านค้า</h1>
           <div className="nav-icons">
-            <FiMessageSquare className="nav-icon" />
-            <FiLogOut className="nav-icon" onClick={handleLogout} style={{ color: '#d32f2f', cursor: 'pointer' }} title="ออกจากระบบ" />
+            <FiShoppingCart className="nav-icon" onClick={() => navigate('/cart')} />
           </div>
         </div>
       </header>

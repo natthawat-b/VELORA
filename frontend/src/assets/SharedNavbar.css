@@ -1,0 +1,96 @@
+/* ============================
+   Shared Navbar Styles
+   ตรงกับ Profile Page Style
+   ============================ */
+
+.velora-navbar {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  padding: 15px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  display: flex;
+  justify-content: center;
+}
+
+.velora-navbar .nav-content {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.velora-navbar .nav-back-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  transition: transform 0.2s;
+}
+
+.velora-navbar .nav-back-btn:hover {
+  transform: scale(1.1);
+  color: #d4af37;
+}
+
+.velora-navbar .nav-title {
+  flex: 1;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, #fff 0%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.velora-navbar .nav-icons {
+  display: flex;
+  gap: 25px;
+}
+
+.velora-navbar .nav-icon {
+  font-size: 24px;
+  cursor: pointer;
+  color: rgba(255,255,255,0.85);
+  transition: transform 0.2s;
+}
+
+.velora-navbar .nav-icon:hover {
+  transform: scale(1.1);
+  color: #d4af37;
+}
+
+.velora-navbar .cart-icon-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.velora-navbar .cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  font-size: 10px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+/* Spacer for pages without cart icon */
+.velora-navbar .nav-spacer {
+  width: 38px;
+}

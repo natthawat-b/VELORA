@@ -14,6 +14,7 @@ function Register() {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleChange = (e) => {
     setFormData({
@@ -26,6 +27,12 @@ function Register() {
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    if (formData.password !== confirmPassword) {
+      setError('รหัสผ่านไม่ตรงกัน กรุณากรอกใหม่');
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await axios.post(`${API_URL}/user/register`, formData);
@@ -93,6 +100,16 @@ function Register() {
               name="password"
               value={formData.password}
               onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>ยืนยันรหัสผ่าน</label>
+            <input 
+              type="password" 
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
           </div>

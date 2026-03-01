@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './WithdrawalPage.css';
+import './assets/SharedNavbar.css';
 import { FiChevronLeft, FiCheck } from 'react-icons/fi';
 
 function WithdrawalPage() {
@@ -43,17 +44,17 @@ function WithdrawalPage() {
   return (
     <div className="withdraw-container">
       {/* --- Header --- */}
-      <header className="withdraw-header">
-        <div className="header-inner">
-          <button className="btn-back" onClick={handleBack} style={{ visibility: step === 3 ? 'hidden' : 'visible' }}>
-            <FiChevronLeft /> {step === 1 ? 'การเงิน' : 'ย้อนกลับ'}
+      <header className="velora-navbar">
+        <div className="nav-content">
+          <button className="nav-back-btn" onClick={handleBack} style={{ visibility: step === 3 ? 'hidden' : 'visible' }}>
+            <FiChevronLeft />
           </button>
-          <h1 className="header-title">
+          <h1 className="nav-title">
             {step === 1 && 'การเงิน'}
             {step === 2 && 'ยืนยันการถอนเงิน'}
             {step === 3 && 'ทำรายการสำเร็จ'}
           </h1>
-          <div style={{ width: 24 }}></div> {/* Spacer */}
+          <div className="nav-spacer"></div>
         </div>
       </header>
 

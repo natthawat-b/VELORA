@@ -1,10 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './assets/StylesPage.css';
-import { FiChevronLeft, FiSearch } from 'react-icons/fi';
+import './assets/SharedNavbar.css';
+import { FiChevronLeft, FiSearch, FiShoppingCart } from 'react-icons/fi';
+import { useCart } from './context/CartContext.jsx';
 
 function StylesPage() {
   const navigate = useNavigate();
+  const { cartCount } = useCart();
   const styles = [
     { name: 'Streetwear', img: '🧥' },
     { name: 'Minimalist', img: '🌿' },
@@ -23,19 +26,18 @@ function StylesPage() {
 
   return (
     <div className="styles-container">
-      {/* Header เต็มความกว้าง */}
-      <header className="styles-header">
-        <div className="header-content">
-          <button className="back-btn" onClick={() => navigate(-1)}>
+      {/* Header */}
+      <header className="velora-navbar">
+        <div className="nav-content">
+          <button className="nav-back-btn" onClick={() => navigate(-1)}>
             <FiChevronLeft />
           </button>
-          <div className="search-wrapper">
-            <FiSearch className="search-icon" />
-            <input 
-              type="text" 
-              placeholder="ค้นหาสไตล์..." 
-              className="search-input" 
-            />
+          <h1 className="nav-title">Trending Styles</h1>
+          <div className="nav-icons">
+            <div className="cart-icon-wrapper" onClick={() => navigate('/cart')}>
+              <FiShoppingCart className="nav-icon" />
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </div>
           </div>
         </div>
       </header>

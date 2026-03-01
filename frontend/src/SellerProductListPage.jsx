@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/SellerProductListPage.css';
+import './assets/SharedNavbar.css';
 import { FiChevronLeft, FiPlus, FiGrid, FiList, FiEdit, FiTrash2, FiDollarSign } from 'react-icons/fi';
 import API_URL from './config/api';
 
@@ -81,13 +82,15 @@ function SellerProductListPage() {
       {/* --- Top Section (Black Background) --- */}
       <header className="seller-header-section">
         {/* Navbar inside header */}
-        <div className="seller-navbar">
-          <button className="btn-back-dark" onClick={() => navigate('/shop-owner-profile')}>
-            <FiChevronLeft /> กลับ
-          </button>
-          <h1 className="header-title-gold">รายการสินค้า</h1>
-          <div className="spacer"></div> {/* เพื่อจัดกึ่งกลาง */}
-        </div>
+        <header className="velora-navbar">
+          <div className="nav-content">
+            <button className="nav-back-btn" onClick={() => navigate('/shop-owner-profile')}>
+              <FiChevronLeft />
+            </button>
+            <h1 className="nav-title">รายการสินค้า</h1>
+            <div className="nav-spacer"></div>
+          </div>
+        </header>
 
         {/* Wallet / Balance Section */}
         <div className="balance-container">

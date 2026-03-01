@@ -21,6 +21,7 @@ const SellerSignup = () => {
   
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   // Handle input changes
   const handleChange = (e) => {
@@ -35,6 +36,12 @@ const SellerSignup = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    if (formData.shopPassword !== confirmPassword) {
+      setError('รหัสผ่านไม่ตรงกัน กรุณากรอกใหม่');
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await axios.post(`${API_URL}/shop/register`, formData);
@@ -102,6 +109,16 @@ const SellerSignup = () => {
               name="shopPassword"
               value={formData.shopPassword}
               onChange={handleChange}
+              required
+              minLength="6"
+            />
+          </div>
+          <div className="form-group">
+            <label>ยืนยันรหัสผ่าน</label>
+            <input 
+              type="password" 
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
               minLength="6"
             />
