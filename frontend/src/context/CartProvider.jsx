@@ -103,6 +103,7 @@ export function CartProvider({ children }) {
         : price,
       fullPrice: price,
       type: type,
+      shopId: product.shopId || '',
       shopName: product.shop?.name || 'ร้านค้า',
       quantity: 1,
       rentalDays: 1, 

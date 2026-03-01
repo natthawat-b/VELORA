@@ -1,0 +1,318 @@
+.wallet-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f5f5f5;
+  font-family: 'Kanit', sans-serif;
+}
+
+/* Header */
+.wallet-header {
+  background: white;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+
+.wallet-header .btn-back {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #555;
+  padding: 8px;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.wallet-header .btn-back:hover { background: rgba(0,0,0,0.05); }
+
+.wallet-header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Balance Card */
+.balance-card {
+  margin: 20px;
+  padding: 30px;
+  background: linear-gradient(135deg, #1a1a1a, #333);
+  border-radius: 20px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.balance-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -30%;
+  width: 200px;
+  height: 200px;
+  background: rgba(212, 175, 55, 0.15);
+  border-radius: 50%;
+}
+
+.balance-label {
+  font-size: 14px;
+  color: #aaa;
+  margin-bottom: 8px;
+}
+
+.balance-amount {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0;
+  color: #d4af37;
+}
+
+.balance-currency {
+  font-size: 18px;
+  font-weight: 400;
+  color: #ccc;
+  margin-left: 4px;
+}
+
+.balance-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn-withdraw {
+  flex: none;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  font-family: 'Kanit', sans-serif;
+  cursor: pointer;
+  font-weight: 600;
+  background: #d4af37;
+  color: #1a1a1a;
+  transition: 0.2s;
+}
+
+.btn-withdraw:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.btn-withdraw:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Bank Info */
+.bank-info-card {
+  margin: 0 20px 16px;
+  padding: 16px 20px;
+  background: white;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.bank-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #666;
+}
+
+.bank-details h4 {
+  margin: 0;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+.bank-details p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #999;
+}
+
+/* Transaction List */
+.transactions-section {
+  padding: 0 20px 20px;
+}
+
+.transactions-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transaction-item {
+  background: white;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.transaction-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.transaction-icon.income {
+  background: #e8f5e9;
+  color: #4caf50;
+}
+
+.transaction-icon.withdraw {
+  background: #fce4ec;
+  color: #f44336;
+}
+
+.transaction-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.transaction-desc {
+  font-size: 14px;
+  color: #1a1a1a;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.transaction-date {
+  font-size: 12px;
+  color: #999;
+  margin: 2px 0 0;
+}
+
+.transaction-amount {
+  font-size: 16px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.transaction-amount.income { color: #4caf50; }
+.transaction-amount.withdraw { color: #f44336; }
+
+.transactions-empty {
+  text-align: center;
+  padding: 40px;
+  color: #bbb;
+}
+
+/* Withdraw Modal */
+.withdraw-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.withdraw-modal {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.withdraw-modal h3 {
+  margin: 0 0 20px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.withdraw-input-group {
+  margin-bottom: 16px;
+}
+
+.withdraw-input-group label {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.withdraw-input-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 18px;
+  font-family: 'Kanit', sans-serif;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.withdraw-input-group input:focus {
+  border-color: #d4af37;
+}
+
+.withdraw-bank-info {
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #666;
+}
+
+.withdraw-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.withdraw-actions button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-family: 'Kanit', sans-serif;
+  cursor: pointer;
+  font-weight: 600;
+  border: none;
+}
+
+.btn-withdraw-cancel {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.btn-withdraw-confirm {
+  background: #d4af37;
+  color: #1a1a1a;
+}
+
+.btn-withdraw-confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/ShopOwnerProfile.css';
+import './assets/ChatListPage.css';
 import { FiShoppingCart, FiMessageSquare, FiBox, FiTruck, FiCheckCircle, FiHome, FiSearch, FiUser, FiEdit2, FiCamera, FiShoppingBag, FiLogOut, FiCheck, FiX, FiInfo } from 'react-icons/fi';
 import API_URL from './config/api';
 
@@ -16,10 +17,30 @@ function ShopOwnerProfile() {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [editInfo, setEditInfo] = useState({ shopBank: '', shopBankNumber: '', shopIDcard: '' });
   const [savingInfo, setSavingInfo] = useState(false);
+  const [chatCount, setChatCount] = useState(0);
 
   useEffect(() => {
     fetchShopData();
+    fetchChatCount();
   }, []);
+
+  const fetchChatCount = async () => {
+    try {
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      const shopId = userData._id;
+      if (!shopId) return;
+
+      const response = await axios.get(`${API_URL}/chat/list/${shopId}`);
+      if (response.data.success) {
+        const chats = response.data.payload;
+        // Count total messages across all chats
+        const totalMessages = chats.reduce((sum, chat) => sum + (chat.messages?.length || 0), 0);
+        setChatCount(totalMessages);
+      }
+    } catch {
+      // silently fail
+    }
+  };
 
   const fetchShopData = async () => {
     try {
@@ -153,7 +174,10 @@ function ShopOwnerProfile() {
         <div className="nav-content">
           <h1 className="brand-logo">VELORA</h1>
           <div className="nav-icons">
-            <FiMessageSquare className="nav-icon" />
+            <div className="nav-icon-wrapper" onClick={() => navigate('/chat-list')} title="แชท">
+              <FiMessageSquare className="nav-icon" />
+              {chatCount > 0 && <span className="nav-chat-badge">{chatCount > 99 ? '99+' : chatCount}</span>}
+            </div>
             <FiLogOut className="nav-icon" onClick={handleLogout} style={{ color: '#d32f2f', cursor: 'pointer' }} title="ออกจากระบบ" />
           </div>
         </div>

@@ -138,6 +138,28 @@ function ProductDetailPage() {
     }
   };
 
+  const handleChat = async () => {
+    try {
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      const userId = userData._id || userData.id;
+      const shopId = product?.shop?._id || product?.shopId;
+
+      if (!userId || !shopId) {
+        alert('ไม่สามารถเปิดแชทได้ กรุณาเข้าสู่ระบบ');
+        return;
+      }
+
+      const response = await axios.post(`${API_URL}/chat/start`, { userId, shopId });
+      if (response.data.success) {
+        const chatId = response.data.payload._id;
+        navigate(`/chat/${chatId}`);
+      }
+    } catch (err) {
+      console.error('Error starting chat:', err);
+      alert('เกิดข้อผิดพลาดในการเปิดแชท');
+    }
+  };
+
   const handleRentNow = () => {
     if (product) {
       addToCart(product, 'rent');
@@ -316,7 +338,7 @@ function ProductDetailPage() {
 
           {/* Action Buttons */}
           <div className="action-buttons-container">
-            <button className="btn-action chat">
+            <button className="btn-action chat" onClick={handleChat}>
               <FiMessageCircle /> สอบถามร้าน
             </button>
             <button className="btn-action add-cart" onClick={handleAddToCart}>

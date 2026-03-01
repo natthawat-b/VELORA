@@ -2,16 +2,17 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/SellerProductListPage.css';
-import { FiChevronLeft, FiPlus, FiGrid, FiList, FiEdit, FiTrash2, FiDollarSign } from 'react-icons/fi';
+import { FiChevronLeft, FiPlus, FiGrid, FiList, FiEdit, FiTrash2, FiDollarSign, FiShoppingBag, FiTruck, FiCheckCircle, FiClock, FiPackage, FiXCircle } from 'react-icons/fi';
 import API_URL from './config/api';
 
 function SellerProductListPage() {
   const navigate = useNavigate();
   
-  const [balance] = useState(0);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [orders, setOrders] = useState([]);
+  const [walletBalance, setWalletBalance] = useState(0);
 
   // Fetch products function
   const fetchProducts = useCallback(async () => {
@@ -42,10 +43,79 @@ function SellerProductListPage() {
     }
   }, []); // เอา API_URL ออกจาก dependencies เพราะเป็น constant
 
-  // Fetch products on mount
+  // Fetch orders for this shop
+  const fetchOrders = useCallback(async () => {
+    try {
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      const shopId = userData._id;
+      if (!shopId) return;
+
+      const response = await axios.get(`${API_URL}/order/shop/${shopId}`);
+      if (response.data.success) {
+        setOrders(response.data.payload);
+      }
+    } catch (err) {
+      console.error('Error fetching orders:', err);
+    }
+  }, []);
+
+  // Fetch wallet balance
+  const fetchWallet = useCallback(async () => {
+    try {
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      const shopId = userData._id;
+      if (!shopId) return;
+
+      const response = await axios.get(`${API_URL}/wallet/${shopId}`);
+      if (response.data.success) {
+        setWalletBalance(response.data.payload.balance || 0);
+      }
+    } catch (err) {
+      console.error('Error fetching wallet:', err);
+    }
+  }, []);
+
+  // Fetch all data on mount
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
+    fetchOrders();
+    fetchWallet();
+  }, [fetchProducts, fetchOrders, fetchWallet]);
+
+  // Helper: format date
+  const formatDate = (dateStr) => {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' })
+      + ' ' + d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  // Helper: status label & icon
+  const getStatusInfo = (status) => {
+    switch (status) {
+      case 'pending': return { label: 'รอดำเนินการ', icon: <FiClock />, className: 'status-pending' };
+      case 'paid': return { label: 'ชำระแล้ว', icon: <FiDollarSign />, className: 'status-paid' };
+      case 'shipping': return { label: 'กำลังจัดส่ง', icon: <FiTruck />, className: 'status-shipping' };
+      case 'completed': return { label: 'สำเร็จ', icon: <FiCheckCircle />, className: 'status-completed' };
+      case 'cancelled': return { label: 'ยกเลิก', icon: <FiXCircle />, className: 'status-cancelled' };
+      default: return { label: status, icon: <FiPackage />, className: 'status-pending' };
+    }
+  };
+
+  // Compute order stats
+  const totalOrders = orders.length;
+  const totalRevenue = orders.reduce((sum, order) => {
+    // Only sum items belonging to this shop
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    const shopId = userData._id;
+    const shopItems = order.items?.filter(i => i.shopId === shopId) || [];
+    return sum + shopItems.reduce((s, item) => {
+      const itemTotal = item.type === 'rent'
+        ? item.price * (item.rentalDays || 1) * item.quantity
+        : item.price * item.quantity;
+      return s + itemTotal;
+    }, 0);
+  }, 0);
+  const completedOrders = orders.filter(o => o.status === 'completed').length;
 
   // Handle delete product
   const handleDelete = async (productId, productName) => {
@@ -95,10 +165,10 @@ function SellerProductListPage() {
             <span className="balance-label">ยอดเงินคงเหลือ</span>
             <div className="balance-amount">
               <span className="currency">฿</span>
-              <span className="amount">{balance.toLocaleString()}</span>
+              <span className="amount">{walletBalance.toLocaleString()}</span>
             </div>
           </div>
-          <button className="btn-withdraw">
+          <button className="btn-withdraw" onClick={() => navigate('/wallet')}>
             ถอนเงิน
           </button>
         </div>
@@ -106,7 +176,94 @@ function SellerProductListPage() {
 
       {/* --- Main Content (White/Grey Area) --- */}
       <main className="seller-content">
-        
+
+        {/* Order Stats Summary */}
+        <div className="order-stats-grid">
+          <div className="order-stat-card">
+            <div className="stat-icon-box stat-orders"><FiShoppingBag /></div>
+            <div className="stat-info">
+              <span className="stat-value">{totalOrders}</span>
+              <span className="stat-label">คำสั่งซื้อทั้งหมด</span>
+            </div>
+          </div>
+          <div className="order-stat-card">
+            <div className="stat-icon-box stat-revenue"><FiDollarSign /></div>
+            <div className="stat-info">
+              <span className="stat-value">฿{totalRevenue.toLocaleString()}</span>
+              <span className="stat-label">รายได้รวม</span>
+            </div>
+          </div>
+          <div className="order-stat-card">
+            <div className="stat-icon-box stat-completed"><FiCheckCircle /></div>
+            <div className="stat-info">
+              <span className="stat-value">{completedOrders}</span>
+              <span className="stat-label">สำเร็จแล้ว</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Orders Section */}
+        <div className="recent-orders-section">
+          <h2 className="section-title">รายการสั่งซื้อล่าสุด ({orders.length})</h2>
+          {orders.length === 0 ? (
+            <div className="empty-orders">
+              <FiShoppingBag style={{ fontSize: 40, color: '#ccc', marginBottom: 10 }} />
+              <p>ยังไม่มีคำสั่งซื้อ</p>
+            </div>
+          ) : (
+            <div className="seller-orders-list">
+              {orders.slice(0, 10).map((order) => {
+                const statusInfo = getStatusInfo(order.status);
+                const userData2 = JSON.parse(localStorage.getItem('userData') || '{}');
+                const shopItems = order.items?.filter(i => i.shopId === userData2._id) || [];
+                const orderTotal = shopItems.reduce((s, item) => {
+                  const t = item.type === 'rent'
+                    ? item.price * (item.rentalDays || 1) * item.quantity
+                    : item.price * item.quantity;
+                  return s + t;
+                }, 0);
+                return (
+                  <div key={order._id} className="order-card">
+                    <div className="order-card-header">
+                      <span className="order-id">{order.orderId}</span>
+                      <span className={`order-status-badge ${statusInfo.className}`}>
+                        {statusInfo.icon} {statusInfo.label}
+                      </span>
+                    </div>
+                    <div className="order-card-body">
+                      <div className="order-items-list">
+                        {shopItems.map((item, idx) => (
+                          <div key={idx} className="order-item-row">
+                            <div className="order-item-thumb">
+                              {item.productPhoto ? (
+                                <img src={item.productPhoto} alt={item.productName} />
+                              ) : (
+                                <div className="order-item-placeholder"><FiPackage /></div>
+                              )}
+                            </div>
+                            <div className="order-item-info">
+                              <span className="order-item-name">{item.productName}</span>
+                              <span className="order-item-detail">
+                                {item.type === 'rent' ? `เช่า ${item.rentalDays} วัน` : 'ซื้อ'}
+                                {' × '}{item.quantity}
+                              </span>
+                            </div>
+                            <span className="order-item-price">฿{(item.price * item.quantity).toLocaleString()}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="order-card-footer">
+                      <span className="order-date">{formatDate(order.createdAt)}</span>
+                      <span className="order-total">รวม ฿{orderTotal.toLocaleString()}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
         {/* Toolbar: Title & Add Button */}
         <div className="content-toolbar">
           <h2 className="section-title">รายการสินค้าของฉัน ({products.length})</h2>

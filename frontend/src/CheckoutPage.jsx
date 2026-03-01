@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './assets/CheckoutPage.css';
 import { FiChevronLeft, FiMapPin, FiPhone, FiTruck, FiShield, FiChevronRight, FiCreditCard, FiBox, FiSmartphone, FiDollarSign, FiCheckCircle } from 'react-icons/fi';
 import { useCart } from './context/CartContext';
+import API_URL from './config/api';
 
 const PAYMENT_METHODS = [
   { id: 'promptpay', name: 'PromptPay (QR Code)', icon: <FiSmartphone />, description: 'สแกน QR Code เพื่อชำระเงิน' },
@@ -26,6 +28,7 @@ function CheckoutPage() {
     productPhoto: product.productphoto || product.productPhoto,
     productPrice: price,
     type: type,
+    shopId: product.shopId || product.shop?._id || '',
     shopName: product.shop?.name || product.shopName || 'ร้านค้า',
     quantity: 1
   }] : []);
@@ -44,6 +47,7 @@ function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS[0]); // Default to PromptPay
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [ordering, setOrdering] = useState(false);
 
 
   
@@ -172,14 +176,54 @@ function CheckoutPage() {
   // Cart Context
   const { removeItems } = useCart();
 
-  const handleConfirmOrder = () => {
-    // ถ้ามาจากการตระกร้าสินค้า (มี cartItems) ให้ลบสินค้าที่ซื้อออกจากตะกร้า
-    if (cartItems && cartItems.length > 0) {
-      const itemIds = cartItems.map(item => item.id);
-      removeItems(itemIds);
+  const handleConfirmOrder = async () => {
+    if (!selectedAddress) {
+      alert('กรุณาเลือกที่อยู่จัดส่ง');
+      return;
     }
-    
-    setShowSuccessModal(true);
+
+    setOrdering(true);
+    try {
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      const userId = userData._id || userData.id || '';
+
+      const orderData = {
+        userId,
+        items: checkoutItems.map(item => ({
+          productId: item.productId || item.id,
+          productName: item.productName,
+          productPhoto: item.productPhoto,
+          price: item.productPrice,
+          quantity: item.quantity,
+          type: item.type || 'buy',
+          rentalDays: item.rentalDays,
+          shopId: item.shopId || '',
+          shopName: item.shopName || 'ร้านค้า'
+        })),
+        shippingAddress: selectedAddress,
+        shippingMethod,
+        paymentMethod: paymentMethod?.id || 'promptpay',
+        productTotal,
+        shippingCost: currentShippingCost,
+        insuranceCost: currentInsuranceCost,
+        totalAmount: total
+      };
+
+      await axios.post(`${API_URL}/order/create`, orderData);
+
+      // ลบสินค้าออกจากตะกร้า
+      if (cartItems && cartItems.length > 0) {
+        const itemIds = cartItems.map(item => item.id);
+        removeItems(itemIds);
+      }
+
+      setShowSuccessModal(true);
+    } catch (err) {
+      console.error('Order error:', err);
+      alert('เกิดข้อผิดพลาดในการสั่งซื้อ: ' + (err.response?.data?.error?.message || err.message));
+    } finally {
+      setOrdering(false);
+    }
   };
 
   return (
@@ -337,8 +381,8 @@ function CheckoutPage() {
                 <span className="gold-text">฿ {total.toLocaleString()}</span>
               </div>
 
-              <button className="btn-place-order" onClick={handleConfirmOrder}>
-                ยืนยันการสั่งซื้อ
+              <button className="btn-place-order" onClick={handleConfirmOrder} disabled={ordering}>
+                {ordering ? 'กำลังดำเนินการ...' : 'ยืนยันการสั่งซื้อ'}
               </button>
             </div>
           </aside>
