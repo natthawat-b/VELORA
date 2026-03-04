@@ -389,12 +389,29 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--white);
+  background: #ffffff;
   display: flex;
-  justify-content: space-around;
-  padding: 20px 0;
-  box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-  z-index: 100;
+  justify-content: center;
+  gap: 60px;
+  padding: 15px 0;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+  z-index: 1000;
+}
+
+.shop-owner-container .bottom-nav .nav-icon {
+  font-size: 26px;
+  color: #888;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.shop-owner-container .bottom-nav .nav-icon:hover {
+  transform: scale(1.1);
+  color: #d4af37;
+}
+
+.shop-owner-container .bottom-nav .nav-icon.active {
+  color: var(--text-dark);
 }
 
 .shop-owner-container .nav-item {

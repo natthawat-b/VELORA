@@ -96,7 +96,7 @@ function SelectedStylePage() {
       <footer className="bottom-nav">
         <FiHome className="nav-icon" onClick={() => navigate('/home')} />
         <FiSearch className="nav-icon active" />
-        <FiUser className="nav-icon" onClick={() => navigate('/profile')} />
+        <FiUser className="nav-icon" onClick={() => navigate(localStorage.getItem('userType') === 'shop' ? '/shop-owner-profile' : '/profile')} />
       </footer>
     </div>
   );

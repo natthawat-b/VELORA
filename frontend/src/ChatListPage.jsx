@@ -10,6 +10,9 @@ function ChatListPage() {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [partnerNames, setPartnerNames] = useState({});
+  const [seenCounts, setSeenCounts] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('velora_chat_seen') || '{}'); } catch { return {}; }
+  });
 
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
   const userType = localStorage.getItem('userType') || 'user';
@@ -26,6 +29,10 @@ function ChatListPage() {
       if (response.data.success) {
         const chatList = response.data.payload;
         setChats(chatList);
+
+        // Mark all messages as "seen" by saving total count
+        const totalMessages = chatList.reduce((sum, chat) => sum + (chat.messages?.length || 0), 0);
+        localStorage.setItem('velora_chat_seen_count', totalMessages.toString());
 
         // Fetch partner names
         const names = {};
@@ -99,12 +106,21 @@ function ChatListPage() {
           chats.map((chat) => {
             const name = partnerNames[chat._id] || (userType === 'shop' ? 'ลูกค้า' : 'ร้านค้า');
             const msgCount = chat.messages?.length || 0;
+            const seenCount = seenCounts[chat._id] || 0;
+            const newCount = msgCount - seenCount;
+
+            const handleChatClick = () => {
+              const updated = { ...seenCounts, [chat._id]: msgCount };
+              setSeenCounts(updated);
+              localStorage.setItem('velora_chat_seen', JSON.stringify(updated));
+              navigate(`/chat/${chat._id}`);
+            };
 
             return (
               <div
                 key={chat._id}
                 className="chat-list-item"
-                onClick={() => navigate(`/chat/${chat._id}`)}
+                onClick={handleChatClick}
               >
                 <div className="chat-list-avatar">
                   {name.charAt(0).toUpperCase()}
@@ -117,8 +133,8 @@ function ChatListPage() {
                 </div>
                 <div className="chat-list-meta">
                   <span className="chat-list-time">{formatTime(chat.lastMessageAt)}</span>
-                  {msgCount > 0 && (
-                    <span className="chat-list-badge">{msgCount}</span>
+                  {newCount > 0 && (
+                    <span className="chat-list-badge">{newCount}</span>
                   )}
                 </div>
               </div>

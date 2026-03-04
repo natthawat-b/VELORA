@@ -4,7 +4,7 @@ import axios from 'axios';
 import './assets/ShopOwnerProfile.css';
 import './assets/ChatListPage.css';
 import './assets/SharedNavbar.css';
-import { FiShoppingCart, FiMessageSquare, FiBox, FiTruck, FiCheckCircle, FiHome, FiSearch, FiUser, FiEdit2, FiCamera, FiShoppingBag, FiLogOut, FiCheck, FiX, FiInfo } from 'react-icons/fi';
+import { FiShoppingCart, FiMessageSquare, FiBox, FiTruck, FiCheckCircle, FiHome, FiSearch, FiUser, FiEdit2, FiCamera, FiShoppingBag, FiLogOut, FiCheck, FiX, FiInfo, FiChevronLeft } from 'react-icons/fi';
 import API_URL from './config/api';
 
 function ShopOwnerProfile() {
@@ -37,7 +37,10 @@ function ShopOwnerProfile() {
         const chats = response.data.payload;
         // Count total messages across all chats
         const totalMessages = chats.reduce((sum, chat) => sum + (chat.messages?.length || 0), 0);
-        setChatCount(totalMessages);
+        // Compare with last seen count to only show new messages
+        const lastSeenCount = parseInt(localStorage.getItem('velora_chat_seen_count') || '0', 10);
+        const newMessages = totalMessages - lastSeenCount;
+        setChatCount(newMessages > 0 ? newMessages : 0);
       }
     } catch {
       // silently fail
@@ -310,9 +313,10 @@ function ShopOwnerProfile() {
         </div>
       </main>
 
-      {/* Bottom Nav - Only Profile Button */}
+      {/* Bottom Nav */}
       <footer className="bottom-nav">
-        <div className="nav-item active"><FiUser /></div>
+        <FiHome className="nav-icon" onClick={() => navigate('/home')} />
+        <FiUser className="nav-icon active" />
       </footer>
 
       {/* Modal ข้อมูลเพิ่มเติม */}
