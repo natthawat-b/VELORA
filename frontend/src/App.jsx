@@ -51,6 +51,17 @@ function App() {
         const userData = response.data.payload;
         const userType = userData.userType || loginType;
         
+        // ล้างข้อมูล user เก่าก่อนเก็บข้อมูลใหม่
+        localStorage.removeItem('userData');
+        localStorage.removeItem('userType');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('velora_cart');
+        localStorage.removeItem('velora_favorites');
+        localStorage.removeItem('velora_addresses');
+        localStorage.removeItem('userProfileImage');
+        localStorage.removeItem('velora_chat_seen');
+        localStorage.removeItem('velora_chat_seen_count');
+
         // Store user data in localStorage
         localStorage.setItem('userData', JSON.stringify(userData));
         localStorage.setItem('userType', userType);
