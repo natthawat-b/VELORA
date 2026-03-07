@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+// import axios from 'axios'; // Removed unused import
 import './assets/CheckoutPage.css';
 import './assets/SharedNavbar.css';
 import { FiChevronLeft, FiMapPin, FiPhone, FiTruck, FiShield, FiChevronRight, FiCreditCard, FiBox, FiSmartphone, FiDollarSign, FiCheckCircle } from 'react-icons/fi';
 import { useCart } from './context/CartContext';
+import API_URL from './config/api';
+import ThaiAddressSelect from './components/ThaiAddressSelect';
 
 const PAYMENT_METHODS = [
   { id: 'promptpay', name: 'PromptPay (QR Code)', icon: <FiSmartphone />, description: 'สแกน QR Code เพื่อชำระเงิน' },
@@ -27,6 +30,7 @@ function CheckoutPage() {
     productPhoto: product.productphoto || product.productPhoto,
     productPrice: price,
     type: type,
+    shopId: product.shopId || product.shop?._id || '',
     shopName: product.shop?.name || product.shopName || 'ร้านค้า',
     quantity: 1
   }] : []);
@@ -45,6 +49,7 @@ function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS[0]); // Default to PromptPay
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [ordering, setOrdering] = useState(false);
 
 
   
@@ -174,7 +179,7 @@ function CheckoutPage() {
   // Cart Context
   const { removeItems } = useCart();
 
-  const [orderLoading, setOrderLoading] = useState(false);
+  // Removed duplicate state declaration
 
   const handleConfirmOrder = async () => {
     // ตรวจสอบว่าเลือกที่อยู่จัดส่งแล้วหรือยัง
@@ -193,10 +198,10 @@ function CheckoutPage() {
     const userData = JSON.parse(userDataStr);
     const userId = userData._id || userData.id;
 
-    setOrderLoading(true);
+    setOrdering(true);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const orderData = {
         userId,
         items: checkoutItems.map(item => ({
@@ -208,6 +213,7 @@ function CheckoutPage() {
           type: item.type || 'buy',
           rentalDays: item.rentalDays || 0,
           shopName: item.shopName || 'ร้านค้า',
+          shopId: item.shopId || '',
         })),
         shippingAddress: selectedAddress,
         shippingMethod,
@@ -217,7 +223,7 @@ function CheckoutPage() {
         totalPrice: total,
       };
 
-      const response = await fetch(`${apiUrl}/api/order`, {
+      const response = await fetch(`${apiUrl}/api/order/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData),
@@ -239,7 +245,7 @@ function CheckoutPage() {
       console.error('Order error:', error);
       alert('ไม่สามารถเชื่อมต่อ server ได้ กรุณาลองใหม่อีกครั้ง');
     } finally {
-      setOrderLoading(false);
+      setOrdering(false);
     }
   };
 
@@ -445,8 +451,8 @@ function CheckoutPage() {
                 <span className="gold-text">฿ {total.toLocaleString()}</span>
               </div>
 
-              <button className="btn-place-order" onClick={handleConfirmOrder} disabled={orderLoading}>
-                {orderLoading ? 'กำลังดำเนินการ...' : 'ยืนยันการสั่งซื้อ'}
+              <button className="btn-place-order" onClick={handleConfirmOrder} disabled={ordering}>
+                {ordering ? 'กำลังดำเนินการ...' : 'ยืนยันการสั่งซื้อ'}
               </button>
             </div>
           </aside>
@@ -536,44 +542,8 @@ function CheckoutPage() {
                     required 
                   />
                 </div>
-                <div className="form-group">
-                  <label>จังหวัด</label>
-                  <input 
-                    type="text" 
-                    value={newAddress.province} 
-                    onChange={e => setNewAddress({...newAddress, province: e.target.value})}
-                    required 
-                  />
-                </div>
-                <div className="form-group">
-                  <label>เขต/อำเภอ</label>
-                  <input 
-                    type="text" 
-                    value={newAddress.district} 
-                    onChange={e => setNewAddress({...newAddress, district: e.target.value})}
-                    required 
-                  />
-                </div>
-                <div className="form-group">
-                  <label>แขวง/ตำบล</label>
-                  <input 
-                    type="text" 
-                    value={newAddress.subDistrict} 
-                    onChange={e => setNewAddress({...newAddress, subDistrict: e.target.value})}
-                    required 
-                  />
-                </div>
-                <div className="form-group">
-                  <label>รหัสไปรษณีย์</label>
-                  <input 
-                    type="text" 
-                    value={newAddress.postalCode} 
-                    onChange={e => setNewAddress({...newAddress, postalCode: e.target.value})}
-                    required 
-                  />
-                </div>
                 <div className="form-group full">
-                  <label>รายละเอียดที่อยู่ (บ้านเลขที่, ซอย, ถนน)</label>
+                  <label>รายละเอียดที่อยู่ (บ้านเลขที่, ซอย, หมู่, ถนน)</label>
                   <textarea 
                     value={newAddress.details} 
                     onChange={e => setNewAddress({...newAddress, details: e.target.value})}
@@ -582,7 +552,13 @@ function CheckoutPage() {
                   ></textarea>
                 </div>
                 
-                <button type="submit" className="btn-save-address">บันทึกที่อยู่</button>
+                {/* Thai Address Select Component (Province, District, SubDistrict, PostalCode) */}
+                <ThaiAddressSelect 
+                  address={newAddress} 
+                  onChange={setNewAddress} 
+                />
+                
+                <button type="submit" className="btn-save-address" style={{ marginTop: '20px' }}>บันทึกที่อยู่</button>
               </form>
             </div>
           </div>

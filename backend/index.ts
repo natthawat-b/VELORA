@@ -5,7 +5,9 @@ import middleware from "./middleware";
 import userRouters from "./routers/user";
 import productRouters from "./routers/product";
 import shopRouters from "./routers/shop";
+import chatRouters from "./routers/chat";
 import orderRouters from "./routers/order";
+import walletRouters from "./routers/wallet";
 
 const app = express();
 
@@ -18,7 +20,9 @@ connectDB();
 app.use("/api/shop", shopRouters);
 app.use("/api/product", productRouters);
 app.use("/api/user", userRouters);
+app.use("/api/chat", chatRouters);
 app.use("/api/order", orderRouters);
+app.use("/api/wallet", walletRouters);
 app.get("/", (req, res) => res.send("ยินดีต้อนรับสู่ API"));
 
 // --- จุดที่แก้ไข ---

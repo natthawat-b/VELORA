@@ -3,7 +3,7 @@ import { successRes, errRes } from "../../main";
 
 export default async function getById(id: string) {
     try {
-        const shop = await Shop.findById(id).select('-shopPassword -shopIDcard');
+        const shop = await Shop.findById(id).select('-shopPassword');
         if (!shop) {
             return errRes.DATA_NOT_FOUND({ message: "Shop not found" });
         }

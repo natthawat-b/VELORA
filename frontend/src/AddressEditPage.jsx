@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './AddressEditPage.css';
 import { FiChevronLeft, FiSave, FiMapPin } from 'react-icons/fi';
-
+import ThaiAddressSelect from './components/ThaiAddressSelect';
 function AddressEditPage() {
   // State สำหรับเก็บข้อมูลในฟอร์ม
   const [formData, setFormData] = useState({
@@ -55,50 +55,6 @@ function AddressEditPage() {
               />
             </div>
 
-            {/* กลุ่มที่อยู่ (Grid 2 คอลัมน์) */}
-            <div className="form-grid">
-              <div className="form-group">
-                <label>จังหวัด</label>
-                <input 
-                  type="text" 
-                  name="province"
-                  value={formData.province}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>เขต/อำเภอ</label>
-                <input 
-                  type="text" 
-                  name="district"
-                  value={formData.district}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>แขวง/ตำบล</label>
-                <input 
-                  type="text" 
-                  name="subDistrict"
-                  value={formData.subDistrict}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>รหัสไปรษณีย์</label>
-                <input 
-                  type="text" 
-                  name="postalCode"
-                  value={formData.postalCode}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            {/* รายละเอียดที่อยู่ (Textarea ใหญ่) */}
             <div className="form-group full-width">
               <label>บ้านเลขที่, ซอย, หมู่, ถนน, แขวง/ตำบล</label>
               <textarea 
@@ -108,6 +64,16 @@ function AddressEditPage() {
                 onChange={handleChange}
               ></textarea>
             </div>
+
+            {/* Thai Address Select Component (Province, District, SubDistrict, PostalCode) */}
+            <div className="form-group full-width" style={{ marginTop: '15px' }}>
+               <ThaiAddressSelect 
+                 address={formData} 
+                 onChange={setFormData}
+               />
+            </div>
+
+            {/* รายละเอียดที่อยู่อยู่ด้านบนแล้ว */}
 
             {/* ปุ่มบันทึก */}
             <div className="form-actions">

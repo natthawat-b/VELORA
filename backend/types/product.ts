@@ -5,6 +5,7 @@ export interface IProduct {
     productname: string;
     productdetail: string;
     productstyle: string;
+    productAdditionalImages?: string[]; // Array of base64 strings
     productsize: string;
     productAllowedToRent: boolean;
     productPrice: number;

@@ -23,8 +23,14 @@ function EditProductPage() {
   const [fetchingProduct, setFetchingProduct] = useState(true);
   
   // State สำหรับจัดการขนาดสินค้า (Sizes)
-  const [sizes] = useState(['S', 'M', 'L', 'XL']); // ค่าเริ่มต้น
+  const defaultSizes = ['S', 'M', 'L', 'XL'];
+  const [customSizes, setCustomSizes] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
+  const allSizes = [...defaultSizes, ...customSizes];
+
+  // State สำหรับ Modal เพิ่มขนาด
+  const [showSizeModal, setShowSizeModal] = useState(false);
+  const [newSizeInput, setNewSizeInput] = useState('');
 
   // Mock Styles
   const styles = ['Streetwear', 'Minimalist', 'Vintage', 'Formal', 'Sporty'];
@@ -47,7 +53,7 @@ function EditProductPage() {
         setProductName(product.productname || '');
         setDescription(product.productdetail || '');
         setSelectedStyle(product.productstyle || '');
-        setPrice(product.productPrice?.toString() || '');
+        setPrice(product.productPrice != null ? String(Number(product.productPrice)) : '');
         setProductPhoto(product.productphoto || '');
         setPhotoPreview(product.productphoto || '');
         setIsRentable(product.productAllowedToRent || false);
@@ -56,6 +62,11 @@ function EditProductPage() {
         if (product.productsize) {
           const sizesArray = product.productsize.split(', ');
           setSelectedSizes(sizesArray);
+          // ตรวจหาขนาดที่ไม่อยู่ใน default แล้วเพิ่มเข้า customSizes
+          const extras = sizesArray.filter(s => !defaultSizes.includes(s));
+          if (extras.length > 0) {
+            setCustomSizes(extras);
+          }
         }
       }
     } catch (err) {
@@ -73,6 +84,24 @@ function EditProductPage() {
     } else {
       setSelectedSizes([...selectedSizes, size]);
     }
+  };
+
+  // เพิ่มขนาดใหม่จาก Modal
+  const handleAddCustomSize = () => {
+    const trimmed = newSizeInput.trim().toUpperCase();
+    if (!trimmed) return;
+    if (allSizes.includes(trimmed)) {
+      setNewSizeInput('');
+      return;
+    }
+    setCustomSizes([...customSizes, trimmed]);
+    setNewSizeInput('');
+  };
+
+  // ลบขนาดที่เพิ่มเอง
+  const handleRemoveCustomSize = (size) => {
+    setCustomSizes(customSizes.filter(s => s !== size));
+    setSelectedSizes(selectedSizes.filter(s => s !== size));
   };
 
   // Handle image upload
@@ -135,6 +164,10 @@ function EditProductPage() {
       setError('กรุณากรอกราคาสินค้าที่ถูกต้อง');
       return;
     }
+    if (parseFloat(price) > 10000000) {
+      setError('ราคาสินค้าต้องไม่เกิน 10,000,000 บาท');
+      return;
+    }
     if (!productPhoto) {
       setError('กรุณาอัพโหลดรูปภาพสินค้า');
       return;
@@ -180,9 +213,9 @@ function EditProductPage() {
   return (
     <div className="add-product-container">
       {/* --- Header --- */}
-      <header className="velora-navbar">
-        <div className="nav-content">
-          <button className="nav-back-btn" onClick={() => navigate('/seller-products')}>
+      <header className="page-header">
+        <div className="header-inner">
+          <button className="btn-back" onClick={() => navigate('/seller-products')}>
             <FiChevronLeft />
           </button>
           <h1 className="nav-title">แก้ไขรายการสินค้า</h1>
@@ -318,15 +351,27 @@ function EditProductPage() {
             <div className="form-group">
               <div className="label-row">
                 <label>ขนาด</label>
+                <button type="button" className="btn-add-size-mini" onClick={() => setShowSizeModal(true)}><FiPlus /></button>
               </div>
               <div className="size-selector">
-                {sizes.map((size) => (
+                {allSizes.map((size) => (
                   <div 
                     key={size} 
                     className={`size-chip ${selectedSizes.includes(size) ? 'active' : ''}`}
                     onClick={() => toggleSize(size)}
                   >
                     {size}
+                    {customSizes.includes(size) && (
+                      <span
+                        className="size-chip-remove"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveCustomSize(size);
+                        }}
+                      >
+                        <FiX size={12} />
+                      </span>
+                    )}
                   </div>
                 ))}
               </div>
@@ -339,8 +384,15 @@ function EditProductPage() {
                 type="number" 
                 placeholder="ระบุราคาสินค้า..." 
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === '' || (Number(val) >= 0 && Number(val) <= 10000000)) {
+                    setPrice(val);
+                  }
+                }}
                 min="0"
+                max="10000000"
+                step="1"
               />
             </div>
 
@@ -370,6 +422,53 @@ function EditProductPage() {
           </form>
         </div>
       </main>
+      {/* Modal เพิ่มขนาดใหม่ */}
+      {showSizeModal && (
+        <div className="size-modal-overlay" onClick={() => setShowSizeModal(false)}>
+          <div className="size-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="size-modal-header">
+              <h3>เพิ่มขนาดใหม่</h3>
+              <button type="button" className="size-modal-close" onClick={() => setShowSizeModal(false)}>
+                <FiX />
+              </button>
+            </div>
+            <div className="size-modal-body">
+              <div className="size-modal-input-row">
+                <input
+                  type="text"
+                  placeholder="เช่น XLL, XLLL, XXS..."
+                  value={newSizeInput}
+                  onChange={(e) => setNewSizeInput(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddCustomSize(); } }}
+                  autoFocus
+                />
+                <button type="button" className="btn-add-size" onClick={handleAddCustomSize}>เพิ่ม</button>
+              </div>
+              {customSizes.length > 0 && (
+                <div className="size-modal-list">
+                  <p>ขนาดที่เพิ่มแล้ว:</p>
+                  <div className="size-modal-chips">
+                    {customSizes.map((size) => (
+                      <div key={size} className="size-chip active">
+                        {size}
+                        <span
+                          className="size-chip-remove"
+                          onClick={() => handleRemoveCustomSize(size)}
+                        >
+                          <FiX size={12} />
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="size-modal-footer">
+              <button type="button" className="btn-submit" onClick={() => setShowSizeModal(false)}>ตกลง</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

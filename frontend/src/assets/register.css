@@ -28,32 +28,56 @@
 }
 
 /* ส่วนของ Input */
-.form-group {
+.signup-card .form-group {
   margin-bottom: 18px;
   text-align: left;
 }
 
-.form-group label {
+.signup-card .form-group label {
   display: block;
   font-size: 14px;
-  color: #999;
-  margin-bottom: 6px;
-  margin-left: 12px;
+  color: #888;
+  margin-bottom: 5px;
+  margin-left: 10px;
 }
 
-.form-group input {
+.signup-card .form-group input {
   width: 100%;
-  padding: 14px 22px;
-  background-color: #d9d9d9; /* สีเทาตามต้นฉบับ */
+  padding: 12px 20px;
+  background-color: #d9d9d9;
   border: none;
-  border-radius: 100px; /* ความโค้งมนแบบ Capsule */
+  border-radius: 25px;
   font-size: 16px;
   box-sizing: border-box;
   outline: none;
-  transition: 0.3s;
+  font-family: 'Kanit', sans-serif;
+  transition: background-color 0.3s;
 }
 
-.form-group input:focus {
+.signup-card .form-group input:focus {
+  background-color: #cecece;
+}
+
+.signup-card .form-group select {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #d9d9d9;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  box-sizing: border-box;
+  outline: none;
+  font-family: 'Kanit', sans-serif;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  transition: background-color 0.3s;
+}
+
+.signup-card .form-group select:focus {
   background-color: #cecece;
 }
 
@@ -64,17 +88,18 @@
   background-color: #1c1c1c; /* สีดำเข้ม */
   color: white;
   border: none;
-  border-radius: 12px;
+  border-radius: 25px;
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
   margin-top: 25px;
-  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s, background 0.3s;
 }
 
 .btn-submit:hover {
   background-color: #333;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 /* ปุ่มลูกศรย้อนกลับ */

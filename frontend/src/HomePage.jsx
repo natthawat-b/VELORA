@@ -138,8 +138,8 @@ function HomePage() {
       {/* เมนูด้านล่าง */}
       <footer className="bottom-nav">
         <FiHome className="nav-icon active" />
-        <FiSearch className="nav-icon" onClick={() => navigate('/search')} />
-        <FiUser className="nav-icon" onClick={() => navigate('/profile')} />
+        {localStorage.getItem('userType') !== 'shop' && <FiSearch className="nav-icon" onClick={() => navigate('/search')} />}
+        <FiUser className="nav-icon" onClick={() => navigate(localStorage.getItem('userType') === 'shop' ? '/shop-owner-profile' : '/profile')} />
       </footer>
     </div>
   );

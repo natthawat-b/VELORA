@@ -22,6 +22,9 @@ import AddressEditPage from './AddressEditPage.jsx'
 import StylesPage from './StylesPage.jsx'
 import SelectedStylePage from './SelectedStylePage.jsx'
 import OrderTrackingPage from './OrderTrackingPage.jsx'
+import ChatPage from './ChatPage.jsx'
+import ChatListPage from './ChatListPage.jsx'
+import WalletPage from './WalletPage.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -47,6 +50,9 @@ createRoot(document.getElementById('root')).render(
           <Route path="/style/:styleName" element={<SelectedStylePage />} />
           <Route path="/order-tracking" element={<OrderTrackingPage />} />
           <Route path="/address-edit" element={<AddressEditPage />} />
+          <Route path="/chat/:chatId" element={<ChatPage />} />
+          <Route path="/chat-list" element={<ChatListPage />} />
+          <Route path="/wallet" element={<WalletPage />} />
         </Routes>
       </BrowserRouter>
     </CartProvider>

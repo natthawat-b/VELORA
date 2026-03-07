@@ -53,6 +53,7 @@ export function CartProvider({ children }) {
               productPrice: newPrice,
               fullPrice: price, // เก็บราคาเต็มไว้คำนวณกรณีเปลี่ยน type
               maxStock: product.productStock || 99,
+              shopId: product.shopId || product.shop?._id || item.shopId || '',
               shopName: product.shop?.name || 'ร้านค้า',
               rentalDays: item.rentalDays || calculateDays(item.rentalStartDate, item.rentalEndDate),
               rentalStartDate: item.rentalStartDate,
@@ -120,6 +121,7 @@ export function CartProvider({ children }) {
         : price,
       fullPrice: price,
       type: type,
+      shopId: product.shopId || product.shop?._id || '',
       shopName: product.shop?.name || 'ร้านค้า',
       quantity: 1,
       maxStock: product.productStock || 99,

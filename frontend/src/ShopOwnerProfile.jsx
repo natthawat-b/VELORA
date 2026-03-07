@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/ShopOwnerProfile.css';
+import './assets/ChatListPage.css';
 import './assets/SharedNavbar.css';
-import { FiShoppingCart, FiMessageSquare, FiBox, FiTruck, FiCheckCircle, FiHome, FiSearch, FiUser, FiEdit2, FiCamera, FiShoppingBag, FiLogOut, FiCheck, FiX, FiChevronLeft } from 'react-icons/fi';
+import { FiShoppingCart, FiMessageSquare, FiBox, FiTruck, FiCheckCircle, FiHome, FiSearch, FiUser, FiEdit2, FiCamera, FiShoppingBag, FiLogOut, FiCheck, FiX, FiInfo, FiChevronLeft } from 'react-icons/fi';
 import API_URL from './config/api';
 
 function ShopOwnerProfile() {
@@ -14,27 +15,37 @@ function ShopOwnerProfile() {
   const [loading, setLoading] = useState(true);
   const [shopPhoto, setShopPhoto] = useState('');
   const [photoPreview, setPhotoPreview] = useState('');
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [editInfo, setEditInfo] = useState({ shopBank: '', shopBankNumber: '', shopIDcard: '' });
+  const [savingInfo, setSavingInfo] = useState(false);
+  const [chatCount, setChatCount] = useState(0);
 
   useEffect(() => {
     fetchShopData();
+    fetchChatCount();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Heartbeat: update lastActive every 2 minutes
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    const shopId = userData._id;
-    if (!shopId) return;
+  const fetchChatCount = async () => {
+    try {
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      const shopId = userData._id;
+      if (!shopId) return;
 
-    // Send heartbeat immediately on mount
-    axios.put(`${API_URL}/shop/${shopId}/heartbeat`).catch(() => {});
-
-    // Then every 2 minutes
-    const interval = setInterval(() => {
-      axios.put(`${API_URL}/shop/${shopId}/heartbeat`).catch(() => {});
-    }, 2 * 60 * 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+      const response = await axios.get(`${API_URL}/chat/list/${shopId}`);
+      if (response.data.success) {
+        const chats = response.data.payload;
+        // Count total messages across all chats
+        const totalMessages = chats.reduce((sum, chat) => sum + (chat.messages?.length || 0), 0);
+        // Compare with last seen count to only show new messages
+        const lastSeenCount = parseInt(localStorage.getItem('velora_chat_seen_count') || '0', 10);
+        const newMessages = totalMessages - lastSeenCount;
+        setChatCount(newMessages > 0 ? newMessages : 0);
+      }
+    } catch {
+      // silently fail
+    }
+  };
 
   const fetchShopData = async () => {
     try {
@@ -176,7 +187,12 @@ function ShopOwnerProfile() {
           </button>
           <h1 className="nav-title">โปรไฟล์ร้านค้า</h1>
           <div className="nav-icons">
-            <FiShoppingCart className="nav-icon" onClick={() => navigate('/cart')} />
+            <div className="nav-icon-wrapper" onClick={() => navigate('/chat-list')} title="แชท">
+              <FiMessageSquare className="nav-icon" />
+              {chatCount > 0 && <span className="nav-chat-badge">{chatCount > 99 ? '99+' : chatCount}</span>}
+            </div>
+            <FiShoppingCart className="nav-icon" onClick={() => navigate('/cart')} title="ตะกร้า" />
+            <FiLogOut className="nav-icon" onClick={handleLogout} style={{ color: '#d32f2f', cursor: 'pointer' }} title="ออกจากระบบ" />
           </div>
         </div>
       </header>
@@ -207,7 +223,7 @@ function ShopOwnerProfile() {
                 style={{ display: 'none' }}
               />
               <label htmlFor="photo-upload" className="btn-edit-img">
-                <span className="edit-text">แก้ไข</span>
+                <span className="edit-text"><FiCamera /> แก้ไข</span>
               </label>
               {photoPreview && photoPreview !== shopData?.shopPhoto && (
                 <button className="btn-save-photo" onClick={handleSavePhoto}>
@@ -249,6 +265,16 @@ function ShopOwnerProfile() {
               <button className="btn-my-products" onClick={() => navigate('/seller-products')}>
                 <FiShoppingBag className="btn-icon" /> สินค้าของฉัน
               </button>
+              <button className="btn-my-products" onClick={() => {
+                setEditInfo({
+                  shopBank: shopData?.shopBank || '',
+                  shopBankNumber: shopData?.shopBankNumber || '',
+                  shopIDcard: shopData?.shopIDcard || ''
+                });
+                setShowInfoModal(true);
+              }}>
+                <FiInfo className="btn-icon" /> ข้อมูลเพิ่มเติม
+              </button>
             </div>
           </section>
 
@@ -287,10 +313,96 @@ function ShopOwnerProfile() {
         </div>
       </main>
 
-      {/* Bottom Nav - Only Profile Button */}
+      {/* Bottom Nav */}
       <footer className="bottom-nav">
-        <div className="nav-item active"><FiUser /></div>
+        <FiHome className="nav-icon" onClick={() => navigate('/home')} />
+        <FiUser className="nav-icon active" />
       </footer>
+
+      {/* Modal ข้อมูลเพิ่มเติม */}
+      {showInfoModal && (
+        <div className="info-modal-overlay" onClick={() => setShowInfoModal(false)}>
+          <div className="info-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="info-modal-header">
+              <h3>ข้อมูลเพิ่มเติม</h3>
+              <button className="btn-close-modal" onClick={() => setShowInfoModal(false)}>
+                <FiX />
+              </button>
+            </div>
+            <div className="info-modal-body">
+              <div className="info-item-edit">
+                <label className="info-label">ธนาคาร</label>
+                <select
+                  className="info-select"
+                  value={editInfo.shopBank}
+                  onChange={(e) => setEditInfo({...editInfo, shopBank: e.target.value})}
+                >
+                  <option value="">เลือกธนาคาร</option>
+                  <option value="ธนาคารกรุงเทพ">ธนาคารกรุงเทพ (BBL)</option>
+                  <option value="ธนาคารกสิกรไทย">ธนาคารกสิกรไทย (KBANK)</option>
+                  <option value="ธนาคารกรุงไทย">ธนาคารกรุงไทย (KTB)</option>
+                  <option value="ธนาคารไทยพาณิชย์">ธนาคารไทยพาณิชย์ (SCB)</option>
+                  <option value="ธนาคารกรุงศรีอยุธยา">ธนาคารกรุงศรีอยุธยา (BAY)</option>
+                  <option value="ธนาคารทหารไทยธนชาต">ธนาคารทหารไทยธนชาต (TTB)</option>
+                  <option value="ธนาคารออมสิน">ธนาคารออมสิน (GSB)</option>
+                  <option value="ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร">ธ.ก.ส. (BAAC)</option>
+                  <option value="ธนาคารอาคารสงเคราะห์">ธนาคารอาคารสงเคราะห์ (GHB)</option>
+                  <option value="ธนาคารซีไอเอ็มบีไทย">ธนาคารซีไอเอ็มบีไทย (CIMBT)</option>
+                  <option value="ธนาคารยูโอบี">ธนาคารยูโอบี (UOB)</option>
+                  <option value="ธนาคารแลนด์แอนด์เฮ้าส์">ธนาคารแลนด์ แอนด์ เฮ้าส์ (LHBANK)</option>
+                  <option value="ธนาคารเกียรตินาคินภัทร">ธนาคารเกียรตินาคินภัทร (KKP)</option>
+                  <option value="ธนาคารทิสโก้">ธนาคารทิสโก้ (TISCO)</option>
+                  <option value="ธนาคารไทยเครดิต">ธนาคารไทยเครดิต (TCR)</option>
+                  <option value="ธนาคารอิสลามแห่งประเทศไทย">ธนาคารอิสลามแห่งประเทศไทย (ISBT)</option>
+                  <option value="ธนาคารไอซีบีซี">ธนาคารไอซีบีซี (ICBC)</option>
+                  <option value="ธนาคารพัฒนาวิสาหกิจขนาดกลางและขนาดย่อม">ธนาคาร SME (SME BANK)</option>
+                  <option value="ธนาคารเอ็กซิมแบงค์">ธนาคารเอ็กซิมแบงค์ (EXIM)</option>
+                </select>
+              </div>
+              <div className="info-item-edit">
+                <label className="info-label">เลขบัญชี</label>
+                <input
+                  className="info-input"
+                  type="text"
+                  value={editInfo.shopBankNumber}
+                  onChange={(e) => setEditInfo({...editInfo, shopBankNumber: e.target.value})}
+                  placeholder="กรอกเลขบัญชีธนาคาร"
+                />
+              </div>
+              <div className="info-item-edit">
+                <label className="info-label">เลขบัตรประชาชน</label>
+                <input
+                  className="info-input"
+                  type="text"
+                  value={editInfo.shopIDcard}
+                  onChange={(e) => setEditInfo({...editInfo, shopIDcard: e.target.value})}
+                  maxLength="13"
+                  placeholder="ตัวเลข 13 หลัก ไม่ต้องใส่ -"
+                />
+              </div>
+            </div>
+            <button
+              className="btn-save-info"
+              onClick={async () => {
+                setSavingInfo(true);
+                try {
+                  await axios.put(`${API_URL}/shop/${shopData._id}`, editInfo);
+                  setShopData({...shopData, ...editInfo});
+                  alert('บันทึกข้อมูลสำเร็จ!');
+                  setShowInfoModal(false);
+                } catch (err) {
+                  alert('เกิดข้อผิดพลาด: ' + (err.response?.data?.error?.message || err.message));
+                } finally {
+                  setSavingInfo(false);
+                }
+              }}
+              disabled={savingInfo}
+            >
+              {savingInfo ? 'กำลังบันทึก...' : 'บันทึก'}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

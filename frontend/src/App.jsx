@@ -30,16 +30,19 @@ function App() {
           password
         });
       } catch (userErr) {
+        console.log('User login failed, trying shop login...', userErr.response?.data);
         // If user login fails, try shop login with same credentials
         try {
           response = await axios.post(`${API_URL}/shop/login`, {
-            shopname: username, // Use same input for shopname
+            shopusername: username,
             shopPassword: password
           });
+          console.log('Shop login response:', response.data);
           loginType = 'shop';
-        } catch {
-          // Both logins failed
-          throw userErr; // Throw the original error
+        } catch (shopErr) {
+          console.log('Shop login also failed:', shopErr.response?.data);
+          // Both logins failed - throw shop error if it's more specific
+          throw shopErr;
         }
       }
 
@@ -48,6 +51,17 @@ function App() {
         const userData = response.data.payload;
         const userType = userData.userType || loginType;
         
+        // ล้างข้อมูล user เก่าก่อนเก็บข้อมูลใหม่
+        localStorage.removeItem('userData');
+        localStorage.removeItem('userType');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('velora_cart');
+        localStorage.removeItem('velora_favorites');
+        localStorage.removeItem('velora_addresses');
+        localStorage.removeItem('userProfileImage');
+        localStorage.removeItem('velora_chat_seen');
+        localStorage.removeItem('velora_chat_seen_count');
+
         // Store user data in localStorage
         localStorage.setItem('userData', JSON.stringify(userData));
         localStorage.setItem('userType', userType);
@@ -92,7 +106,7 @@ function App() {
           <h2 className="login-section-title">เข้าสู่ระบบ</h2>
           <form className="login-form" onSubmit={handleLogin}>
             <div className="input-group">
-              <label>ชื่อ</label>
+              <label>ชื่อผู้ใช้</label>
               <input 
                 type="text" 
                 value={username}

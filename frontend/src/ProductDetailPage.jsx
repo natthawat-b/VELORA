@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './assets/ProductDetailPage.css';
 import './assets/SharedNavbar.css';
-import { FiChevronLeft, FiShoppingCart, FiHeart, FiMessageCircle, FiPlus, FiEdit, FiTrash2, FiX } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiShoppingCart, FiHeart, FiMessageCircle, FiPlus, FiEdit, FiTrash2, FiX } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
 import { useCart } from './context/CartContext';
 import API_URL from './config/api';
@@ -17,7 +17,9 @@ function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isOwner, setIsOwner] = useState(false);
-  
+  // Image Carousel State
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   // Edit Modal State
   const [showEditModal, setShowEditModal] = useState(false);
   const [editFormData, setEditFormData] = useState({});
@@ -192,6 +194,28 @@ function ProductDetailPage() {
     }
   };
 
+  const handleChat = async () => {
+    try {
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      const userId = userData._id || userData.id;
+      const shopId = product?.shop?._id || product?.shopId;
+
+      if (!userId || !shopId) {
+        alert('ไม่สามารถเปิดแชทได้ กรุณาเข้าสู่ระบบ');
+        return;
+      }
+
+      const response = await axios.post(`${API_URL}/chat/start`, { userId, shopId });
+      if (response.data.success) {
+        const chatId = response.data.payload._id;
+        navigate(`/chat/${chatId}`);
+      }
+    } catch (err) {
+      console.error('Error starting chat:', err);
+      alert('เกิดข้อผิดพลาดในการเปิดแชท');
+    }
+  };
+
   const handleRentNow = () => {
     if (product) {
       addToCart(product, 'rent');
@@ -213,6 +237,20 @@ function ProductDetailPage() {
   if (error || !product) {
     return <div className="error-container">{error || 'ไม่พบสินค้า'}</div>;
   }
+
+  // Combine main photo and additional photos for carousel
+  const allImages = product.productphoto ? [product.productphoto] : [];
+  if (product.productAdditionalImages && Array.isArray(product.productAdditionalImages)) {
+    allImages.push(...product.productAdditionalImages);
+  }
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1));
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) => (prev === allImages.length - 1 ? 0 : prev + 1));
+  };
 
   return (
     <div className="product-page-container">
@@ -237,9 +275,38 @@ function ProductDetailPage() {
         
         {/* Left Column: Product Image */}
         <div className="product-image-section">
-          <div className="main-image-placeholder">
-            {product.productphoto ? (
-              <img src={product.productphoto} alt={product.productname} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+          <div className="main-image-placeholder carousel-container">
+            {allImages.length > 0 ? (
+              <>
+                <img 
+                  src={allImages[currentImageIndex]} 
+                  alt={`${product.productname} - view ${currentImageIndex + 1}`} 
+                  style={{width: '100%', height: '100%', objectFit: 'cover'}} 
+                />
+                
+                {/* Navigation Arrows (Only show if > 1 image) */}
+                {allImages.length > 1 && (
+                  <>
+                    <button className="carousel-btn prev-btn" onClick={handlePrevImage}>
+                      <FiChevronLeft />
+                    </button>
+                    <button className="carousel-btn next-btn" onClick={handleNextImage}>
+                      <FiChevronRight />
+                    </button>
+                    
+                    {/* Dots Indicator */}
+                    <div className="carousel-dots">
+                      {allImages.map((_, index) => (
+                        <span 
+                          key={index} 
+                          className={`dot ${index === currentImageIndex ? 'active' : ''}`}
+                          onClick={() => setCurrentImageIndex(index)}
+                        ></span>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </>
             ) : (
               <>
                 <div className="art-cloud"></div>
@@ -345,7 +412,7 @@ function ProductDetailPage() {
 
           {/* Action Buttons */}
           <div className="action-buttons-container">
-            <button className="btn-action chat">
+            <button className="btn-action chat" onClick={handleChat}>
               <FiMessageCircle /> สอบถามร้าน
             </button>
             <button className="btn-action add-cart" onClick={handleAddToCart}>
