@@ -201,7 +201,6 @@ function CheckoutPage() {
     setOrdering(true);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const orderData = {
         userId,
         items: checkoutItems.map(item => ({
@@ -223,7 +222,7 @@ function CheckoutPage() {
         totalPrice: total,
       };
 
-      const response = await fetch(`${apiUrl}/api/order/create`, {
+      const response = await fetch(`${API_URL}/order/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData),
