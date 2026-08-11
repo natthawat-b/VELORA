@@ -25,5 +25,5 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=natthawat-b_VELORA
-            -Dsonar.organization=Ynatthawat-b
+            -Dsonar.organization=natthawat-b
           projectBaseDir: .
