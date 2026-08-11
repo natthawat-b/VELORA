@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0   # จำเป็นสำหรับ SonarCloud เพื่ออ่าน git history (blame ฯลฯ)
 
       - name: Analyze with SonarQube Cloud
-        uses: SonarSource/sonarqube-scan-action@fd88b78e2fe1a9a5c8e9d5e8f8e0e40a8f3e26e5 # v6.0.0
+        uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602 # v6.0.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
