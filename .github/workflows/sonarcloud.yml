@@ -1,5 +1,4 @@
 name: SonarCloud analysis
-
 on:
   push:
     branches: [ "main" ]
@@ -15,24 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # จำเป็นสำหรับ SonarCloud เพื่ออ่าน git history (blame ฯลฯ)
+          fetch-depth: 0   # จำเป็นสำหรับ SonarCloud เพื่ออ่าน git history (blame ฯลฯ)
 
-      # === 1. เพิ่มขั้นตอนติดตั้ง Node.js ===
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      # === 2. เพิ่มขั้นตอนรัน Vitest ให้สร้าง Coverage Report ===
-      - name: Run Frontend Vitest Coverage
-        run: |
-          cd frontend
-          npm ci
-          npx vitest run --coverage
-
-      # === 3. ขั้นตอนสแกน SonarCloud (ปรับปรุง args เพิ่มเติม) ===
       - name: Analyze with SonarQube Cloud
         uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602 # v6.0.0
         env:
@@ -41,6 +26,4 @@ jobs:
           args: >
             -Dsonar.projectKey=natthawat-b_VELORA
             -Dsonar.organization=natthawat-b
-            -Dsonar.sources=frontend/src,backend/src
-            -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info
           projectBaseDir: .
