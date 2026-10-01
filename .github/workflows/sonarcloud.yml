@@ -16,7 +16,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0   # จำเป็นสำหรับ SonarCloud เพื่ออ่าน git history (blame ฯลฯ)
+          fetch-depth: 0  # จำเป็นสำหรับ SonarCloud เพื่ออ่าน git history (blame ฯลฯ)
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run test coverage
+        run: npm run test:coverage
 
       - name: Analyze with SonarQube Cloud
         uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602 # v6.0.0
@@ -26,4 +37,4 @@ jobs:
           args: >
             -Dsonar.projectKey=natthawat-b_VELORA
             -Dsonar.organization=natthawat-b
-          projectBaseDir: .
+        projectBaseDir: .
